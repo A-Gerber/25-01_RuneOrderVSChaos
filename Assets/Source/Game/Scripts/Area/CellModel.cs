@@ -11,20 +11,17 @@ namespace RuneOrderVSChaos
 
         private CubeModel _cube;
         private bool _isBusy = false;
-        private Vector3 _position;
+        private LocalPosition _position;
         private Color _currentColor;
 
-        internal CellModel(Vector3 position)
+        internal CellModel(LocalPosition position)
         {
-            if (position == null)
-                throw new InvalidOperationException("position is null");
-
             _position = position;
         }
 
         internal event Action<Color> ChangedColor;
 
-        internal Vector3 Position => _position;
+        internal LocalPosition Position => _position;
 
         internal bool IsBusy => _isBusy;
 

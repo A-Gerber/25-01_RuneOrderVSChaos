@@ -1,39 +1,39 @@
+using System;
 using UnityEngine;
 
 namespace RuneOrderVSChaos
 {
-    internal class ShapeHandler : MonoBehaviour
+    internal class ShapeHandler
     {
-        private const int ClickButton = 0;
-
-        [SerializeField] private Camera _camera;
-        [SerializeField] private Ray _ray;
+        private Camera _camera;
+        private Ray _ray;
 
         private ShapeView _shape;
-        private bool _isRaisedShape = false;
 
-        private void Update()
+        public ShapeHandler(Camera camera, Ray ray)
         {
-            if (Input.GetMouseButton(ClickButton))
-            {
-                _ray = _camera.ScreenPointToRay(Input.mousePosition);
+            if (camera == null)
+                throw new InvalidOperationException("camera is null");
 
-                if (_isRaisedShape == false)
-                {
-                    if (Physics.Raycast(_ray, out RaycastHit hit, Mathf.Infinity) && hit.transform.TryGetComponent(out ShapeView shape))
-                    {
-                        _shape = shape;
-                        _shape.Raise();
-                        _isRaisedShape = shape.IsRaised;
-                    }
-                }
+            _camera = camera;
+            _ray = ray;
+        }
+
+        internal void RaiseShape()
+        {
+            _ray = _camera.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(_ray, out RaycastHit hit, Mathf.Infinity) && hit.transform.TryGetComponent(out ShapeView shape) && shape.IsRaised == false)
+            {
+                _shape = shape;
+                _shape.Raise();
             }
+        }
 
-            if (Input.GetMouseButtonUp(ClickButton) && _shape != null)
-            {
-                _isRaisedShape = false;
+        internal void PutShape()
+        {
+            if (_shape != null)
                 _shape.Put();
-            }
         }
     }
 }

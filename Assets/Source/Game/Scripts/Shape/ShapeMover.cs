@@ -7,6 +7,8 @@ namespace RuneOrderVSChaos
     {
         private float _height;
         private float _speed;
+        private Vector2 _minPointBorder;
+        private Vector2 _maxPointBorder;
 
         internal ShapeMover(float height, float speed)
         {
@@ -15,6 +17,9 @@ namespace RuneOrderVSChaos
 
             _height = height;
             _speed = speed;
+
+            _minPointBorder = new Vector2(-0.5f, -3.5f);
+            _maxPointBorder = new Vector2(7.5f, 7.5f);
         }
 
         internal void Move(Transform transform)
@@ -26,6 +31,9 @@ namespace RuneOrderVSChaos
             mousePosition.z = _height;
 
             Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+            targetPosition = new Vector3(
+                Mathf.Clamp(targetPosition.x, _minPointBorder.x, _maxPointBorder.x), targetPosition.y, Mathf.Clamp(targetPosition.z, _minPointBorder.y, _maxPointBorder.y)
+                );
 
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);
         }

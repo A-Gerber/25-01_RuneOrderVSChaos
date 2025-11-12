@@ -31,7 +31,8 @@ namespace RuneOrderVSChaos
             {
                 for (int j = 0; j < _playField.GetLength(1); j++)
                 {
-                    Instantiate(_cellViewPrefab, _playField[i, j].Position, Quaternion.identity, _areaView.GetContainer()).Initialize(_playField[i, j]);
+                    Instantiate(_cellViewPrefab, new Vector3(_playField[i, j].Position.PositionX,0, _playField[i, j].Position.PositionZ), Quaternion.identity, _areaView.GetContainer())
+                        .Initialize(_playField[i, j]);
                 }
             }
         }

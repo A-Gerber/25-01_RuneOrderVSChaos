@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 namespace RuneOrderVSChaos
@@ -12,8 +11,10 @@ namespace RuneOrderVSChaos
 
         private readonly ShapeModelFactory _modelFactory = new();
         private List<CubeView> _currentCubeViews;
-        private IDiagnosticable _game;
+        private IProcessable _game;
         private int _index = 0;
+
+        internal event Action<ShapeModel> CreatedShape;
 
         private void OnEnable()
         {
@@ -25,7 +26,7 @@ namespace RuneOrderVSChaos
             _cubeViewSpawner.CreatedCubeView -= OnGetShape;
         }
 
-        internal void Initialize(IDiagnosticable game)
+        internal void Initialize(IProcessable game)
         {
             _game = game ?? throw new InvalidOperationException("game is null");
         }
@@ -54,7 +55,9 @@ namespace RuneOrderVSChaos
             base.OnRelease(shape);
 
             shape.RemoveCubes();
-            _game.PerformDiagnostics();
+
+            if (shape.IsRestart == false)
+                _game.ProcessStep();
 
             shape.Released -= Release;
         }
@@ -67,12 +70,12 @@ namespace RuneOrderVSChaos
             base.OnGet(shape);
 
             shape.transform.position = _pointsSpawn[_index].position;
-            shape.SetStartPosition(_pointsSpawn[_index].position);
+            shape.SetPosition(_pointsSpawn[_index].position);
             shape.TakeCubes(_currentCubeViews);
+            shape.Reduce();
+            _index = ++_index % _pointsSpawn.Length;
 
-            if (++_index == _pointsSpawn.Length)
-                _index= 0;
-
+            CreatedShape?.Invoke(shape.GetShapeModel());
             shape.Released += Release;
         }
 

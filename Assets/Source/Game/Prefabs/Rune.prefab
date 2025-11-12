@@ -100,7 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 327586f5ce8a3d245af04345e8e69827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _durationLanding: 0.5
+  _durationLanding: 0.3
+  _distanceRaycast: 5
 --- !u!65 &4600871782581418583
 BoxCollider:
   m_ObjectHideFlags: 0

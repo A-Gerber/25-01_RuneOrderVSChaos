@@ -1,0 +1,44 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+namespace RuneOrderVSChaos
+{
+    public class PlayerInputController : MonoBehaviour
+    {
+        [SerializeField] private Camera _camera;
+        [SerializeField] private Ray _ray;
+
+        private ShapeHandler _shapeHandler;
+        private PlayerInput _playerInput;
+
+        private void Awake()
+        {
+            _shapeHandler = new(_camera, _ray);
+            _playerInput = new PlayerInput();
+
+            _playerInput.Player.TakeShape.performed += OnTakeShape;
+            _playerInput.Player.PutShape.performed += OnPutShape;
+
+        }
+
+        private void OnEnable()
+        {
+            _playerInput.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _playerInput.Disable();
+        }
+
+        public void OnTakeShape(InputAction.CallbackContext context)
+        {
+            _shapeHandler.RaiseShape();
+        }
+
+        public void OnPutShape(InputAction.CallbackContext context)
+        {
+            _shapeHandler.PutShape();
+        }
+    }
+}

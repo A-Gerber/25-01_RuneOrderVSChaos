@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cubeContainer: {fileID: 6457238350972849289}
-  _height: 13
+  _height: 18
   _speed: 20
   _durationOfReturn: 1
 --- !u!65 &1974558137395815934

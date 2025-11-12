@@ -1,0 +1,67 @@
+{
+    "version": 1,
+    "name": "PlayerInput",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "78ff92f5-82c0-4140-b461-931fb691cca0",
+            "actions": [
+                {
+                    "name": "TakeShape",
+                    "type": "Value",
+                    "id": "f1d2c3bd-b8c2-47c0-9938-cd9c99c6aa62",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "PutShape",
+                    "type": "Button",
+                    "id": "0fd16e81-6b20-4bf7-8392-92a314e66d2b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b0ecb6a3-8726-47b7-a79f-427ea3f5a942",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold(duration=0.1)",
+                    "processors": "",
+                    "groups": ";Mouse",
+                    "action": "TakeShape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "45c9009d-b70f-48ff-9e12-84540f045dd2",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "SlowTap",
+                    "processors": "",
+                    "groups": ";Mouse",
+                    "action": "PutShape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Mouse",
+            "bindingGroup": "Mouse",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

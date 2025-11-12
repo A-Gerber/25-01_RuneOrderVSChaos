@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace RuneOrderVSChaos
 {
@@ -26,12 +27,14 @@ namespace RuneOrderVSChaos
             _moverTo = new MoverTo(_transform);
         }
 
+        internal LocalPosition LocalPosition { get; private set; }
+
         internal event Action Released;
 
         internal void TrackLanding()
         {
             if (Physics.Raycast(_transform.position, Vector3.down, out RaycastHit hit, _distanceRaycast) && hit.transform.TryGetComponent(out IChangeableColor target))
-                    target.ChangeColorCell();
+                    target.ChangeColorCells();
         }
 
         internal void Land()
@@ -60,6 +63,11 @@ namespace RuneOrderVSChaos
         internal void Release()
         {
             Released?.Invoke();
+        }
+
+        internal void SetLocalPosition(LocalPosition localPosition)
+        {
+            LocalPosition = localPosition;
         }
     }
 }

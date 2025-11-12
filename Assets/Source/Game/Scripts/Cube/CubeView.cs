@@ -18,11 +18,12 @@ namespace RuneOrderVSChaos
 
         internal void Initialize(CubeModel cube)
         {
+            if (_cubeModel != null)
+                _cubeModel.Released -= OnRelease;
+
             _cubeModel = cube ?? throw new InvalidOperationException("cube is null");
 
-            _cubeModel.Released += OnRelease;  // Подумать как отписаться
-
-            Debug.Log("Подумать как отписаться");
+            _cubeModel.Released += OnRelease;
         }
 
         internal CubeModel GetCubeModel()
@@ -30,12 +31,11 @@ namespace RuneOrderVSChaos
             return _cubeModel;
         }
 
-        internal void SetLocalPosition(Vector3 position)
+        internal void SetLocalPosition(LocalPosition position)
         {
-            if (position == null)
-                throw new InvalidOperationException("position is null");
+            _cubeModel.SetLocalPosition(position);
 
-            LocalPosition = position;
+            LocalPosition = new Vector3(position.PositionX, 0 , position.PositionZ);
         }
 
         private void OnRelease()

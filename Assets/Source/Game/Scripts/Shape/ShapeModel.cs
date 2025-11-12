@@ -12,6 +12,8 @@ namespace RuneOrderVSChaos
         private readonly Transform _transform;
         private readonly float _durationOfReturn;
         private Vector3 _startPosition;
+        
+        private bool _isBackStartPosition = false;
 
         public ShapeModel(ShapeMover mover, Transform transform, float durationOfReturn)
         {
@@ -25,11 +27,12 @@ namespace RuneOrderVSChaos
             _moverTo = new MoverTo(_transform);
         }
 
-        internal event Action Released;
+        internal event Action<bool> ReleasedOnRestart;
 
         internal bool IsRaised { get; private set; } = false;
+        internal bool IsRelease => _cubeModels.Count ==0;
 
-        internal void SetStartPosition(Vector3 startPosition)
+        internal void SetPosition(Vector3 startPosition)
         {
             if (startPosition == null)
                 throw new InvalidOperationException("startPosition is null");
@@ -39,10 +42,8 @@ namespace RuneOrderVSChaos
 
         internal void TakeCubes(List<CubeModel> cubeModels)
         {
-            foreach (var cube in cubeModels)
-            {
-                _cubeModels.Add(cube);
-            }
+            foreach (var cube in cubeModels)            
+                _cubeModels.Add(cube);    
         }
 
         internal void RemoveCubes()
@@ -50,18 +51,35 @@ namespace RuneOrderVSChaos
             _cubeModels.Clear();
         }
 
-        internal void SetRaise(bool value)
+        internal void ReleaseOnRestart()
         {
-            IsRaised = value;
+            foreach (var cube in _cubeModels)
+            {
+                cube.Release();
+            }
+
+            ReleasedOnRestart?.Invoke(true);
+        }
+
+        internal void SetStatusRaised()
+        {
+            IsRaised = true;
+            _isBackStartPosition = false;
+        }
+
+        internal void SetStatusOnStartPoint()
+        {
+            IsRaised = false;
         }
 
         internal void Raise()
         {
             _mover.Move(_transform);
 
-            foreach (var cubeModel in _cubeModels)
+            if (_isBackStartPosition == false)
             {
-                cubeModel.TrackLanding();
+                foreach (var cubeModel in _cubeModels)               
+                    cubeModel.TrackLanding();               
             }
         }
 
@@ -74,12 +92,24 @@ namespace RuneOrderVSChaos
                     cubeModel.Land();
                 }
 
-                Released?.Invoke();
+                IsRaised = false;
+                ReleasedOnRestart?.Invoke(false);
             }
             else
             {
+                _isBackStartPosition = true;
                 _moverTo.MoveTo(_startPosition, _durationOfReturn);
             }
+        }
+
+        internal List<LocalPosition> GetLocalPositionCubes()
+        {
+            List<LocalPosition> localPositions = new();
+
+            foreach (var cubeModel in _cubeModels)
+                localPositions.Add(cubeModel.LocalPosition);
+
+            return localPositions;
         }
 
         private bool IsFreeSpace()

@@ -5,18 +5,24 @@ namespace RuneOrderVSChaos
 {
     internal class SimpleCubeConfigurator : ICubeConfigurator
     {
+        private readonly List<CubesConfiguration> _configurations = new();
 
-        public List<Vector3> CreateConfiguration()
+        internal SimpleCubeConfigurator() 
         {
-            List<Vector3> coordinate = new()
-            {
-                new Vector3(-1.5f, 0, -0.5f),
-                new Vector3(-0.5f, 0, -0.5f),
-                new Vector3(0.5f, 0, -0.5f),
-                new Vector3(1.5f, 0, -0.5f)
-            };
+            //_configurations.Add(new LineOfFourCubes());
+            //_configurations.Add(new LineOfFourCubes());
+            //_configurations.Add(new LineOfFourCubes());
+            //_configurations.Add(new SquareOfNineCubes());
+            //_configurations.Add(new SquareOfNineCubes());
+            //_configurations.Add(new LConfiguration());
+            _configurations.Add(new SquareOfSixteenCubes());
+        }
 
-            return coordinate;
+        public List<LocalPosition> CreateConfiguration()
+        {
+            int index = Random.Range(0, _configurations.Count);
+
+            return _configurations[index].GenerateConfiguration();
         }
     }
 }

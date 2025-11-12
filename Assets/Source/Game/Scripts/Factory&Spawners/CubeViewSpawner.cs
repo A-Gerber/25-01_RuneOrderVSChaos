@@ -1,20 +1,17 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace RuneOrderVSChaos
 {
     internal class CubeViewSpawner : Spawner<CubeView>
     {
-        private readonly CubeModelFactory _cubeModelFactory = new();
-
-        private List<Vector3> _coordinates;
+        private List<LocalPosition> _coordinates;
         private List<CubeView> _currentCubeViews = new List<CubeView>();
         private int _index = 0;
 
         internal event Action<List<CubeView>> CreatedCubeView;
 
-        internal void CreateCubes(List<Vector3> coordinates)
+        internal void CreateCubes(List<LocalPosition> coordinates)
         {
             if (coordinates == null)
                 throw new InvalidOperationException("coordinate is null");
@@ -30,7 +27,7 @@ namespace RuneOrderVSChaos
         protected override CubeView Create()
         {
             CubeView @object = Instantiate(Prefab);
-            @object.Initialize(_cubeModelFactory.Create(@object.transform, @object.DurationLanding, @object.DistanceRaycast));
+            @object.Initialize(new CubeModel(@object.transform, @object.DurationLanding, @object.DistanceRaycast));
 
             return @object;
         }

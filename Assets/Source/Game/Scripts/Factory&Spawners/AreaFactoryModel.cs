@@ -24,10 +24,9 @@ namespace RuneOrderVSChaos
 
             for (int x = 0; x < size; x++)
             {
-                for (int y = 0; y < size; y++)
+                for (int z = 0; z < size; z++)
                 {
-                    cells[x, y] = new CellModel( new Vector3(x, 0, y));
-                    
+                    cells[x, z] = new CellModel( new LocalPosition(x, z));
                 }
             }
 
