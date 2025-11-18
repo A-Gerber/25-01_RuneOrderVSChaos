@@ -2,58 +2,55 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RuneOrderVSChaos
+internal class ProjectileSpawner : Spawner<WizardProjectile>, ICreateableBullets
 {
-    internal class ProjectileSpawner : Spawner<WizardProjectile>, ICreateableBullets
+    [SerializeField] private int _damage;
+    [SerializeField] private int _speed;
+
+    private Vector3 _enemyPosition;
+    private List<Vector3> _startPositions;
+
+    private int _index = 0;
+
+    internal void Initialize(Vector3 enemyPosition)
     {
-        [SerializeField] private int _damage;
-        [SerializeField] private int _speed;
+        _enemyPosition = enemyPosition;
+    }
 
-        private Vector3 _enemyPosition;
-        private List<Vector3> _startPositions;
+    public void CreateBullets(List<Vector3> position)
+    {
+        _startPositions = position;
 
-        private int _index = 0;
-
-        internal void Initialize(Vector3 enemyPosition)
+        for (int i = 0; i < position.Count; i++)
         {
-            _enemyPosition = enemyPosition;
+            Get();
         }
+    }
 
-        public void CreateBullets(List<Vector3> position)
-        {
-            _startPositions = position;
+    protected override void OnRelease(WizardProjectile bullet)
+    {
+        if (bullet == null)
+            throw new InvalidOperationException("bullet is null");
 
-            for (int i = 0; i < position.Count; i++)
-            {
-                Get();
-            }
-        }
+        base.OnRelease(bullet);
 
-        protected override void OnRelease(WizardProjectile bullet)
-        {
-            if (bullet == null)
-                throw new InvalidOperationException("bullet is null");
+        bullet.Released -= Release;
+    }
 
-            base.OnRelease(bullet);
+    protected override void OnGet(WizardProjectile bullet)
+    {
+        if (bullet == null)
+            throw new InvalidOperationException("bullet is null");
 
-            bullet.Released -= Release;
-        }
+        base.OnGet(bullet);
 
-        protected override void OnGet(WizardProjectile bullet)
-        {
-            if (bullet == null)
-                throw new InvalidOperationException("bullet is null");
+        bullet.Initialize(_damage, _speed, _enemyPosition);
+        bullet.transform.position = _startPositions[_index];
+        _index++;
 
-            base.OnGet(bullet);
+        if (_index == _startPositions.Count)
+            _index = 0;
 
-            bullet.Initialize(_damage, _speed, _enemyPosition);
-            bullet.transform.position = _startPositions[_index];
-            _index++;
-
-            if(_index == _startPositions.Count)
-                _index = 0;
-
-            bullet.Released += Release;
-        }
+        bullet.Released += Release;
     }
 }

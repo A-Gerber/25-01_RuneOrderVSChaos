@@ -1,44 +1,49 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace RuneOrderVSChaos
+public class PlayerInputController : MonoBehaviour
 {
-    public class PlayerInputController : MonoBehaviour
+    [SerializeField] private Camera _camera;
+    [SerializeField] private Ray _ray;
+
+    private ShapeHandler _shapeHandler;
+    private PlayerInput _playerInput;
+
+    internal event Action SkillButtonClicked;
+
+    private void Awake()
     {
-        [SerializeField] private Camera _camera;
-        [SerializeField] private Ray _ray;
+        _shapeHandler = new(_camera, _ray);
+        _playerInput = new PlayerInput();
 
-        private ShapeHandler _shapeHandler;
-        private PlayerInput _playerInput;
+        _playerInput.Player.TakeShape.performed += OnTakeShape;
+        _playerInput.Player.PutShape.performed += OnPutShape;
+        _playerInput.Player.UseSkill.performed += OnUseSkill;
+    }
 
-        private void Awake()
-        {
-            _shapeHandler = new(_camera, _ray);
-            _playerInput = new PlayerInput();
+    private void OnEnable()
+    {
+        _playerInput.Enable();
+    }
 
-            _playerInput.Player.TakeShape.performed += OnTakeShape;
-            _playerInput.Player.PutShape.performed += OnPutShape;
+    private void OnDisable()
+    {
+        _playerInput.Disable();
+    }
 
-        }
+    public void OnTakeShape(InputAction.CallbackContext context)
+    {
+        _shapeHandler.RaiseShape();
+    }
 
-        private void OnEnable()
-        {
-            _playerInput.Enable();
-        }
+    public void OnPutShape(InputAction.CallbackContext context)
+    {
+        _shapeHandler.PutShape();
+    }
 
-        private void OnDisable()
-        {
-            _playerInput.Disable();
-        }
-
-        public void OnTakeShape(InputAction.CallbackContext context)
-        {
-            _shapeHandler.RaiseShape();
-        }
-
-        public void OnPutShape(InputAction.CallbackContext context)
-        {
-            _shapeHandler.PutShape();
-        }
+    public void OnUseSkill(InputAction.CallbackContext context)
+    {
+        SkillButtonClicked?.Invoke();
     }
 }

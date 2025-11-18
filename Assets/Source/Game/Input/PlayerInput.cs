@@ -109,6 +109,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseSkill"",
+                    ""type"": ""Button"",
+                    ""id"": ""6efaf698-e24c-41d9-b02b-910ac8e9f625"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -133,6 +142,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""PutShape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13a1eaf6-d6dc-4f5b-9554-2697ec6ab390"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Mouse"",
+                    ""action"": ""UseSkill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -155,6 +175,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_TakeShape = m_Player.FindAction("TakeShape", throwIfNotFound: true);
         m_Player_PutShape = m_Player.FindAction("PutShape", throwIfNotFound: true);
+        m_Player_UseSkill = m_Player.FindAction("UseSkill", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -237,6 +258,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_TakeShape;
     private readonly InputAction m_Player_PutShape;
+    private readonly InputAction m_Player_UseSkill;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -256,6 +278,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/PutShape".
         /// </summary>
         public InputAction @PutShape => m_Wrapper.m_Player_PutShape;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/UseSkill".
+        /// </summary>
+        public InputAction @UseSkill => m_Wrapper.m_Player_UseSkill;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -288,6 +314,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PutShape.started += instance.OnPutShape;
             @PutShape.performed += instance.OnPutShape;
             @PutShape.canceled += instance.OnPutShape;
+            @UseSkill.started += instance.OnUseSkill;
+            @UseSkill.performed += instance.OnUseSkill;
+            @UseSkill.canceled += instance.OnUseSkill;
         }
 
         /// <summary>
@@ -305,6 +334,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PutShape.started -= instance.OnPutShape;
             @PutShape.performed -= instance.OnPutShape;
             @PutShape.canceled -= instance.OnPutShape;
+            @UseSkill.started -= instance.OnUseSkill;
+            @UseSkill.performed -= instance.OnUseSkill;
+            @UseSkill.canceled -= instance.OnUseSkill;
         }
 
         /// <summary>
@@ -372,5 +404,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPutShape(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "UseSkill" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUseSkill(InputAction.CallbackContext context);
     }
 }

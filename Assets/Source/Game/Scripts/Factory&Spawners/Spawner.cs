@@ -1,55 +1,52 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace RuneOrderVSChaos
+internal class Spawner<T> : MonoBehaviour where T : MonoBehaviour
 {
-    internal class Spawner<T> : MonoBehaviour where T : MonoBehaviour
+    protected ObjectPool<T> _pool;
+
+    [SerializeField] private T _prefab;
+    [SerializeField] private int _poolCapacity = 5;
+    [SerializeField] private int _poolMaxSize = 5;
+
+    protected T Prefab => _prefab;
+
+    protected virtual void Awake()
     {
-        protected ObjectPool<T> _pool;
+        _pool = new ObjectPool<T>(
+            createFunc: () => Create(),
+            actionOnGet: (@object) => OnGet(@object),
+            actionOnRelease: (@object) => OnRelease(@object),
+            actionOnDestroy: (@object) => Destroy(@object.gameObject),
+            collectionCheck: true,
+            defaultCapacity: _poolCapacity,
+            maxSize: _poolMaxSize);
+    }
 
-        [SerializeField] private T _prefab;
-        [SerializeField] private int _poolCapacity = 5;
-        [SerializeField] private int _poolMaxSize = 5;
+    protected virtual T Create()
+    {
+        T @object = Instantiate(_prefab);
 
-        protected T Prefab => _prefab;
+        return @object;
+    }
 
-        protected virtual void Awake()
-        {
-            _pool = new ObjectPool<T>(
-                createFunc: () => Create(),
-                actionOnGet: (@object) => OnGet(@object),
-                actionOnRelease: (@object) => OnRelease(@object),
-                actionOnDestroy: (@object) => Destroy(@object.gameObject),
-                collectionCheck: true,
-                defaultCapacity: _poolCapacity,
-                maxSize: _poolMaxSize);
-        }
+    protected virtual void OnRelease(T @object)
+    {
+        @object.gameObject.SetActive(false);
+    }
 
-        protected virtual T Create()
-        {
-            T @object = Instantiate(_prefab);
+    protected virtual void OnGet(T @object)
+    {
+        @object.gameObject.SetActive(true);
+    }
 
-            return @object;
-        }
+    protected virtual void Get()
+    {
+        _pool.Get();
+    }
 
-        protected virtual void OnRelease(T @object)
-        {
-            @object.gameObject.SetActive(false);
-        }
-
-        protected virtual void OnGet(T @object)
-        {
-            @object.gameObject.SetActive(true);
-        }
-
-        protected virtual void Get()
-        {
-            _pool.Get();
-        }
-
-        protected virtual void Release(T @object)
-        {
-            _pool.Release(@object);
-        }
+    protected virtual void Release(T @object)
+    {
+        _pool.Release(@object);
     }
 }

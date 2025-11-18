@@ -81,6 +81,9 @@ MonoBehaviour:
   _height: 18
   _speed: 20
   _durationOfReturn: 1
+  _durationOfReduction: 0.5
+  _durationOfMagnification: 0.25
+  _reduceCoefficient: 0.5
 --- !u!65 &1974558137395815934
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -100,5 +103,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.8, y: 1, z: 2}
+  m_Size: {x: 2.4, y: 1, z: 2}
   m_Center: {x: 0, y: 0.5, z: 0}

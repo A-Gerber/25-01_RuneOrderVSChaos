@@ -1,28 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RuneOrderVSChaos
+internal class SimpleCubeConfigurator : ICubeConfigurator
 {
-    internal class SimpleCubeConfigurator : ICubeConfigurator
+    private readonly List<CubesConfiguration> _configurations = new();
+
+    internal SimpleCubeConfigurator()
     {
-        private readonly List<CubesConfiguration> _configurations = new();
+        //_configurations.Add(new LineOfFourCubes());
+        //_configurations.Add(new LineOfFourCubes());
+        //_configurations.Add(new LineOfFourCubes());
+        //_configurations.Add(new SquareOfNineCubes());
+       //_configurations.Add(new SquareOfNineCubes());
+        //_configurations.Add(new LConfiguration());
+        _configurations.Add(new SquareOfSixteenCubes());
+    }
 
-        internal SimpleCubeConfigurator() 
-        {
-            //_configurations.Add(new LineOfFourCubes());
-            //_configurations.Add(new LineOfFourCubes());
-            //_configurations.Add(new LineOfFourCubes());
-            //_configurations.Add(new SquareOfNineCubes());
-            //_configurations.Add(new SquareOfNineCubes());
-            //_configurations.Add(new LConfiguration());
-            _configurations.Add(new SquareOfSixteenCubes());
-        }
+    public List<LocalPosition> CreateConfiguration()
+    {
+        int index = Random.Range(0, _configurations.Count);
 
-        public List<LocalPosition> CreateConfiguration()
-        {
-            int index = Random.Range(0, _configurations.Count);
-
-            return _configurations[index].GenerateConfiguration();
-        }
+        return _configurations[index].GenerateConfiguration();
     }
 }

@@ -2,87 +2,86 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RuneOrderVSChaos
+internal class ShapeViewSpawner : Spawner<ShapeView>
 {
-    internal class ShapeViewSpawner : Spawner<ShapeView>
+    [SerializeField] private Transform[] _pointsSpawn;
+    [SerializeField] private CubeViewSpawner _cubeViewSpawner;
+
+    private readonly ShapeModelFactory _modelFactory = new();
+    private List<CubeView> _currentCubeViews;
+    private IProcessable _game;
+    private int _index = 0;
+    private float _height;
+
+    internal event Action<ShapeModel> CreatedShape;
+
+    private void OnEnable()
     {
-        [SerializeField] private Transform[] _pointsSpawn;
-        [SerializeField] private CubeViewSpawner _cubeViewSpawner;
+        _cubeViewSpawner.CreatedCubeView += OnGetShape;
+    }
 
-        private readonly ShapeModelFactory _modelFactory = new();
-        private List<CubeView> _currentCubeViews;
-        private IProcessable _game;
-        private int _index = 0;
+    private void OnDisable()
+    {
+        _cubeViewSpawner.CreatedCubeView -= OnGetShape;
+    }
 
-        internal event Action<ShapeModel> CreatedShape;
+    internal void Initialize(IProcessable game, float height)
+    {
+        _game = game ?? throw new InvalidOperationException("game is null");
+        _height = height;
+    }
 
-        private void OnEnable()
-        {
-            _cubeViewSpawner.CreatedCubeView += OnGetShape;
-        }
+    internal void CreateShape(ICubeConfigurator configurator)
+    {
+        if (configurator == null)
+            throw new InvalidOperationException("configurator is null");
 
-        private void OnDisable()
-        {
-            _cubeViewSpawner.CreatedCubeView -= OnGetShape;
-        }
+        _cubeViewSpawner.CreateCubes(configurator.CreateConfiguration());
+    }
 
-        internal void Initialize(IProcessable game)
-        {
-            _game = game ?? throw new InvalidOperationException("game is null");
-        }
+    protected override ShapeView Create()
+    {
+        ShapeView @object = Instantiate(Prefab);
+        @object.Initialize(_modelFactory.Create(@object.transform, @object.GetMover(), @object.DurationOfReturn), _height);
 
-        internal void CreateShape(ICubeConfigurator configurator)
-        {
-            if (configurator == null)
-                throw new InvalidOperationException("configurator is null");
+        return @object;
+    }
 
-            _cubeViewSpawner.CreateCubes(configurator.CreateConfiguration());
-        }
+    protected override void OnRelease(ShapeView shape)
+    {
+        if (shape == null)
+            throw new InvalidOperationException("shape is null");
 
-        protected override ShapeView Create()
-        {
-            ShapeView @object = Instantiate(Prefab);
-            @object.Initialize(_modelFactory.Create(@object.transform, @object.GetMover(), @object.DurationOfReturn));
+        base.OnRelease(shape);
 
-            return @object;
-        }
+        shape.RemoveCubes();
 
-        protected override void OnRelease(ShapeView shape)
-        {
-            if (shape == null)
-                throw new InvalidOperationException("shape is null");
+        if (shape.IsRestart == false)
+            _game.ProcessStepOverTime();
 
-            base.OnRelease(shape);
+        shape.Released -= Release;
+    }
 
-            shape.RemoveCubes();
+    protected override void OnGet(ShapeView shape)
+    {
+        if (shape == null)
+            throw new InvalidOperationException("shape is null");
 
-            if (shape.IsRestart == false)
-                _game.ProcessStep();
+        base.OnGet(shape);
 
-            shape.Released -= Release;
-        }
+        shape.transform.position = _pointsSpawn[_index].position;
+        shape.SetPosition(_pointsSpawn[_index].position);
+        shape.TakeCubes(_currentCubeViews);
+        shape.Reduce();
+        _index = ++_index % _pointsSpawn.Length;
 
-        protected override void OnGet(ShapeView shape)
-        {
-            if (shape == null)
-                throw new InvalidOperationException("shape is null");
+        CreatedShape?.Invoke(shape.GetShapeModel());
+        shape.Released += Release;
+    }
 
-            base.OnGet(shape);
-
-            shape.transform.position = _pointsSpawn[_index].position;
-            shape.SetPosition(_pointsSpawn[_index].position);
-            shape.TakeCubes(_currentCubeViews);
-            shape.Reduce();
-            _index = ++_index % _pointsSpawn.Length;
-
-            CreatedShape?.Invoke(shape.GetShapeModel());
-            shape.Released += Release;
-        }
-
-        private void OnGetShape(List<CubeView> cubeViews)
-        {
-            _currentCubeViews = cubeViews;
-            Get();
-        }
+    private void OnGetShape(List<CubeView> cubeViews)
+    {
+        _currentCubeViews = cubeViews;
+        Get();
     }
 }
