@@ -24,10 +24,7 @@ public class ShapeMover
         if (transform == null)
             throw new InvalidOperationException("transform is null");
 
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = _height;
-
-        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        Vector3 targetPosition = UserUtilities.GetCursorPosition(_height);
         targetPosition = new Vector3(
             Mathf.Clamp(targetPosition.x, _minPointBorder.x, _maxPointBorder.x), 
             targetPosition.y, 

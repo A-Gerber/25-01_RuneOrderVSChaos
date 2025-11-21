@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-internal class SkillUserView : MonoBehaviour
+public class SkillUserView : MonoBehaviour
 {
     [SerializeField] private Transform _attackZone;
     [SerializeField] private float _speed = 25f;
@@ -24,7 +24,7 @@ internal class SkillUserView : MonoBehaviour
         }
     }
 
-    internal void Initialize(SkillUser skillUser)
+    public void Initialize(SkillUser skillUser)
     {
         if (_skillUser != null)
         {

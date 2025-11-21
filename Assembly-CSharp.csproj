@@ -60,7 +60,6 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f2\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Source\Game\Scripts\UserUtilities.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ProjectileSpawner.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\LineOfFiveCubes.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\LConfiguration.cs" />
@@ -68,21 +67,19 @@
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\Gigant.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\MiddleCubeConfigurator.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\AreaViewFactory.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\SkillView.cs" />
     <Compile Include="Assets\Source\Game\Scripts\GameModel.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\SkillFactory.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\MenuView.cs" />
     <Compile Include="Assets\Source\Game\Scripts\IWinnable.cs" />
     <Compile Include="Assets\Source\Game\Scripts\ICubeConfigurator.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Factory.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\HardCubeConfigurator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Skill.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\LineOfFourCubes.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\SquareOfSixteenCubes.cs" />
     <Compile Include="Assets\Source\Game\Scripts\IConfiguration.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\EnemiesFactory.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ShapeViewSpawner.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Windows\WinGameScreen.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\SkillUserView.cs" />
     <Compile Include="Assets\Source\Game\Scripts\GameView.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\SimpleCubeConfigurator.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\AttackerFactory.cs" />
@@ -92,18 +89,19 @@
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\CubeViewSpawner.cs" />
     <Compile Include="Assets\Source\Game\Scripts\ShapeHandler.cs" />
     <Compile Include="Assets\Source\Game\Scripts\PlayerInputController.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\SkillUser.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\AreaFactoryModel.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ShapeModelFactory.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\ZConfiguration.cs" />
     <Compile Include="Assets\Source\Game\Scripts\ConfigurationGenerator.cs" />
     <Compile Include="Assets\Source\Game\Scripts\IProcessable.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\Windows\MenuScreen.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Windows\EndGameScreen.cs" />
     <Compile Include="Assets\Source\Game\Input\PlayerInput.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\CubesConfiguration.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\TConfiguration.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\StartCubeConfigurator.cs" />
     <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\SquareOfNineCubes.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\IGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -1206,6 +1204,10 @@
     <ProjectReference Include="EnemyModule.csproj">
       <Project>{5673DE17-2EAC-9CEC-C955-AC77B64FFB8F}</Project>
       <Name>EnemyModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="RuneOrderVSChaos.EnemyModule.UserUtilities.csproj">
+      <Project>{E7B88C93-A643-8105-4190-35BE913D7604}</Project>
+      <Name>RuneOrderVSChaos.EnemyModule.UserUtilities</Name>
     </ProjectReference>
     <ProjectReference Include="AreaModule.csproj">
       <Project>{67D42B7F-4BF0-A1DF-A3A3-9F106ADA634B}</Project>

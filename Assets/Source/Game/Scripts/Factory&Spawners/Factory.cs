@@ -11,12 +11,13 @@ public class Factory : MonoBehaviour
     [SerializeField] private PlayerInputController _controller;
     [SerializeField] private Camera _camera;
     [SerializeField] private float _flightAltitude = 2f;
+    [SerializeField] private int _areaSize = 8;
 
     internal GameModel CreateGameModel()
     {
-        AreaModel areaModel = _areaFactory.Create();
+        AreaModel areaModel = _areaFactory.Create(_areaSize);
         _projectileSpawner.Initialize(_enemiesFactory.GetSpawnPosition());
-        AttackerModel attacker = _attackerFactory.Create();
+        AttackerModel attacker = _attackerFactory.Create(_areaSize);
         Skill skill = new Skill();
         SkillUser skillUser = _skillFactory.Create(_areaFactory.MinBorderArea, _areaFactory.MaxBorderArea, _camera.transform.position.y);
 

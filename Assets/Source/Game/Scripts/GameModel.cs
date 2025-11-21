@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-internal class GameModel : IProcessable
+internal class GameModel : IProcessable, IGame
 {
     private const int ShapeCountForCreate = 3;
     private const int StartLevel = 1;
-    private const int StartSkillCount = 5;
+    private const int StartSkillCount = 1;
 
     private readonly ShapeModel[] _shapeModels = new ShapeModel[ShapeCountForCreate];
 
@@ -21,7 +21,7 @@ internal class GameModel : IProcessable
     private SkillUser _skillUser;
 
     private int _index = 0;
-    private int _skillCount = 0;
+    private int _skillCount;
     private int _level;
 
     internal GameModel(AreaModel area, AttackerModel attacker, ShapeViewSpawner shapeViewSpawner, EnemiesFactory enemiesFactory, ICreateableBullets projectileSpawner, PlayerInputController controller, SkillUser skillUser)
@@ -37,15 +37,18 @@ internal class GameModel : IProcessable
         _area.Initialize(_shapeModels);
 
         _shapeViewSpawner.CreatedShape += OnCreateShapeView;  // Подумать как отписаться
-        _controller.SkillButtonClicked += OnUseSkill;  // Подумать как отписаться
+        _controller.UsedSkill += OnUseSkill;  // Подумать как отписаться
+        _attacker.SkillPointsAwarded += OnRewardSkillPoints; // Подумать как отписаться
         Debug.Log("Подумать как отписаться");
     }
 
+    public event Action GameOvered;
+    public event Action GameWined;
     internal event Action Waited; // Как лучше сделать замер времени
-    internal event Action GameOvered;
-    internal event Action GameWined;
     internal event Action<int> LevelUpped;
     internal event Action<int> SkillCountChanged;
+
+    public bool IsPlaying { get; private set; } = false;
 
     public void ProcessStepOverTime()
     {
@@ -53,7 +56,7 @@ internal class GameModel : IProcessable
         Debug.Log("Как лучше сделать замер времени");
     }
 
-    internal void NewGame()
+    public void NewGame()
     {
         _level = StartLevel;
         _skillCount = StartSkillCount;
@@ -61,11 +64,16 @@ internal class GameModel : IProcessable
         SkillCountChanged?.Invoke(_skillCount);
         _index = ShapeCountForCreate;
         _configurationGenerator.StartLevel();
-        CreateShapes();
         CreateEnemy();
+
+        if (IsPlaying)
+            _area.Restart();
+
+        CreateShapes();
+        IsPlaying = true;
     }
 
-    internal void Restart()
+    public void Restart()
     {
         _index = ShapeCountForCreate;
         _configurationGenerator.StartLevel();
@@ -74,7 +82,7 @@ internal class GameModel : IProcessable
         CreateShapes();
     }
 
-    internal void GoToNextLevel()
+    public void GoToNextLevel()
     {
         _level++;
         LevelUpped?.Invoke(_level);
@@ -85,30 +93,34 @@ internal class GameModel : IProcessable
         CreateShapes();
     }
 
+    public void OnRewardSkillPoints(int numberOfSkillPoints)
+    {
+        _skillCount += numberOfSkillPoints;
+        SkillCountChanged?.Invoke(_skillCount);
+    }
+
     internal void ProcessStep()
     {
-        if (_area.TryFindTargetCellsByLines())      
-            Attack();
-        
+        if (_area.TryFindTargetCellsByLines())
+        {
+            _projectileSpawner.CreateBullets(_area.GetPositionTargetCells());
+            _attacker.Attack(_area.CountTargetCells);
+            _area.ReleaseTargetCubes();
+
+            if (_enemy.IsAlive == false)
+                GameWined?.Invoke();
+        }
+
         CreateShapes();
 
-        if (_enemy.IsAlive && _area.IsLostGame() && _skillCount <= 0)        
-            GameOvered?.Invoke();       
+        if (_enemy.IsAlive && _area.IsLostGame() && _skillCount <= 0)
+            GameOvered?.Invoke();
     }
 
     internal void PressSkillButton()
     {
-        _skillUser.PressButton();
-    }
-
-    private void Attack()
-    {
-        _projectileSpawner.CreateBullets(_area.GetPositionTargetCells());
-        _attacker.Attack(_area.CountTargetCells);
-        _area.ReleaseTargetCubes();
-
-        if (_enemy.IsAlive == false)
-            GameWined?.Invoke();
+        if (_skillCount > 0)
+            _skillUser.PressButton();
     }
 
     private void CreateShapes()
@@ -135,19 +147,28 @@ internal class GameModel : IProcessable
 
     private void OnUseSkill()
     {
-        if (_skillUser.TryGetSkillCoordinates(out List<LocalPosition> coordinates, _skillCount))
+        if (_skillUser.IsPressedButton)
         {
-            _skillUser.UseSkill();
-            _skillCount--;
-            SkillCountChanged?.Invoke(_skillCount);
-
-            if (_area.TryFindTargetCellsByCoordinates(coordinates))
+            Debug.Log("OnUseSkill");
+            if (_skillUser.TryGetSkillCoordinates(out List<LocalPosition> coordinates, _skillCount))
             {
-                Attack();
-            }
-        }
+                _skillUser.UseSkill();
+                _skillCount--;
+                SkillCountChanged?.Invoke(_skillCount);
 
-        if (_enemy.IsAlive && _area.IsLostGame() && _skillCount <= 0)
-            GameOvered?.Invoke();
+                if (_area.TryFindTargetCellsByCoordinates(coordinates))
+                   {
+                    _projectileSpawner.CreateBullets(_area.GetPositionTargetCells());
+                    _attacker.UseSkill(_area.CountTargetCells);
+                    _area.ReleaseTargetCubes();
+
+                    if (_enemy.IsAlive == false)
+                        GameWined?.Invoke();
+                }
+            }
+
+            if (_enemy.IsAlive && _area.IsLostGame() && _skillCount <= 0)
+                GameOvered?.Invoke();
+        }
     }
 }

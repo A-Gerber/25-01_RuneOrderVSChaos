@@ -10,7 +10,7 @@ public class PlayerInputController : MonoBehaviour
     private ShapeHandler _shapeHandler;
     private PlayerInput _playerInput;
 
-    internal event Action SkillButtonClicked;
+    internal event Action UsedSkill;
 
     private void Awake()
     {
@@ -44,6 +44,6 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnUseSkill(InputAction.CallbackContext context)
     {
-        SkillButtonClicked?.Invoke();
+        UsedSkill?.Invoke();
     }
 }

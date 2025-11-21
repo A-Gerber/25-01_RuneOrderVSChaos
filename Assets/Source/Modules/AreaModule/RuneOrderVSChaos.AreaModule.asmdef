@@ -1,3 +1,16 @@
 {
-	"name": "AreaModule"
+    "name": "AreaModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:cac9ca863674da84faf60a9c884496bc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

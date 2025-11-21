@@ -74,7 +74,6 @@
     <Compile Include="Assets\Source\Modules\AreaModule\Scripts\Area\FinderFullCellsInArea.cs" />
     <Compile Include="Assets\Source\Modules\AreaModule\Scripts\Zones\Outzone.cs" />
     <Compile Include="Assets\Source\Modules\AreaModule\Scripts\Shape\ShapeModel.cs" />
-    <Compile Include="Assets\Source\Modules\AreaModule\Scripts\Cube\LocalPosition.cs" />
     <Compile Include="Assets\Source\Modules\AreaModule\Scripts\Shape\ShapeView.cs" />
     <Compile Include="Assets\Source\Modules\AreaModule\Scripts\Shape\ShapeMover.cs" />
     <Compile Include="Assets\Source\Modules\AreaModule\Scripts\Cube\CubeModel.cs" />
@@ -990,6 +989,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="RuneOrderVSChaos.EnemyModule.UserUtilities.csproj">
+      <Project>{E7B88C93-A643-8105-4190-35BE913D7604}</Project>
+      <Name>RuneOrderVSChaos.EnemyModule.UserUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

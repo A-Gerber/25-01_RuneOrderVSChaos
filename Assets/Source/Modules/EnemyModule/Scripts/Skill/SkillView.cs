@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
 
-internal class SkillView : MonoBehaviour
+public class SkillView : MonoBehaviour
 {
     private Skill _skill;
 
-    internal void Initialize(Skill skill)
+    public void Initialize(Skill skill)
     {
         if (_skill != null)
             _skill.Used -= OnUsed;

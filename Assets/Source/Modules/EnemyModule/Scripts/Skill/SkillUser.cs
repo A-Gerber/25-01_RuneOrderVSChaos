@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-internal class SkillUser
+public class SkillUser
 {
     private Skill _skill;
     private float _minBorderArea;
@@ -10,7 +10,7 @@ internal class SkillUser
     private float _height;
     private bool _isPressedButton = false;
 
-    internal SkillUser(Skill skill, float minBorderArea, float maxBorderArea, float height)
+    public SkillUser(Skill skill, float minBorderArea, float maxBorderArea, float height)
     {
         _skill = skill ?? throw new InvalidOperationException("skill is null");
 
@@ -22,27 +22,17 @@ internal class SkillUser
     internal event Action EnabledAttackZone;
     internal event Action DisabledAttackZone;
 
+    public bool IsPressedButton => _isPressedButton;
     internal float Height => _height;
 
-    internal bool TryGetSkillCoordinates(out List<LocalPosition> coordinates, int skillCount)
+    public bool TryGetSkillCoordinates(out List<LocalPosition> coordinates, int skillCount)
     {
         coordinates = new List<LocalPosition>();
-
-        if (_isPressedButton == false || skillCount <= 0)
-        {
-            DisabledAttackZone?.Invoke();
-            _isPressedButton = false;
-
-            return false;
-        }
-
         _isPressedButton = false;
 
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = _height;
-        Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        Vector3 targetPosition = UserUtilities.GetCursorPosition(_height);
 
-        if (IsInRange(targetPosition.x, _minBorderArea, _maxBorderArea) == false || IsInRange(targetPosition.z, _minBorderArea, _maxBorderArea) == false)
+        if (UserUtilities.IsInRange(targetPosition.x, _minBorderArea, _maxBorderArea) == false || UserUtilities.IsInRange(targetPosition.z, _minBorderArea, _maxBorderArea) == false)
         {
             DisabledAttackZone?.Invoke();
             return false;
@@ -52,13 +42,13 @@ internal class SkillUser
         return true;
     }
 
-    internal void UseSkill()
+    public void UseSkill()
     {
         DisabledAttackZone?.Invoke();
         _skill.Use();
     }
 
-    internal void PressButton()
+    public void PressButton()
     {
         _isPressedButton = true;
         EnabledAttackZone?.Invoke();
@@ -69,13 +59,5 @@ internal class SkillUser
         LocalPosition position = new LocalPosition((int)Mathf.Round(targetPosition.x), (int)Mathf.Round(targetPosition.z));
 
         return _skill.GetSkillCoordinates(position, (int)Mathf.Round(_minBorderArea), (int)Mathf.Round(_maxBorderArea));
-    }
-
-    private  bool IsInRange(float value, float min, float max)
-    {
-        if (min > max)
-            throw new ArgumentException("min должен быть <= max");
-
-        return value >= min && value <= max;
     }
 }

@@ -9,18 +9,29 @@ internal abstract class Window : MonoBehaviour
     protected CanvasGroup WindowGroup => _windowGroup;
     protected Button ActionButton => _actionButton;
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         _actionButton.onClick.AddListener(OnButtonClick);
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         _actionButton.onClick.RemoveListener(OnButtonClick);
     }
 
-    internal abstract void Open();
-    internal abstract void Close();
+    internal virtual void Close()
+    {
+        WindowGroup.alpha = 0f;
+        WindowGroup.blocksRaycasts = false;
+        ActionButton.interactable = false;
+    }
+
+    internal virtual void Open()
+    {
+        WindowGroup.alpha = 1f;
+        WindowGroup.blocksRaycasts = true;
+        ActionButton.interactable = true;
+    }
 
     protected abstract void OnButtonClick();
 }

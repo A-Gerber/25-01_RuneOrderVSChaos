@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-internal class Skill
+public class Skill
 {
     private readonly int[,] _configuration;
     private int _offset = -2;
 
-    internal Skill()
+    public Skill()
     {
         _configuration = new int[,] {
                 { 0, 1, 1, 1, 0 },
@@ -33,7 +33,7 @@ internal class Skill
                     int coordinateX = position.PositionX + i + _offset;
                     int coordinateZ = position.PositionZ + j + _offset;
 
-                    if(IsInRangeInt(coordinateX, minBorderArea, maxBorderArea) && IsInRangeInt(coordinateZ, minBorderArea, maxBorderArea))
+                    if(UserUtilities.IsInRangeInt(coordinateX, minBorderArea, maxBorderArea) && UserUtilities.IsInRangeInt(coordinateZ, minBorderArea, maxBorderArea))
                         coordinates.Add(new LocalPosition(coordinateX, coordinateZ));
                 }
             }
@@ -45,13 +45,5 @@ internal class Skill
     internal void Use()
     {
         Used?.Invoke();
-    }
-
-    private bool IsInRangeInt(int value, int min, int max)
-    {
-        if (min > max)
-            throw new ArgumentException("min должен быть <= max");
-
-        return value >= min && value <= max;
     }
 }

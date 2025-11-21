@@ -1,25 +1,33 @@
 using System;
+using UnityEngine;
+using UnityEngine.UI;
 
 internal class EndGameScreen : Window
 {
-    internal event Action RestartButtonClicked;
+    [SerializeField] private Button _rewardButton;
 
-    internal override void Close()
+    internal event Action RestartButtonClicked;
+    internal event Action RewardButtonClicked;
+
+    protected override void OnEnable()
     {
-        WindowGroup.alpha = 0f;
-        WindowGroup.blocksRaycasts = false;
-        ActionButton.interactable = false;
+        base.OnEnable();
+        _rewardButton.onClick.AddListener(OnRewardButtonClick);
     }
 
-    internal override void Open()
+    protected override void OnDisable()
     {
-        WindowGroup.alpha = 1f;
-        WindowGroup.blocksRaycasts = true;
-        ActionButton.interactable = true;
+        base.OnDisable();
+        _rewardButton.onClick.RemoveListener(OnRewardButtonClick);
     }
 
     protected override void OnButtonClick()
     {
         RestartButtonClicked?.Invoke();
+    }
+
+    private void OnRewardButtonClick()
+    {
+        RewardButtonClicked?.Invoke();
     }
 }
