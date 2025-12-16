@@ -10,7 +10,7 @@ internal class AreaViewFactory : MonoBehaviour
     [SerializeField] private CellView _cellViewPrefab;
     [SerializeField] private AreaView _areaViewPrefab;
 
-    private readonly AreaFactoryModel _areaFactoryModel = new AreaFactoryModel();
+    private readonly AreaModelFactory _areaFactoryModel = new AreaModelFactory();
     private AreaModel _areaModel;
     private AreaView _areaView;
     private CellModel[,] _playField;

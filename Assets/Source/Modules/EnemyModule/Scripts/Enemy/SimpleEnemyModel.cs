@@ -3,22 +3,30 @@ using UnityEngine;
 
 public class SimpleEnemyModel : IEnemy
 {
+    private readonly int _maxHealth;
     private int _health;
+    private float _skillCooldown;
+    private Sprite _icon;
 
-    public SimpleEnemyModel(int health, Vector3 position)
+    public SimpleEnemyModel(int health, float skillCooldown, Sprite icon)
     {
         if (health <= 0)
             throw new ArgumentOutOfRangeException(nameof(health));
 
-        MaxHealth = health;
+        if (skillCooldown <= 0)
+            throw new ArgumentOutOfRangeException(nameof(skillCooldown));
+
+        _icon = icon ?? throw new InvalidOperationException("icon is null");
+        _skillCooldown = skillCooldown;
+        _maxHealth = health;
         SetMaxHealth();
-        Position = position;
     }
 
     internal event Action ChangedHealth;
 
-    internal int MaxHealth { get; private set; }
-    internal Vector3 Position { get; private set; }
+    internal int MaxHealth => _maxHealth;
+    internal float SkillCooldown => _skillCooldown;
+    internal Sprite Icon => _icon;
     internal int Health => _health;
     public bool IsAlive => _health > 0;
 
@@ -33,6 +41,8 @@ public class SimpleEnemyModel : IEnemy
 
             if (_health < 0)
                 _health = 0;
+
+            ChangedHealth?.Invoke();
         }
     }
 
@@ -44,6 +54,7 @@ public class SimpleEnemyModel : IEnemy
 
     internal void SetMaxHealth()
     {
-        _health = MaxHealth;
+        _health = _maxHealth;
+        ChangedHealth?.Invoke();
     }
 }

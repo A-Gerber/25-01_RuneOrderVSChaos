@@ -1,20 +1,43 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-internal class CubeViewSpawner : Spawner<CubeView>
+internal class CubeViewSpawner : Spawner<CubeView>, ICreateableCubesForArea
 {
     private List<LocalPosition> _coordinates;
     private List<CubeView> _currentCubeViews = new List<CubeView>();
+    List<CellModel> _cells = new List<CellModel>();
     private int _index = 0;
+
+    private bool _isSendForShape = true;
 
     internal event Action<List<CubeView>> CreatedCubeView;
 
-    internal void CreateCubes(List<LocalPosition> coordinates)
+    public void CreateCubesForArea(List<LocalPosition> coordinates, List<CellModel> cells)
+    {
+        if (coordinates == null)
+            throw new InvalidOperationException("coordinate is null");
+
+        if (cells == null)
+            throw new InvalidOperationException("cells is null");
+
+        _coordinates = coordinates;
+        _cells = cells;
+        _isSendForShape = false;
+
+        for (int i = 0; i < coordinates.Count; i++)
+        {
+            Get();
+        }
+    }
+
+    internal void CreateCubesForShape(List<LocalPosition> coordinates)
     {
         if (coordinates == null)
             throw new InvalidOperationException("coordinate is null");
 
         _coordinates = coordinates;
+        _isSendForShape = true;
 
         for (int i = 0; i < coordinates.Count; i++)
         {
@@ -49,6 +72,7 @@ internal class CubeViewSpawner : Spawner<CubeView>
 
         cube.SetLocalPosition(_coordinates[_index]);
         _currentCubeViews.Add(cube);
+
         SendCubeViews();
 
         cube.Released += Release;
@@ -58,7 +82,11 @@ internal class CubeViewSpawner : Spawner<CubeView>
     {
         if (_index == _coordinates.Count - 1)
         {
-            CreatedCubeView?.Invoke(_currentCubeViews);
+            if (_isSendForShape)
+                CreatedCubeView?.Invoke(_currentCubeViews);
+            else
+                FillCells();
+
             _index = 0;
             _currentCubeViews.Clear();
         }
@@ -66,5 +94,16 @@ internal class CubeViewSpawner : Spawner<CubeView>
         {
             _index++;
         }
+    }
+
+    private void FillCells()
+    {
+        for (int i = 0; i < _cells.Count; i++)
+        {
+            _currentCubeViews[i].transform.position = new Vector3(_coordinates[i].PositionX,0, _coordinates[i].PositionZ);
+            _cells[i].Take(_currentCubeViews[i].GetCubeModel());
+        }
+
+        _cells.Clear();
     }
 }

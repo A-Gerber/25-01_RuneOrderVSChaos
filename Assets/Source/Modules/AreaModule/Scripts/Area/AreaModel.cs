@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AreaModel
+public class AreaModel : IUseableUserSkills
 {
     private readonly CellModel[,] _playField;
     private readonly List<CellModel> _targetCells = new();
     private readonly FinderFullLinesOfCells _finderFullLines = new();
     private readonly FinderFullCellsInArea _finderInArea = new();
+    private readonly FinderEmptyCell _finderEmptyCell = new();
     private readonly FinderPlacesForShapes _finderPlaces;
     private ShapeModel[] _shapeModel;
 
@@ -22,7 +23,7 @@ public class AreaModel
         _finderPlaces = new(_playField);
     }
 
-    public int CountTargetCells => _targetCells.Count;
+    public int CountTargetDamage { get; private set; } = 0;
 
     public void Initialize(ShapeModel[] shapeModels)
     {
@@ -44,6 +45,7 @@ public class AreaModel
         if (_finderFullLines.TryGetFullCellsByLines(out List<CellModel> targetCells, _playField))
         {
             _targetCells.AddRange(targetCells);
+            CountTargetDamage = _targetCells.Count;
 
             return true;
         }
@@ -51,16 +53,27 @@ public class AreaModel
         return false;
     }
 
-    public bool TryFindTargetCellsByCoordinates(List<LocalPosition> coordinates)
+    public bool TryFindTargetCellsForStrike(List<LocalPosition> coordinates)
     {
         if (_finderInArea.TryGetFullCellsByArea(out List<CellModel> targetCells, _playField, coordinates))
         {
             _targetCells.AddRange(targetCells);
+            CountTargetDamage = _targetCells.Count;
 
             return true;
         }
 
         return false;
+    }
+
+    public void SetCountTargetDamage(int count)
+    {
+        CountTargetDamage = count;
+    }
+
+    public List<CellModel>  GetCellsForFilling(out List<LocalPosition> cellCoordinates, List<LocalPosition> skillCoordinates)
+    {
+        return _finderEmptyCell.FindCellsForFilling(out cellCoordinates, skillCoordinates, _playField);
     }
 
     public void ReleaseTargetCubes()

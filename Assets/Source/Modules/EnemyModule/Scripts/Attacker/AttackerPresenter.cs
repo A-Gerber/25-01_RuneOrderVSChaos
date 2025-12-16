@@ -10,10 +10,7 @@ public class AttackerPresenter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textIncreasedCombo;
     [SerializeField] private TextMeshProUGUI _textGood;
     [SerializeField] private TextMeshProUGUI _textExcellent;
-    [SerializeField] private float _textHeight = 18f;
-    [SerializeField] private float _timeframeOfCombo = 3f;
     [SerializeField] private float _delayInShowScored = 0.5f;
-    [SerializeField] private int _divider = 5;
     [SerializeField] private int _numberSimpleCombo = 1;
 
     [Header("Shake")]
@@ -27,10 +24,12 @@ public class AttackerPresenter : MonoBehaviour
 
     private AttackerModel _attackerModel;
     private CameraShaker _cameraShaker;
-    private int _totalComboNumber = 0;
     private WaitForSeconds _waitTimeframe;
     private WaitForSeconds _waitDelay;
     private Coroutine _coroutine;
+
+    private int _comboSkillPointsInterval;
+    private int _totalComboNumber = 0;
     private bool _isOnCountdown = false;
 
     private void Awake()
@@ -40,7 +39,6 @@ public class AttackerPresenter : MonoBehaviour
         _textIncreasedCombo.alpha = 0f;
         _textGood.alpha = 0f;
         _textExcellent.alpha = 0f;
-        _waitTimeframe = new WaitForSeconds(_timeframeOfCombo);
         _waitDelay = new WaitForSeconds(_delayInShowScored);
         _cameraShaker = new CameraShaker(_cameraTransform, _perlinNoiseTimeScale, _perlinNoiseAmplitudeCurve);
     }
@@ -57,6 +55,7 @@ public class AttackerPresenter : MonoBehaviour
             _attackerModel.FilledInLines -= OnFillInLine;
             _attackerModel.CubesReleased -= OnShowScored;
             _attackerModel.UsedSkill -= OnUseSkill;
+            _attackerModel.UpdatedParametrs -= OnUpdateParametrs;
         }
 
         _attackerModel = attackerModel ?? throw new InvalidOperationException("attackerModel is null");
@@ -64,6 +63,13 @@ public class AttackerPresenter : MonoBehaviour
         _attackerModel.FilledInLines += OnFillInLine;
         _attackerModel.CubesReleased += OnShowScored;
         _attackerModel.UsedSkill += OnUseSkill;
+        _attackerModel.UpdatedParametrs += OnUpdateParametrs;
+    }
+
+    private void OnUpdateParametrs()
+    {
+        _comboSkillPointsInterval = _attackerModel.ComboSkillPointsInterval;
+        _waitTimeframe = new WaitForSeconds(_attackerModel.TimeFrameOfCombo);
     }
 
     private void OnUseSkill()
@@ -98,11 +104,11 @@ public class AttackerPresenter : MonoBehaviour
         {
             text = _textGood;
         }
-        else if (_totalComboNumber >= _divider)
+        else if (_totalComboNumber >= _comboSkillPointsInterval)
         {
-            _attackerModel.SendNumberOfSkillPoints(_totalComboNumber / _divider);
+            _attackerModel.SendNumberOfSkillPoints(_totalComboNumber / _comboSkillPointsInterval);
 
-            if (_totalComboNumber % _divider == 0)
+            if (_totalComboNumber % _comboSkillPointsInterval == 0)
             {
                 text = _textExcellent;
             }

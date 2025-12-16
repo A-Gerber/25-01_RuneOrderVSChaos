@@ -22,6 +22,12 @@ public class CellModel
 
     internal bool IsBusy => _isBusy;
 
+    public void Take(CubeModel cube)
+    {
+        _cube = cube ?? throw new InvalidOperationException("cube is null");
+        _isBusy = true;
+    }
+
     internal void ChangeColor()
     {
         if (_currentColor != _selectColor)
@@ -38,12 +44,6 @@ public class CellModel
             _currentColor = _defaultColor;
             ChangedColor?.Invoke(_currentColor);
         }
-    }
-
-    internal void Take(CubeModel cube)
-    {
-        _cube = cube ?? throw new InvalidOperationException("cube is null");
-        _isBusy = true;
     }
 
     internal CubeModel GetCube()

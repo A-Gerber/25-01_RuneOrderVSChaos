@@ -1,9 +1,16 @@
+using System;
 using System.Collections.Generic;
 
 internal class FinderFullCellsInArea
 {
     internal bool TryGetFullCellsByArea(out List<CellModel> targetCells, CellModel[,] playField, List<LocalPosition> coordinates)
     {
+        if (playField == null)
+            throw new InvalidOperationException("playField is null");
+
+        if (coordinates == null)
+            throw new InvalidOperationException("coordinates is null");
+
         targetCells = new List<CellModel>();
         bool hasBusyCell = false;
 

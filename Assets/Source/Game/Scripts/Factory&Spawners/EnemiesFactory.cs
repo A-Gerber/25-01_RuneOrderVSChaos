@@ -5,34 +5,23 @@ using UnityEngine.UI;
 
 internal class EnemiesFactory : MonoBehaviour
 {
-    [SerializeField] private EnemyView _simpleEnemyPrefab;
-    [SerializeField] private Transform _pointSpawn;
-    [SerializeField] private Transform _enemyContainer;
-    [SerializeField] private TextMeshProUGUI _text;
-    [SerializeField] private Slider _slider;
-    [SerializeField] private float _smoothEffectTime = 0.25f;
-    [SerializeField] private int _startEnemyHealth = 80;
+    [SerializeField] private EnemyPresenter _enemyPresenter;
+    [SerializeField] private int _startEnemyHealth = 50;
     [SerializeField] private int _increase = 20;
     [SerializeField] private int _divider = 3;
+    [SerializeField] private int _skillCooldown = 3;
+    [SerializeField] private Sprite _simpleEnemy;
 
-    private EnemyView _enemyView;
-
-    private void Awake()
+    internal Vector3 GetEnemyPosition()
     {
-        _enemyView = Instantiate(_simpleEnemyPrefab, _pointSpawn.position, Quaternion.identity, _enemyContainer);
-        _enemyView.Initialize(_text, _slider, _smoothEffectTime);
-    }
-
-    internal Vector3 GetSpawnPosition()
-    {
-        return _pointSpawn.position;
+        return _enemyPresenter.transform.position;
     }
 
     internal IEnemy Create(int level)
     {
         int health = CalculateHealth(level);
-        SimpleEnemyModel enemy = new SimpleEnemyModel(health, _pointSpawn.position);
-        _enemyView.SetEnemy(enemy);
+        SimpleEnemyModel enemy = new SimpleEnemyModel(health, _skillCooldown, _simpleEnemy);
+        _enemyPresenter.SetEnemy(enemy);
 
         return enemy;
     }

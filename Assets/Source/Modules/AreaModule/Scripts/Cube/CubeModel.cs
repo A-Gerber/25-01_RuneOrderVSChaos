@@ -8,6 +8,7 @@ public class CubeModel
     private readonly float _distanceRaycast;
     private readonly MoverTo _moverTo;
     private CellView _cellView;
+    private ILiftable _shape;
 
     public CubeModel(Transform transform, float durationLanding, float distanceRaycast)
     {
@@ -25,8 +26,14 @@ public class CubeModel
     }
 
     internal LocalPosition LocalPosition { get; private set; }
+    internal ILiftable Shape => _shape;
 
     internal event Action Released;
+
+    internal void SetLiftableShape(ILiftable shape)
+    {
+        _shape = shape;
+    }
 
     internal void TrackLanding()
     {

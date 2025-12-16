@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 internal class FinderPlacesForShapes
 {
@@ -12,6 +13,9 @@ internal class FinderPlacesForShapes
 
     internal List<LocalPosition> ShiftPositionByOffset(List<LocalPosition> positions, LocalPosition offset, bool positiveShift)
     {
+        if (positions == null)
+            throw new InvalidOperationException("positions is null");
+
         List<LocalPosition> newPositions = new();
 
         int coefficient;
@@ -29,6 +33,9 @@ internal class FinderPlacesForShapes
 
     internal bool IsCellsFreeForShape(List<LocalPosition> offsetPositions, LocalPosition cellPosition)
     {
+        if (offsetPositions == null)
+            throw new InvalidOperationException("offsetPositions is null");
+
         List<LocalPosition> cubePositionsInAreaCoordinates = ShiftPositionByOffset(offsetPositions, cellPosition, true);
         List<CellModel> checkCells = new List<CellModel>();
 

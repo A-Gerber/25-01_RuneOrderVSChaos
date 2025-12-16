@@ -31,9 +31,14 @@ public class CubeView : MonoBehaviour
         LocalPosition = new Vector3(position.PositionX, 0, position.PositionZ);
     }
 
-    internal CubeModel GetCubeModel()
+    public CubeModel GetCubeModel()
     {
         return _cubeModel;
+    }
+
+    public ILiftable GetLiftableShape()
+    {
+        return _cubeModel.Shape;
     }
 
     private void OnRelease()

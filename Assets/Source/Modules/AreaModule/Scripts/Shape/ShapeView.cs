@@ -22,7 +22,6 @@ public class ShapeView : MonoBehaviour
 
     public float DurationOfReturn => _durationOfReturn;
     public bool IsRestart { get; private set; } = false;
-    public bool IsRaised => _shapeModel.IsRaised;
 
     private void Awake()
     {
@@ -31,7 +30,7 @@ public class ShapeView : MonoBehaviour
 
     private void Update()
     {
-        if (IsRaised)
+        if (_shapeModel.IsRaised)
             _shapeModel.Raise();
     }
 
@@ -110,16 +109,6 @@ public class ShapeView : MonoBehaviour
     public ShapeModel GetShapeModel()
     {
         return _shapeModel;
-    }
-
-    public void Raise()
-    {
-        _shapeModel.SetStatusRaised();
-    }
-
-    public void Put()
-    {
-        _shapeModel.Put();
     }
 
     private void OnRelease(bool value)

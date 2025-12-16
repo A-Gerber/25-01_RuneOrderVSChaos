@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
 
 internal class FinderFullLinesOfCells
 {
     internal bool TryGetFullCellsByLines(out List<CellModel> tempCells, CellModel[,] playField)
     {
+        if (playField == null)
+            throw new InvalidOperationException("playField is null");
+
         tempCells = CheckLineCells(true, playField);
         List<CellModel> horizontalCells = CheckLineCells(false, playField);
 

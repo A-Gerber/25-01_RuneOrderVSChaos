@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShapeModel
+public class ShapeModel : ILiftable
 {
     private readonly List<CubeModel> _cubeModels = new();
     private readonly MoverTo _moverTo;
@@ -12,6 +12,7 @@ public class ShapeModel
     private Vector3 _startPosition;
 
     private bool _isBackStartPosition = false;
+    private bool _isRaised = false;
 
     public ShapeModel(ShapeMover mover, Transform transform, float durationOfReturn)
     {
@@ -27,8 +28,33 @@ public class ShapeModel
 
     internal event Action<bool> ReleasedOnRestart;
 
-    internal bool IsRaised { get; private set; } = false;
+    public bool IsRaised => _isRaised;
     internal bool IsRelease => _cubeModels.Count == 0;
+
+    public void Put()
+    {
+        if (IsFreeSpace())
+        {
+            foreach (var cubeModel in _cubeModels)
+            {
+                cubeModel.Land();
+            }
+
+            _isRaised = false;
+            ReleasedOnRestart?.Invoke(false);
+        }
+        else
+        {
+            _isBackStartPosition = true;
+            _moverTo.MoveTo(_startPosition, _durationOfReturn);
+        }
+    }
+
+    public void SetStatusRaised()
+    {
+        _isRaised = true;
+        _isBackStartPosition = false;
+    }
 
     internal void SetPosition(Vector3 startPosition)
     {
@@ -41,7 +67,10 @@ public class ShapeModel
     internal void TakeCubes(List<CubeModel> cubeModels)
     {
         foreach (var cube in cubeModels)
+        {
             _cubeModels.Add(cube);
+            cube.SetLiftableShape(this);
+        }
     }
 
     internal void RemoveCubes()
@@ -59,15 +88,9 @@ public class ShapeModel
         ReleasedOnRestart?.Invoke(true);
     }
 
-    internal void SetStatusRaised()
-    {
-        IsRaised = true;
-        _isBackStartPosition = false;
-    }
-
     internal void SetStatusOnStartPoint()
     {
-        IsRaised = false;
+        _isRaised = false;
     }
 
     internal void Raise()
@@ -78,25 +101,6 @@ public class ShapeModel
         {
             foreach (var cubeModel in _cubeModels)
                 cubeModel.TrackLanding();
-        }
-    }
-
-    internal void Put()
-    {
-        if (IsFreeSpace())
-        {
-            foreach (var cubeModel in _cubeModels)
-            {
-                cubeModel.Land();
-            }
-
-            IsRaised = false;
-            ReleasedOnRestart?.Invoke(false);
-        }
-        else
-        {
-            _isBackStartPosition = true;
-            _moverTo.MoveTo(_startPosition, _durationOfReturn);
         }
     }
 

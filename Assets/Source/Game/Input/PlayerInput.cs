@@ -94,7 +94,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""TakeShape"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""f1d2c3bd-b8c2-47c0-9938-cd9c99c6aa62"",
                     ""expectedControlType"": """",
                     ""processors"": """",
@@ -125,7 +125,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""b0ecb6a3-8726-47b7-a79f-427ea3f5a942"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""Hold(duration=0.1)"",
+                    ""interactions"": ""Press(behavior=1)"",
                     ""processors"": """",
                     ""groups"": "";Mouse"",
                     ""action"": ""TakeShape"",
@@ -136,7 +136,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""45c9009d-b70f-48ff-9e12-84540f045dd2"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""SlowTap"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": "";Mouse"",
+                    ""action"": ""PutShape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d594bf83-2337-42ae-a46a-47c100040a54"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Mouse"",
                     ""action"": ""PutShape"",

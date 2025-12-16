@@ -36,7 +36,12 @@ internal class ShapeViewSpawner : Spawner<ShapeView>
         if (configurator == null)
             throw new InvalidOperationException("configurator is null");
 
-        _cubeViewSpawner.CreateCubes(configurator.CreateConfiguration());
+        _cubeViewSpawner.CreateCubesForShape(configurator.CreateConfiguration());
+    }
+
+    internal ICreateableCubesForArea GetCubesSpawner()
+    {
+        return _cubeViewSpawner;
     }
 
     protected override ShapeView Create()
