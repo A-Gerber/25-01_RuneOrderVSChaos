@@ -1,55 +1,61 @@
 using System;
-using UnityEngine;
 
-public class CellModel
+public class CellModel : ITakeable
 {
-    private Color _defaultColor = Color.gray;
-    private Color _selectColor = Color.cyan;
-
-    private CubeModel _cube;
+    private IReleaseable _item;
     private bool _isBusy = false;
     private LocalPosition _position;
-    private Color _currentColor;
 
     public CellModel(LocalPosition position)
     {
         _position = position;
     }
 
-    internal event Action<Color> ChangedColor;
+    internal event Action ChangedDisplayRune;
 
     public LocalPosition Position => _position;
 
-    internal bool IsBusy => _isBusy;
+    public bool IsBusy => _isBusy;
+    internal bool IsBusyByStalactite => _item is Stalactite;
+    internal bool IsEnableRune { get; private set; } = true;
 
-    public void Take(CubeModel cube)
+    public void Take(IReleaseable item)
     {
-        _cube = cube ?? throw new InvalidOperationException("cube is null");
+        _item = item ?? throw new InvalidOperationException("item is null");
         _isBusy = true;
     }
 
-    internal void ChangeColor()
+    internal void EnableRune()
     {
-        if (_currentColor != _selectColor)
+        if (IsEnableRune == false)
         {
-            _currentColor = _selectColor;
-            ChangedColor?.Invoke(_currentColor);
+            IsEnableRune = true;
+            ChangedDisplayRune?.Invoke();
         }
     }
 
-    internal void SetDefaultColor()
+    internal void DisableRune()
     {
-        if (_currentColor != _defaultColor)
+        if (IsEnableRune)
         {
-            _currentColor = _defaultColor;
-            ChangedColor?.Invoke(_currentColor);
+            IsEnableRune = false;
+            ChangedDisplayRune?.Invoke();
         }
     }
 
-    internal CubeModel GetCube()
+    internal IReleaseable GetItemWhenRestarting()
     {
         _isBusy = false;
+        return _item;
+    }
 
-        return _cube;
+    internal IReleaseable GetItem()
+    {
+        return _item;
+    }
+
+    internal void Release—ell()
+    {
+        _isBusy = false;
     }
 }

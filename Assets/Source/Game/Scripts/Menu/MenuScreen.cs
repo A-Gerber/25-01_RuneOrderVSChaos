@@ -52,7 +52,6 @@ internal class MenuScreen : Window
 
     private void OnSettingsButtonClick()
     {
-        Debug.Log("OnSettingsButtonClick");
         SettingsButtonClicked?.Invoke();
     }
 }

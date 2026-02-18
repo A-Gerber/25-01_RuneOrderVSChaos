@@ -61,15 +61,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Attacker\AttackerModel.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\IPerformableAttack.cs" />
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\IRestartable.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\WitchOfChaos.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Skills\FreezingEffect.cs" />
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Attacker\AttackerPresenter.cs" />
-    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\SimpleEnemyModel.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Skills\GroundImpact.cs" />
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\IDamageable.cs" />
-    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\IceDemon.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Greenskin.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Freezer.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Skills\GroundImpactEffect.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Skills\IEnemySkill.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\IChangeableHealthEnemy.cs" />
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\IEnemy.cs" />
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\WizardProjectile.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Skills\FreezingSkill.cs" />
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Attacker\CameraShaker.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Attacker\IConfigurableFromSkillSide.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\Skills\HealingSkill.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Attacker\ScoreСounter.cs" />
     <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\EnemyPresenter.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Attacker\ScoreСounterPresenter.cs" />
+    <Compile Include="Assets\Source\Modules\EnemyModule\Scripts\Enemy\EarthDemon.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Source\Modules\EnemyModule\RuneOrderVSChaos.EnemyModule.asmdef" />

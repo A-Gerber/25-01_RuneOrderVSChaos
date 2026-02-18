@@ -12,16 +12,13 @@ internal class AreaModelFactory
         return area;
     }
 
-    internal CellModel[,] CreateCells(int size, int originByX, int originByZ)
+    internal CellModel[,] CreateCells()
     {
-        if (size <= 0)
-            throw new ArgumentOutOfRangeException(nameof(size));
+        CellModel[,] cells = new CellModel[UserUtilities.AreaSize, UserUtilities.AreaSize];
 
-        CellModel[,] cells = new CellModel[size, size];
-
-        for (int x = originByX; x < size; x++)
+        for (int x = UserUtilities.OriginByX; x < UserUtilities.AreaSize; x++)
         {
-            for (int z = originByZ; z < size; z++)
+            for (int z = UserUtilities.OriginByZ; z < UserUtilities.AreaSize; z++)
             {
                 cells[x, z] = new CellModel(new LocalPosition(x, z));
             }

@@ -14,7 +14,7 @@ internal class ConfigurationGenerator
 
     internal ConfigurationGenerator(int startLevel)
     {
-        if (startLevel < 1)
+        if (startLevel < 0)
             throw new ArgumentOutOfRangeException(nameof(startLevel));
 
         _startLevel = startLevel;
@@ -26,10 +26,10 @@ internal class ConfigurationGenerator
         _configurators.Add(new HardCubeConfigurator());
     }
 
-    internal ICubeConfigurator GenerateConfiguration(int level)
+    internal ICubeConfigurator GetCubeConfigurator(int level)
     {
-        if (level == _startLevel)
-            return _configurators[0];
+        if (level <= 10) // _startLevel
+            return _configurators[4];
 
         int index = (int)(SecondIndex + (level * LevelCoefficient + Time.time - _startTime) / IndexPerSeconds);
         index = Math.Clamp(index, SecondIndex, _configurators.Count - 1);

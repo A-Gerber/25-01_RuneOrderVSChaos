@@ -6,44 +6,71 @@ using UnityEngine.UI;
 
 public class EnemyPresenter : MonoBehaviour
 {
-    private const float Delay = 0.01f;
+    private const float DelaySlider = 0.01f;
 
     [SerializeField] private Image _enemyView;
     [SerializeField] private TextMeshProUGUI _text;
     [SerializeField] private Slider _slider;
     [SerializeField] private float _smoothEffectTime = 0.25f;
 
-    private SimpleEnemyModel _enemyModel;
+    private IEnemy _enemy;
+    private IPerformableAttack _game;
     private Coroutine _coroutine;
-    private WaitForSeconds _wait;
+    private WaitForSeconds _waitForSlider;
+    private float _currentTime;
 
     private void Awake()
     {
-        _wait = new WaitForSeconds(Delay);
+        _waitForSlider = new WaitForSeconds(DelaySlider);
+    }
+
+    private void FixedUpdate()
+    {
+        if (_enemy == null)
+            return;
+
+        _currentTime -= Time.fixedDeltaTime;
+
+        if (_currentTime <= 0f && _enemy.IsAlive)
+        {
+            _enemy.UseSkill();
+            _currentTime = _enemy.SkillCooldown;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out WizardProjectile bullet))       
-            bullet.Release();       
+        if (other.TryGetComponent(out WizardProjectile bullet))
+        {
+            bullet.Release();
+
+            if (_game.CanAttack)
+                _game.Attack();
+        }
     }
 
-    public void SetEnemy(SimpleEnemyModel simpleEnemyModel)
+    public void SetGame(IPerformableAttack game)
     {
-        if (_enemyModel != null)
-            _enemyModel.ChangedHealth -= Show;
+        _game = game ?? throw new InvalidOperationException("game is null");
+    }
 
-        _enemyModel = simpleEnemyModel ?? throw new InvalidOperationException("simpleEnemyModel is null");
+    public void SetEnemy(IEnemy enemy)
+    {
+        if (_enemy != null)
+            _enemy.ChangedHealth -= Show;
 
-        _enemyModel.ChangedHealth += Show;
-        _enemyModel.SetMaxHealth();
-        _enemyView.sprite = _enemyModel.Icon;
+        _enemy = enemy ?? throw new InvalidOperationException("enemy is null");
+        _currentTime = _enemy.SkillCooldown;
+
+        _enemy.ChangedHealth += Show;
+        _enemy.UpdateHealth();
+        _enemyView.sprite = _enemy.Icon;
     }
 
     private void Show()
     {
-        _text.text = $"{_enemyModel.Health} / {_enemyModel.MaxHealth}";
-        float sliderValue = (float)_enemyModel.Health / _enemyModel.MaxHealth;
+        _text.text = $"{_enemy.Health} / {_enemy.MaxHealth}";
+        float sliderValue = (float)_enemy.Health / _enemy.MaxHealth;
 
         if (_coroutine != null)
             StopCoroutine(_coroutine);
@@ -57,7 +84,7 @@ public class EnemyPresenter : MonoBehaviour
 
         while (Mathf.Approximately(_slider.value, targetValue) == false)
         {
-            yield return _wait;
+            yield return _waitForSlider;
             _slider.value = Mathf.MoveTowards(_slider.value, targetValue, step * Time.deltaTime);
         }
     }

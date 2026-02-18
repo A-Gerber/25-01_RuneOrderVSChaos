@@ -1,15 +1,15 @@
 using System;
 using UnityEngine;
 
-public class AreaView : MonoBehaviour, IChangeableColor
+public class AreaView : MonoBehaviour, IDisplayChangeable
 {
     [SerializeField] private Transform _cellContainer;
 
     private AreaModel _area;
 
-    public void ChangeColorCells()
+    public void ChangeDisplayRune()
     {
-        _area.ChangeColorCells();
+        _area.DisableRunes();
     }
 
     public void Initialize(AreaModel area)

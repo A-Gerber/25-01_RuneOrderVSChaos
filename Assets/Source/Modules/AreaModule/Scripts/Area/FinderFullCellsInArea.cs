@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 internal class FinderFullCellsInArea
 {
-    internal bool TryGetFullCellsByArea(out List<CellModel> targetCells, CellModel[,] playField, List<LocalPosition> coordinates)
+    internal bool TryGetBusyCellsByArea(out List<CellModel> targetCells, CellModel[,] playField, List<LocalPosition> coordinates)
     {
         if (playField == null)
             throw new InvalidOperationException("playField is null");
@@ -20,7 +20,7 @@ internal class FinderFullCellsInArea
             {
                 for (int j = 0; j < playField.GetLength(1); j++)
                 {
-                    if (LocalPositionsComparator.IsEqualPosition(coordinate, playField[i, j].Position) && playField[i, j].IsBusy)
+                    if (UserUtilities.IsEqualPosition(coordinate, playField[i, j].Position) && playField[i, j].IsBusy)
                     {
                         targetCells.Add(playField[i, j]);
                         hasBusyCell = true;

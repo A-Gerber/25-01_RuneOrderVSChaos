@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AreaModel : IUseableUserSkills
+public class AreaModel : IUseableUserSkills, IUseableEnemySkills
 {
     private readonly CellModel[,] _playField;
     private readonly List<CellModel> _targetCells = new();
@@ -10,7 +10,7 @@ public class AreaModel : IUseableUserSkills
     private readonly FinderFullCellsInArea _finderInArea = new();
     private readonly FinderEmptyCell _finderEmptyCell = new();
     private readonly FinderPlacesForShapes _finderPlaces;
-    private ShapeModel[] _shapeModel;
+    private Shape[] _shapeModel;
 
     private int _index = 0;
 
@@ -24,20 +24,18 @@ public class AreaModel : IUseableUserSkills
     }
 
     public int CountTargetDamage { get; private set; } = 0;
+    public int CountTargets => _targetCells.Count;
 
-    public void Initialize(ShapeModel[] shapeModels)
+
+    public void Initialize(Shape[] shapeModels)
     {
         _shapeModel = shapeModels ?? throw new InvalidOperationException("shapeModels is null");
     }
 
-    public void TakeShapeModel(ShapeModel shapeModel)
+    public void TakeShapeModel(Shape shapeModel)
     {
-        if (shapeModel == null)
-            throw new InvalidOperationException("shapeView is null");
-
-        _shapeModel[_index] = shapeModel;
+        _shapeModel[_index] = shapeModel ?? throw new InvalidOperationException("shapeView is null");
         _index = ++_index % _shapeModel.Length;
-
     }
 
     public bool TryFindTargetCellsByLines()
@@ -53,13 +51,35 @@ public class AreaModel : IUseableUserSkills
         return false;
     }
 
-    public bool TryFindTargetCellsForStrike(List<LocalPosition> coordinates)
+    public bool TryFindTargetsForStrike(List<LocalPosition> coordinates, out List<Cube> targets)
     {
-        if (_finderInArea.TryGetFullCellsByArea(out List<CellModel> targetCells, _playField, coordinates))
-        {
-            _targetCells.AddRange(targetCells);
-            CountTargetDamage = _targetCells.Count;
+        targets = new List<Cube>();
 
+        if (_finderInArea.TryGetBusyCellsByArea(out List<CellModel> targetCells, _playField, coordinates))
+        {
+            foreach (var cell in targetCells)
+            {
+                IReleaseable item = cell.GetItem();
+
+                if (item is Cube cube)
+                {
+                    if (cube.IsFrozen)
+                    {
+                        item.Release();
+                    }
+                    else
+                    {
+                        _targetCells.Add(cell);
+                        targets.Add(cube);
+                    }
+                }
+                else
+                {
+                    _targetCells.Add(cell);
+                }
+            }
+
+            CountTargetDamage = _targetCells.Count;
             return true;
         }
 
@@ -71,7 +91,7 @@ public class AreaModel : IUseableUserSkills
         CountTargetDamage = count;
     }
 
-    public List<CellModel>  GetCellsForFilling(out List<LocalPosition> cellCoordinates, List<LocalPosition> skillCoordinates)
+    public List<CellModel> GetCellsForFilling(out List<LocalPosition> cellCoordinates, IReadOnlyList<LocalPosition> skillCoordinates)
     {
         return _finderEmptyCell.FindCellsForFilling(out cellCoordinates, skillCoordinates, _playField);
     }
@@ -80,7 +100,8 @@ public class AreaModel : IUseableUserSkills
     {
         foreach (var cell in _targetCells)
         {
-            cell.GetCube().Release();
+            cell.GetItem().Release();
+            cell.Release—ell();
         }
 
         _targetCells.Clear();
@@ -93,7 +114,7 @@ public class AreaModel : IUseableUserSkills
             for (int j = 0; j < _playField.GetLength(1); j++)
             {
                 if (_playField[i, j].IsBusy)
-                    _playField[i, j].GetCube().Release();
+                    _playField[i, j].GetItemWhenRestarting().Restart();
             }
         }
 
@@ -141,13 +162,67 @@ public class AreaModel : IUseableUserSkills
         return position;
     }
 
-    internal void ChangeColorCells()
+    public bool TryGetCellByCoordinate(out ITakeable cell, LocalPosition position)
+    {
+        cell = null;
+
+        for (int i = 0; i < _playField.GetLength(0); i++)
+        {
+            for (int j = 0; j < _playField.GetLength(1); j++)
+            {
+                if (UserUtilities.IsEqualPosition(position, new LocalPosition(i, j)))
+                {
+                    cell = _playField[i, j];
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public bool TryFreezeRandomShape(ref Vector3 position)
+    {
+        int index = UnityEngine.Random.Range(0, _shapeModel.Length);
+        bool canFreezeShape = false;
+
+        for (int i = 0; i < _shapeModel.Length; i++)
+        {
+            if (_shapeModel[index].IsFrozen)
+            {
+                index = ++index % _shapeModel.Length;
+            }
+            else
+            {
+                canFreezeShape = true;
+                break;
+            }
+        }
+
+        if (canFreezeShape)
+        {
+            if (_shapeModel[index].IsRelease == false)
+            {
+                if (_shapeModel[index].IsRaised)
+                    position = UserUtilities.GetCursorPosition(UserUtilities.CameraHeight);
+                else
+                    position = _shapeModel[index].StartPosition;
+
+                _shapeModel[index].FreezeCubes();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    internal void DisableRunes()
     {
         for (int i = 0; i < _playField.GetLength(0); i++)
         {
             for (int j = 0; j < _playField.GetLength(1); j++)
             {
-                _playField[i, j].SetDefaultColor();
+                _playField[i, j].DisableRune();
             }
         }
     }

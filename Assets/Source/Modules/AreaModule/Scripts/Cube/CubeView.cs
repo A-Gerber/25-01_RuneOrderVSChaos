@@ -1,48 +1,99 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class CubeView : MonoBehaviour
 {
+    [SerializeField] private ParticleSystem _glowEffect;
+    [SerializeField] private ParticleSystem _lightningFlow;
+    [SerializeField] private Transform _icing;
     [SerializeField] private float _durationLanding = 0.5f;
-    [SerializeField] private float _distanceRaycast = 5f;
+    [SerializeField] private float _raycastDistance = 5f;
 
-    private CubeModel _cubeModel;
+    private Cube _cube;
+    private Transform _transform;
+    private Rigidbody _rigidbody;
+    private Quaternion _startRotation;
 
     public event Action<CubeView> Released;
 
     public float DurationLanding => _durationLanding;
-    public float DistanceRaycast => _distanceRaycast;
-    internal Vector3 LocalPosition { get; private set; }
+    public float RaycastDistance => _raycastDistance;
+    public Rigidbody Rigidbody => _rigidbody;
+    public Vector3 LocalPosition { get; private set; }
 
-    public void Initialize(CubeModel cube)
+    private void Awake()
     {
-        if (_cubeModel != null)
-            _cubeModel.Released -= OnRelease;
+        _transform = transform;
+        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.isKinematic = true;
+        _startRotation = _transform.rotation;
+        _lightningFlow.gameObject.SetActive(false);
+    }
 
-        _cubeModel = cube ?? throw new InvalidOperationException("cube is null");
+    public float GetCubeSize()
+    {
+        return GetComponent<BoxCollider>().size.x;
+    }
 
-        _cubeModel.Released += OnRelease;
+    public void Initialize(Cube cube)
+    {
+        if (_cube != null)
+        {
+            _cube.Released -= OnRelease;
+            _cube.ChangedFreeze -= OnChangeFreeze;
+            _cube.ChangedGlowEffect -= OnChangeGlowEffect;
+            _cube.Pushed -= OnPush;
+        }
+
+        _cube = cube ?? throw new InvalidOperationException("cube is null");
+
+        _cube.Released += OnRelease;
+        _cube.ChangedFreeze += OnChangeFreeze;
+        _cube.ChangedGlowEffect += OnChangeGlowEffect;
+        _cube.Pushed += OnPush;
     }
 
     public void SetLocalPosition(LocalPosition position)
     {
-        _cubeModel.SetLocalPosition(position);
+        _cube.SetLocalPosition(position);
 
         LocalPosition = new Vector3(position.PositionX, 0, position.PositionZ);
     }
 
-    public CubeModel GetCubeModel()
+    public void Reset()
     {
-        return _cubeModel;
+        _rigidbody.isKinematic = true;
+        _transform.rotation = _startRotation;
+        _lightningFlow.gameObject.SetActive(false);
     }
 
-    public ILiftable GetLiftableShape()
+    public Cube GetCubeModel()
     {
-        return _cubeModel.Shape;
+        return _cube;
     }
 
     private void OnRelease()
     {
         Released?.Invoke(this);
+    }
+
+    private void OnPush()
+    {
+        _lightningFlow.gameObject.SetActive(true);
+        _lightningFlow.Play();
+    }
+
+    private void OnChangeGlowEffect(bool isNormalSize)
+    {
+        _glowEffect.gameObject.SetActive(isNormalSize);
+    }
+
+    private void OnChangeFreeze(bool isFrozen)
+    {
+        if (isFrozen)
+            _icing.gameObject.SetActive(true);
+        else
+            _icing.gameObject.SetActive(false);
     }
 }

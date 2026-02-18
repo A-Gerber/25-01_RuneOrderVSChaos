@@ -3,28 +3,29 @@ using UnityEngine;
 
 public class AttackerModel : IConfigurableFromSkillSide
 {
-    private readonly int _sizeOfLine;
+
+    private readonly Score—ounter _Òounter;
+    private readonly int _numberSimpleCombo;
     private IDamageable _enemy;
     private int _damagePerProjectile;
-    private int _comboSkillPointsInterval;
-    private float _timeFrameOfCombo;
 
-    public AttackerModel(int sizeOfLine)
+    public AttackerModel(Score—ounter Òounter, int numberSimpleCombo)
     {
-        if (sizeOfLine <= 0)
-            throw new ArgumentOutOfRangeException(nameof(sizeOfLine));
+        if (numberSimpleCombo <= 0)
+            throw new ArgumentOutOfRangeException(nameof(numberSimpleCombo));
 
-        _sizeOfLine = sizeOfLine;
+        _Òounter = Òounter ?? throw new InvalidOperationException("Òounter is null");
+        _numberSimpleCombo = numberSimpleCombo;
+
+        Òounter.SkillPointsAwarded += OnReward;
     }
 
     public event Action<int> SkillPointsAwarded;
-    internal event Action<int> FilledInLines;
     internal event Action<int> CubesReleased;
     internal event Action UsedSkill;
-    internal event Action UpdatedParametrs;
+    internal event Action ShakedCamera;
 
-    internal int ComboSkillPointsInterval => _comboSkillPointsInterval;
-    internal float TimeFrameOfCombo => _timeFrameOfCombo;
+    public int MaxTotalCombo => _Òounter.MaxTotalCombo;
 
     public void SetEnemy(IDamageable enemy)
     {
@@ -36,24 +37,20 @@ public class AttackerModel : IConfigurableFromSkillSide
         if (damagePerProjectile <= 0)
             throw new ArgumentOutOfRangeException(nameof(damagePerProjectile));
 
-        if (comboSkillPointsInterval <= 0)
-            throw new ArgumentOutOfRangeException(nameof(comboSkillPointsInterval));
-
-        if (timeFrameOfCombo <= 0)
-            throw new ArgumentOutOfRangeException(nameof(timeFrameOfCombo));
-
         _damagePerProjectile = damagePerProjectile;
-        _comboSkillPointsInterval = comboSkillPointsInterval;
-        _timeFrameOfCombo = timeFrameOfCombo;
-
-        UpdatedParametrs?.Invoke();
+        _Òounter.SetParameters(comboSkillPointsInterval, timeFrameOfCombo);
     }
 
     public void Attack(int countCells)
     {
         _enemy.TakeDamage(countCells * _damagePerProjectile);
         CubesReleased?.Invoke(countCells * _damagePerProjectile);
-        FilledInLines?.Invoke((int)Mathf.Ceil(countCells / _sizeOfLine));
+
+        int numberOfCombos = (int)Mathf.Ceil(countCells / UserUtilities.AreaSize);
+        _Òounter.CalculateCombo(numberOfCombos);
+
+        if (numberOfCombos > _numberSimpleCombo)
+            ShakedCamera?.Invoke();
     }
 
     public void UseSkill(int countCells)
@@ -63,13 +60,14 @@ public class AttackerModel : IConfigurableFromSkillSide
         UsedSkill?.Invoke();
     }
 
-    internal void SendNumberOfSkillPoints(int count)
+
+    public void ResetCounter()
+    {
+        _Òounter.ResetMaxScore();
+    }
+
+    private void OnReward(int count)
     {
         SkillPointsAwarded?.Invoke(count);
     }
-}
-
-public interface IConfigurableFromSkillSide
-{
-    void SetParameters(int damagePerProjectile, int comboSkillPointsInterval, float timeFrameOfCombo);
 }

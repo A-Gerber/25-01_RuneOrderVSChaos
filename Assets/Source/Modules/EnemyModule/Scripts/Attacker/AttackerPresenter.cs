@@ -6,39 +6,23 @@ using UnityEngine;
 public class AttackerPresenter : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _textScore;
-    [SerializeField] private TextMeshProUGUI _textCombo;
-    [SerializeField] private TextMeshProUGUI _textIncreasedCombo;
-    [SerializeField] private TextMeshProUGUI _textGood;
-    [SerializeField] private TextMeshProUGUI _textExcellent;
     [SerializeField] private float _delayInShowScored = 0.5f;
-    [SerializeField] private int _numberSimpleCombo = 1;
 
     [Header("Shake")]
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private float _perlinNoiseTimeScale = 1f;
     [SerializeField] private AnimationCurve _perlinNoiseAmplitudeCurve;
-
     [SerializeField] private float _amplitude = 5f;
     [SerializeField] private float _duration = 1f;
     [SerializeField] private float _shakeMultiplier = 2f;
 
     private AttackerModel _attackerModel;
     private CameraShaker _cameraShaker;
-    private WaitForSeconds _waitTimeframe;
     private WaitForSeconds _waitDelay;
-    private Coroutine _coroutine;
-
-    private int _comboSkillPointsInterval;
-    private int _totalComboNumber = 0;
-    private bool _isOnCountdown = false;
 
     private void Awake()
     {
         _textScore.alpha = 0f;
-        _textCombo.alpha = 0f;
-        _textIncreasedCombo.alpha = 0f;
-        _textGood.alpha = 0f;
-        _textExcellent.alpha = 0f;
         _waitDelay = new WaitForSeconds(_delayInShowScored);
         _cameraShaker = new CameraShaker(_cameraTransform, _perlinNoiseTimeScale, _perlinNoiseAmplitudeCurve);
     }
@@ -52,81 +36,26 @@ public class AttackerPresenter : MonoBehaviour
     {
         if (_attackerModel != null)
         {
-            _attackerModel.FilledInLines -= OnFillInLine;
             _attackerModel.CubesReleased -= OnShowScored;
             _attackerModel.UsedSkill -= OnUseSkill;
-            _attackerModel.UpdatedParametrs -= OnUpdateParametrs;
+            _attackerModel.ShakedCamera -= OnShakedCamera;
         }
 
         _attackerModel = attackerModel ?? throw new InvalidOperationException("attackerModel is null");
 
-        _attackerModel.FilledInLines += OnFillInLine;
         _attackerModel.CubesReleased += OnShowScored;
         _attackerModel.UsedSkill += OnUseSkill;
-        _attackerModel.UpdatedParametrs += OnUpdateParametrs;
+        _attackerModel.ShakedCamera += OnShakedCamera;
     }
 
-    private void OnUpdateParametrs()
+    private void OnShakedCamera()
     {
-        _comboSkillPointsInterval = _attackerModel.ComboSkillPointsInterval;
-        _waitTimeframe = new WaitForSeconds(_attackerModel.TimeFrameOfCombo);
+        _cameraShaker.MakeShake(_amplitude, _duration);
     }
 
     private void OnUseSkill()
     {
         _cameraShaker.MakeShake(_amplitude, _duration * _shakeMultiplier);
-    }
-
-    private void OnFillInLine(int numberOfCombos)
-    {
-        _totalComboNumber += numberOfCombos;
-
-        if (_totalComboNumber > _numberSimpleCombo)
-            _cameraShaker.MakeShake(_amplitude, _duration);
-
-        ShowComboText();
-
-        if (_isOnCountdown)
-        {
-            if (_coroutine != null)
-                StopCoroutine(_coroutine);
-        }
-
-        _coroutine = StartCoroutine(ResetCounterOverTime());
-        _isOnCountdown = true;
-    }
-
-    private void ShowComboText()
-    {
-        TextMeshProUGUI text;
-
-        if (_totalComboNumber == _numberSimpleCombo)
-        {
-            text = _textGood;
-        }
-        else if (_totalComboNumber >= _comboSkillPointsInterval)
-        {
-            _attackerModel.SendNumberOfSkillPoints(_totalComboNumber / _comboSkillPointsInterval);
-
-            if (_totalComboNumber % _comboSkillPointsInterval == 0)
-            {
-                text = _textExcellent;
-            }
-            else
-            {
-                text = _textIncreasedCombo;
-                text.text = $"COMBO {_totalComboNumber}!";
-            }
-        }
-        else
-        {
-            text = _textCombo;
-            text.text = $"Combo {_totalComboNumber}!";
-        }
-
-        text.rectTransform.position = Input.mousePosition;
-        text.alpha = 1f;
-        StartCoroutine(DisableTextOverTime(text));
     }
 
     private void OnShowScored(int score)
@@ -141,19 +70,12 @@ public class AttackerPresenter : MonoBehaviour
         _textScore.rectTransform.position = position;
         _textScore.text = $"-{score}";
         _textScore.alpha = 1f;
-        StartCoroutine(DisableTextOverTime(_textScore));
+        StartCoroutine(DisableTextOverTime());
     }
 
-    private IEnumerator DisableTextOverTime(TextMeshProUGUI text)
+    private IEnumerator DisableTextOverTime()
     {
         yield return _waitDelay;
-        text.alpha = 0f;
-    }
-
-    private IEnumerator ResetCounterOverTime()
-    {
-        yield return _waitTimeframe;
-        _totalComboNumber = 0;
-        _isOnCountdown = false;
+        _textScore.alpha = 0f;
     }
 }

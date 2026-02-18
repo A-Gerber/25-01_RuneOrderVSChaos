@@ -1,6 +1,6 @@
 internal interface IFactoryData
 {
-    ShapeViewSpawner ShapeViewSpawner { get; }
+    ShapePresenterSpawner ShapePresenterSpawner { get; }
     EnemiesFactory EnemiesFactory { get; }
     ICreateableBullets ProjectileSpawner { get; }
     PlayerInputController PlayerInputController { get; }

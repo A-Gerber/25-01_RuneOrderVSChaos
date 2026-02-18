@@ -2,8 +2,17 @@ using UnityEngine;
 
 internal class ShapeModelFactory
 {
-    internal ShapeModel Create(Transform transform, ShapeMover shapeMover, float durationOfReturn)
+    private readonly float _height;
+
+    public ShapeModelFactory(float height)
     {
-        return new ShapeModel(shapeMover, transform, durationOfReturn);
+        _height = height;
+    }
+
+    internal Shape Create(Transform transform, float durationOfReturn, float speed)
+    {
+        ShapeMover mover = new (speed, _height);
+
+        return new Shape(transform, mover, durationOfReturn);
     }
 }

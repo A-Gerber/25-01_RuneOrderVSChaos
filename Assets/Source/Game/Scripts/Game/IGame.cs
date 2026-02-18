@@ -1,11 +1,11 @@
 using System;
 
-internal interface IGame
+internal interface IGame : IWinable
 {
     event Action GameOvered;
-    event Action GameWined;
 
     bool IsPlaying { get; }
+    int CurrentLevel { get; }
 
     void NewGame();
 
@@ -14,4 +14,9 @@ internal interface IGame
     void GoToNextLevel();
 
     void OnRewardSkillPoints(int numberOfSkillPoints);
+}
+
+internal interface IWinable
+{
+    event Action<int> GameWined;
 }

@@ -7,7 +7,7 @@ internal class HardCubeConfigurator : ICubeConfigurator
 
     internal HardCubeConfigurator()
     {
-        
+        /*
         _configurations.Add(new CConfiguration());
         _configurations.Add(new LConfiguration());
         _configurations.Add(new LConfiguration());
@@ -19,8 +19,9 @@ internal class HardCubeConfigurator : ICubeConfigurator
         _configurations.Add(new SquareOfSixteenCubes());
         _configurations.Add(new TConfiguration());
         _configurations.Add(new TConfiguration());
-        _configurations.Add(new ZConfiguration());
+        _configurations.Add(new ZConfiguration());*/
         //_configurations.Add(new Gigant());
+        _configurations.Add(new SquareOfSixteenCubes());
     }
 
     public List<LocalPosition> CreateConfiguration()

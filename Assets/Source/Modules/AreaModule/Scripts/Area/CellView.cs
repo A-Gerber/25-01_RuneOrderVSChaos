@@ -1,51 +1,46 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
-public class CellView : MonoBehaviour, IChangeableColor
+public class CellView : MonoBehaviour, IDisplayChangeable
 {
-    private CellModel _cell;
-    private Renderer _renderer;
-    private ColorChanger _colorChanger;
-    private Transform _transform;
+    [SerializeField] private ParticleSystem _rune;
 
-    public float CellSize => transform.localScale.x;
+    private CellModel _cell;
+
     internal bool IsBusy => _cell.IsBusy;
 
-    private void Awake()
+    public void ChangeDisplayRune()
     {
-        _renderer = GetComponent<Renderer>();
-        _colorChanger = new ColorChanger(_renderer);
-        _transform = transform;
-    }
-
-    public void ChangeColorCells()
-    {
-        _cell.ChangeColor();
+        _cell.EnableRune();
     }
 
     public void Initialize(CellModel cell)
     {
         if (_cell != null)
-            _cell.ChangedColor -= OnChangeColor;
+            _cell.ChangedDisplayRune -= OnChangeDisplayRune;
 
         _cell = cell ?? throw new InvalidOperationException("cell is null");
 
-        _cell.ChangedColor += OnChangeColor;
+        _cell.ChangedDisplayRune += OnChangeDisplayRune;
+
+        DisableRune();
     }
 
-    internal void Take(CubeModel cube)
+    internal void Take(IReleaseable item)
     {
-        _cell.Take(cube);
+        _cell.Take(item);
     }
 
-    internal void SetDefaultColorCell()
+    internal void DisableRune()
     {
-        _cell.SetDefaultColor();
+        _cell.DisableRune();
     }
 
-    private void OnChangeColor(Color color)
+    private void OnChangeDisplayRune()
     {
-        _colorChanger.ChangeColor(color);
+        if(_cell.IsEnableRune)
+            _rune.gameObject.SetActive(true);
+        else 
+            _rune.gameObject.SetActive(false);
     }
 }

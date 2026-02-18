@@ -24,6 +24,7 @@ internal abstract class Window : MonoBehaviour
         WindowGroup.alpha = 0f;
         WindowGroup.blocksRaycasts = false;
         ActionButton.interactable = false;
+        UserUtilities.UnbanRaycast();
     }
 
     internal virtual void Open()
@@ -31,6 +32,7 @@ internal abstract class Window : MonoBehaviour
         WindowGroup.alpha = 1f;
         WindowGroup.blocksRaycasts = true;
         ActionButton.interactable = true;
+        UserUtilities.BanRaycast();
     }
 
     protected abstract void OnButtonClick();

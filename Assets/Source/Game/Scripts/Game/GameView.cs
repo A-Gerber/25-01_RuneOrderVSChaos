@@ -9,6 +9,7 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
     [SerializeField] private float _delayAttack = 0.35f;
     [SerializeField] private TextMeshProUGUI _textLevel;
     [SerializeField] private TextMeshProUGUI _scillCount;
+    [SerializeField] private TextMeshProUGUI _gameScore;
     [SerializeField] private Button _settingsButton;
     [SerializeField] private Button _menuButton;
     [SerializeField] private Button _skillsButton;
@@ -30,12 +31,13 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
 
     private void OnEnable()
     {
-        //SubscribeGameModel();
+        if (_gameModel != null)
+            SubscribeGameModel();
     }
 
     private void OnDisable()
     {
-        //UnsubscribeGameModel();
+        UnsubscribeGameModel();
     }
 
     public void ResetSkillButtons()
@@ -86,6 +88,7 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
 
     private void OnSkillsButtonClick()
     {
+        //Time.timeScale = 0;
         OpenedSkillsMenu?.Invoke();
     }
 
@@ -105,20 +108,29 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
         _scillCount.text = $"{value}";
     }
 
+    private void OnChangeGameScore(int value)
+    {
+        _gameScore.text = $"{value}";
+    }
+
     private void OnHelp()
     {
         _hintAboutUsingSkill.gameObject.SetActive(true);
     }
 
-    private void OnWaitForDelayAttack()
+    private void OnWaitForDelayAttack(bool isUsedSkill)
     {
-        StartCoroutine(AttackOverTime());
+        StartCoroutine(AttackOverTime(isUsedSkill));
     }
 
-    private IEnumerator AttackOverTime()
+    private IEnumerator AttackOverTime(bool isUsedSkill)
     {
         yield return _waitForAttack;
-        _gameModel.ProcessStep();
+
+        if (isUsedSkill)
+            _gameModel.UseSkill();
+        else
+            _gameModel.ProcessStep();
     }
 
     private void SubscribeGameModel()
@@ -128,6 +140,7 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
         _gameModel.Waited += OnWaitForDelayAttack;
         _gameModel.ChangedLevel += OnChangeLevel;
         _gameModel.SkillCountChanged += OnChangeCountSkill;
+        _gameModel.GameScoreChanged += OnChangeGameScore;
         _gameModel.Helped += OnHelp;
 
         _settingsButton.onClick.AddListener(OnSettingButtonClick);
@@ -146,6 +159,7 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
         _gameModel.Waited -= OnWaitForDelayAttack;
         _gameModel.ChangedLevel -= OnChangeLevel;
         _gameModel.SkillCountChanged -= OnChangeCountSkill;
+        _gameModel.GameScoreChanged -= OnChangeGameScore;
         _gameModel.Helped += OnHelp;
 
         _settingsButton.onClick.RemoveListener(OnSettingButtonClick);

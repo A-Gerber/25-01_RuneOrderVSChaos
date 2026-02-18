@@ -3,30 +3,18 @@ using UnityEngine;
 
 internal class AreaViewFactory : MonoBehaviour
 {
-    private const int OriginByX = 0;
-    private const int OriginByZ = 0;
-    private const float HalfDivider = 2f;
-
     [SerializeField] private CellView _cellViewPrefab;
     [SerializeField] private AreaView _areaViewPrefab;
 
-    private readonly AreaModelFactory _areaFactoryModel = new AreaModelFactory();
+    private readonly AreaModelFactory _areaFactoryModel = new ();
     private AreaModel _areaModel;
     private AreaView _areaView;
     private CellModel[,] _playField;
-    private int _size = 8;
 
-    internal float MinBorderArea => OriginByX - _cellViewPrefab.CellSize / HalfDivider;
-    internal float MaxBorderArea => OriginByX + (_size - 1) + _cellViewPrefab.CellSize / HalfDivider;
-
-    internal AreaModel Create(int size)
+    internal AreaModel Create()
     {
-        if (size <= 0)
-            throw new ArgumentOutOfRangeException(nameof(size));
-
-        _size = size;
         _areaView = Instantiate(_areaViewPrefab, _areaViewPrefab.transform.position, Quaternion.identity);
-        _playField = _areaFactoryModel.CreateCells(_size, OriginByX, OriginByZ);
+        _playField = _areaFactoryModel.CreateCells();
         CreateCellViews();
         _areaModel = _areaFactoryModel.CreateArea(_playField);
         _areaView.Initialize(_areaModel);

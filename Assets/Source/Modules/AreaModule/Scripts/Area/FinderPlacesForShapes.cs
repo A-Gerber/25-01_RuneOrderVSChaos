@@ -45,7 +45,7 @@ internal class FinderPlacesForShapes
             {
                 for (int j = 0; j < _playField.GetLength(1); j++)
                 {
-                    if (LocalPositionsComparator.IsEqualPosition(cubePositionsInAreaCoordinates[k], _playField[i, j].Position))
+                    if (UserUtilities.IsEqualPosition(cubePositionsInAreaCoordinates[k], _playField[i, j].Position))
                         checkCells.Add(_playField[i, j]);
                 }
             }

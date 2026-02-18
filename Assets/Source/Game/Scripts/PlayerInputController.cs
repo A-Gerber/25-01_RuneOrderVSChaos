@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements.Experimental;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -20,7 +19,7 @@ public class PlayerInputController : MonoBehaviour
 
     private void Awake()
     {
-        _shapeLifter = new(_camera, _ray);
+        _shapeLifter = new ShapeLifter(_camera, _ray);
         _playerInput = new PlayerInput();
         _delay = new WaitForSeconds(_delayBeforeLifting);
 
@@ -32,13 +31,20 @@ public class PlayerInputController : MonoBehaviour
     private void OnEnable()
     {
         _playerInput.Enable();
-        _shapeLifter.Puted += ChangeLiftingStatus;
+        _shapeLifter.Placed += ChangeLiftingStatus;
     }
 
     private void OnDisable()
     {
         _playerInput.Disable();
-        _shapeLifter.Puted -= ChangeLiftingStatus;
+        _shapeLifter.Placed -= ChangeLiftingStatus;
+    }
+
+    private void OnDestroy()
+    {
+        _playerInput.Player.TakeShape.started -= OnTakeShape;
+        _playerInput.Player.PutShape.performed -= OnPutShape;
+        _playerInput.Player.UseSkill.performed -= OnUseSkill;
     }
 
     public void OnTakeShape(InputAction.CallbackContext context)

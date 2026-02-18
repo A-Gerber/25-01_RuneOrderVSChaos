@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 internal class FinderFullLinesOfCells
 {
-    internal bool TryGetFullCellsByLines(out List<CellModel> tempCells, CellModel[,] playField)
+    internal bool TryGetFullCellsByLines(out List<CellModel> NonFrozenCells, CellModel[,] playField)
     {
         if (playField == null)
             throw new InvalidOperationException("playField is null");
 
-        tempCells = CheckLineCells(true, playField);
+        NonFrozenCells = new();
+        List<CellModel> tempCells = CheckLineCells(true, playField);
         List<CellModel> horizontalCells = CheckLineCells(false, playField);
 
         foreach (var cell in tempCells)
@@ -19,9 +21,22 @@ internal class FinderFullLinesOfCells
 
         tempCells.AddRange(horizontalCells);
 
-        if (tempCells.Count > 0)
-            return true;
+        if (tempCells.Count == 0)
+            return false;
 
+        foreach (var cell in tempCells)
+        {
+            IReleaseable item = cell.GetItem();
+
+            if (item is Cube cube && cube.IsFrozen)
+                cube.Release();
+            else
+                NonFrozenCells.Add(cell);
+        }
+
+        if (NonFrozenCells.Count > 0)                    
+            return true;
+        
         return false;
     }
 
@@ -32,7 +47,7 @@ internal class FinderFullLinesOfCells
 
         for (int i = 0; i < playField.GetLength(0); i++)
         {
-            bool isBusyLine = true;
+            bool isBusyLineByCubes = true;
 
             for (int j = 0; j < playField.GetLength(1); j++)
             {
@@ -40,19 +55,19 @@ internal class FinderFullLinesOfCells
                 {
                     tempCells.Add(playField[i, j]);
 
-                    if (playField[i, j].IsBusy == false)
-                        isBusyLine = false;
+                    if (playField[i, j].IsBusy == false || playField[i, j].IsBusyByStalactite)
+                        isBusyLineByCubes = false;
                 }
                 else
                 {
                     tempCells.Add(playField[j, i]);
 
-                    if (playField[j, i].IsBusy == false)
-                        isBusyLine = false;
+                    if (playField[j, i].IsBusy == false || playField[j, i].IsBusyByStalactite)
+                        isBusyLineByCubes = false;
                 }
             }
 
-            if (isBusyLine)
+            if (isBusyLineByCubes)
             {
                 cellModels.AddRange(tempCells);
                 tempCells.Clear();

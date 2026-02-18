@@ -4,6 +4,7 @@ using UnityEngine;
 
 internal class ProjectileSpawner : Spawner<WizardProjectile>, ICreateableBullets
 {
+    [SerializeField] private WizardProjectileSoundPlayer _soundPlayer;
     [SerializeField] private int _damage;
     [SerializeField] private int _speed;
 
@@ -20,11 +21,10 @@ internal class ProjectileSpawner : Spawner<WizardProjectile>, ICreateableBullets
     public void CreateBullets(List<Vector3> position)
     {
         _startPositions = position;
+        _soundPlayer.PlayCreateSound();
 
         for (int i = 0; i < position.Count; i++)
-        {
             Get();
-        }
     }
 
     protected override void OnRelease(WizardProjectile bullet)
@@ -32,6 +32,7 @@ internal class ProjectileSpawner : Spawner<WizardProjectile>, ICreateableBullets
         if (bullet == null)
             throw new InvalidOperationException("bullet is null");
 
+        _soundPlayer.PlayDamageSound();
         base.OnRelease(bullet);
 
         bullet.Released -= Release;
@@ -44,7 +45,7 @@ internal class ProjectileSpawner : Spawner<WizardProjectile>, ICreateableBullets
 
         base.OnGet(bullet);
 
-        bullet.Initialize(_damage, _speed, _enemyPosition);
+        bullet.Attack(_damage, _speed, _enemyPosition);
         bullet.transform.position = _startPositions[_index];
         _index++;
 

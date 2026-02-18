@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
@@ -9,61 +11,80 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
     [SerializeField] private WinGameScreen _winGameScreen;
     [SerializeField] private EndGameScreen _endGameScreen;
     [SerializeField] private MenuScreen _menuScreen;
-    [SerializeField] private float _pauseDelay = 0.5f;
+    [SerializeField] private SettingsScreen _settingsScreen;
+    [SerializeField] private TextMeshProUGUI _winnerText;
+    [SerializeField] private float _delay = 0.5f;
 
-    private IGame _gameModel;
+    private IGame _game;
+    private ISkillCardDiscoverer _skillCardDiscoverer;
     private WaitForSeconds _wait;
+    
+    private void Awake()
+    {
+        _wait = new WaitForSeconds(_delay);
+    }
 
     private void OnEnable()
     {
         _winGameScreen.NextLevelButtonClicked += OnNextLevelButtonClick;
         _endGameScreen.RestartButtonClicked += OnRestartButtonClick;
         _endGameScreen.RewardButtonClicked += OnRewardButtonClick;
+        _settingsScreen.ExitButtonClicked += CloseMenu;
 
         _menuScreen.NewGameButtonClicked += OnNewGameButtonClick;
         _menuScreen.ContinueButtonClicked += OnContinueButtonClick;
+        _menuScreen.SettingsButtonClicked += OpenSettings;
     }
 
     private void OnDisable()
     {
         _winGameScreen.NextLevelButtonClicked -= OnNextLevelButtonClick;
         _endGameScreen.RestartButtonClicked -= OnRestartButtonClick;
+        _endGameScreen.RewardButtonClicked -= OnRewardButtonClick;
+        _settingsScreen.ExitButtonClicked -= CloseMenu;
 
         _menuScreen.NewGameButtonClicked -= OnNewGameButtonClick;
         _menuScreen.ContinueButtonClicked -= OnContinueButtonClick;
+        _menuScreen.SettingsButtonClicked -= OpenSettings;
     }
 
     public void OpenMenu()
     {
         Time.timeScale = 0;
-        _menuScreen.SetInteractableContinueButton(_gameModel.IsPlaying);
+        _menuScreen.SetInteractableContinueButton(_game.IsPlaying);
         _menuScreen.Open();
     }
 
     public void OpenSettings()
     {
-
+        Time.timeScale = 0;
+        _settingsScreen.Open();
     }
 
-    internal void Initialize(IGame gameModel)
+    internal void Initialize(IGame gameModel, ISkillCardDiscoverer skillCardDiscoverer)
     {
-        if (_gameModel != null)
+        if (_game != null)
         {
-            _gameModel.GameOvered -= OnGameOver;
-            _gameModel.GameWined -= OnWinGame;
+            _game.GameOvered -= OnGameOver;
+            _game.GameWined -= OnWinGame;
         }
 
-        _gameModel = gameModel ?? throw new InvalidOperationException("game is null");
-        _wait = new WaitForSeconds(_pauseDelay);
+        _game = gameModel ?? throw new InvalidOperationException("game is null");
+        _skillCardDiscoverer = skillCardDiscoverer ?? throw new InvalidOperationException("skillCardDiscoverer is null");
 
-        _gameModel.GameOvered += OnGameOver;
-        _gameModel.GameWined += OnWinGame;
+        _game.GameOvered += OnGameOver;
+        _game.GameWined += OnWinGame;
+    }
+
+    private void CloseMenu()
+    {
+        _settingsScreen.Close();
     }
 
     private void OnNewGameButtonClick()
     {
         Time.timeScale = 1;
-        _gameModel.NewGame();
+        _game.NewGame();
         _menuScreen.Close();
     }
 
@@ -77,37 +98,49 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
     {
         Time.timeScale = 1;
         _winGameScreen.Close();
-        _gameModel.GoToNextLevel();
+        _game.GoToNextLevel();
     }
 
     private void OnRestartButtonClick()
     {
         Time.timeScale = 1;
         _endGameScreen.Close();
-        _gameModel.Restart();
+        _game.Restart();
     }
 
     private void OnRewardButtonClick()
     {
         Time.timeScale = 1;
         _endGameScreen.Close();
-        _gameModel.OnRewardSkillPoints(Reward);
+        _game.OnRewardSkillPoints(Reward);
     }
 
     private void OnGameOver()
     {
-        StartCoroutine(PutOnPauseOverTime());
+        Time.timeScale = 0;
         _endGameScreen.Open();
     }
 
-    private void OnWinGame()
+    private void OnWinGame(int gameScoreIncrease)
     {
-        StartCoroutine(PutOnPauseOverTime());
-        _winGameScreen.Open();
+        StartCoroutine(OpenWinScreenOverTime());
+
+        if (_skillCardDiscoverer.TryGetSkillSprites(out List<Sprite> sprites, _game.CurrentLevel + 1))
+            _winGameScreen.ShowOpenSkills(sprites);
+        else
+            _winGameScreen.Hide();
+
+        _winGameScreen.UpdateIncreases(gameScoreIncrease, _game.CurrentLevel);
+        _winnerText.gameObject.SetActive(true);
     }
 
-    private IEnumerator PutOnPauseOverTime()
+    private IEnumerator OpenWinScreenOverTime()
     {
+        yield return _wait;
+        yield return _wait;
+        _winnerText.gameObject.SetActive(false);
+        _winGameScreen.Open();
+
         yield return _wait;
         Time.timeScale = 0;
     }

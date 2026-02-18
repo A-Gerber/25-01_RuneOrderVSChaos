@@ -3,12 +3,11 @@ using UnityEngine;
 
 internal class ShapeLifter
 {
-    private Camera _camera;
+    private readonly Camera _camera;
     private Ray _ray;
-
     private ILiftable _shape;
 
-    internal event Action Puted;
+    internal event Action Placed;
 
     public ShapeLifter(Camera camera, Ray ray)
     {
@@ -18,16 +17,14 @@ internal class ShapeLifter
         _camera = camera;
         _ray = ray;
     }
-    
+
     internal void LiftShape()
     {
-        _ray = _camera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(_ray, out RaycastHit hit, Mathf.Infinity) && hit.transform.TryGetComponent(out CubeView cube))
+        if (UserUtilities.CanPerformRaycast)
         {
-            ILiftable shape = cube.GetLiftableShape();
+            _ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-            if (shape.IsRaised == false)
+            if (Physics.Raycast(_ray, out RaycastHit hit, Mathf.Infinity) && hit.transform.TryGetComponent(out ILiftable shape) && shape.IsRaised == false)
             {
                 _shape = shape;
                 _shape.SetStatusRaised();
@@ -41,7 +38,7 @@ internal class ShapeLifter
         {
             _shape.Put();
             _shape = null;
-            Puted?.Invoke();
+            Placed?.Invoke();
         }
     }
 }

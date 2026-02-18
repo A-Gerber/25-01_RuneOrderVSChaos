@@ -20,12 +20,10 @@ public class WizardProjectile : MonoBehaviour
     private void Update()
     {
         if (_canMove)
-        {
             _transform.Translate(_speed * Time.deltaTime * (_target - _transform.position).normalized, Space.World);
-        }
     }
 
-    public void Initialize(int damage, float speed, Vector3 target)
+    public void Attack(int damage, float speed, Vector3 target)
     {
         Damage = damage;
         _target = target;
@@ -36,7 +34,6 @@ public class WizardProjectile : MonoBehaviour
     public void Release()
     {
         _canMove = false;
-
         Released?.Invoke(this);
     }
 }

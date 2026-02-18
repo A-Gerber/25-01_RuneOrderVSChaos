@@ -6,36 +6,51 @@ public class UserSkillFactory : MonoBehaviour
     [SerializeField] private UserSkillPerformerView _skillUserViewPrefab;
     [SerializeField] private SkillCardView _skillCardViewPrefab;
     [SerializeField] private Transform _skillContainer;
+    [SerializeField] private Transform _effectContainer;
     [SerializeField] private RectTransform _skillViewContainer;
-    [SerializeField] private SkillView _skillViewPrefab;
+    [SerializeField] private UserSkillView _skillViewPrefab;
     [SerializeField] private UserSkillHandlerView _userSkillHandlerView;
-    [SerializeField] private int _skillPointsInterval = 5;
+    [SerializeField] private float _heightOfForceImpact = -1f;
+    [SerializeField] private float _forceImpact = 5f;
     [SerializeField] private Sprite _emptySprite;
 
     [Header("LightningStrikes")]
+    [SerializeField] private AudioClip _firstLightningStrikeSound;
+    [SerializeField] private ParticleSystem _firstLightningStrikeEffect;
     [SerializeField] private Sprite _firstLightningStrikeIcon;
     [SerializeField] private int _firstLightningStrikeThreshold = 1;
-    [SerializeField] private ParticleSystem _firstLightningStrikeAttackZone;
+    [SerializeField] private ParticleSystem _secondLightningStrikeEffect;
     [SerializeField] private Sprite _secondLightningStrikeIcon;
     [SerializeField] private int _secondLightningStrikeThreshold = 1;
+    [SerializeField] private ParticleSystem _thirdLightningStrikeEffect;
     [SerializeField] private Sprite _thirdLightningStrikeIcon;
     [SerializeField] private int _thirdLightningStrikeThreshold = 15;
+    [SerializeField] private ParticleSystem _fourthLightningStrikeEffect;
     [SerializeField] private Sprite _fourthLightningStrikeIcon;
     [SerializeField] private int _fourthLightningStrikeThreshold = 45;
 
     [Header("FillingSkills")]
+    [SerializeField] private AudioClip _fillingSound;
+    [SerializeField] private ParticleSystem _horizontalFillingEffect;
     [SerializeField] private Sprite _horizontalFillingIcon;
     [SerializeField] private int _horizontalFillingThreshold = 10;
+    [SerializeField] private ParticleSystem _crossFillingEffect;
     [SerializeField] private Sprite _crossFillingIcon;
     [SerializeField] private int _crossFillingThreshold = 25;
+    [SerializeField] private ParticleSystem _verticalFillingEffect;
     [SerializeField] private Sprite _verticalFillingIcon;
     [SerializeField] private int _verticalFillingThreshold = 35;
 
     [Header("Damage")]
+    [SerializeField] private AudioClip _damageEffectSound;
+    [SerializeField] private ParticleSystem _firstDamageEffect;
     [SerializeField] private Sprite _damageOfFirstRankIcon;
     [SerializeField] private int _damageOfFirstRankThreshold = 1;
+    [SerializeField] private ParticleSystem _secondDamageEffect;
     [SerializeField] private Sprite _damageOfSecondRankIcon;
     [SerializeField] private int _damageOfSecondRankThreshold = 20;
+    [SerializeField] private AudioClip _thirdDamageEffectSound;
+    [SerializeField] private ParticleSystem _thirdDamageEffect;
     [SerializeField] private Sprite _damageOfThirdRankIcon;
     [SerializeField] private int _damageOfThirdRankThreshold = 30;
 
@@ -49,9 +64,11 @@ public class UserSkillFactory : MonoBehaviour
 
     private UserSkillPerformerView _userSkillPerformerView;
 
-    internal UserSkillPerformer CreateUserSkillPerformer(float minBorderArea, float maxBorderArea, float cameraHeight)
+    internal SkillCardDiscoverer SkillCardDiscoverer { get; private set; }
+
+    internal UserSkillPerformer CreateUserSkillPerformer()
     {
-        UserSkillPerformer performer = new(minBorderArea, maxBorderArea, cameraHeight);
+        UserSkillPerformer performer = new(new Pusher(_heightOfForceImpact), _forceImpact);
         _userSkillPerformerView = Instantiate(_skillUserViewPrefab, _skillContainer);
         _userSkillPerformerView.Initialize(performer);
 
@@ -60,10 +77,10 @@ public class UserSkillFactory : MonoBehaviour
 
     internal UserSkillHandler CreateUserSkillHandler(IConfigurableFromSkillSide attacker)
     {
-        PassiveSkillOfFirstRank firstPassiveSkill = new(_emptySprite, _firstLightningStrikeAttackZone);
-        SkillCardDiscoverer skillCardDiscoverer = new(CreateSkillCards(CreateSkills()));
-        UserSkillHandler userSkillHandler = new(skillCardDiscoverer, _skillPointsInterval, attacker, firstPassiveSkill);
-        skillCardDiscoverer.InitializeSkillCards(userSkillHandler);
+        PassiveSkillOfFirstRank firstPassiveSkill = new(_emptySprite, _firstDamageEffect, _firstLightningStrikeSound);
+        SkillCardDiscoverer = new(CreateSkillCards(CreateSkills()));
+        UserSkillHandler userSkillHandler = new(SkillCardDiscoverer, attacker, firstPassiveSkill);
+        SkillCardDiscoverer.InitializeSkillCards(userSkillHandler);
         _userSkillHandlerView.Initialize(userSkillHandler);
 
         return userSkillHandler;
@@ -84,24 +101,21 @@ public class UserSkillFactory : MonoBehaviour
 
     private Dictionary<UserSkill, int> CreateSkills()
     {
-        ParticleSystem attackZone = Instantiate(_firstLightningStrikeAttackZone, _userSkillPerformerView.transform);
-        attackZone.gameObject.SetActive(false);
-
         Dictionary<UserSkill, int> skills = new()
         {
-            { new FirstLightningStrike(_firstLightningStrikeIcon,attackZone), _firstLightningStrikeThreshold },
-            { new SecondLightningStrike(_secondLightningStrikeIcon, attackZone), _secondLightningStrikeThreshold },
-            { new ThirdLightningStrike(_thirdLightningStrikeIcon, attackZone), _thirdLightningStrikeThreshold },
-            { new FourthLightningStrike(_fourthLightningStrikeIcon, attackZone), _fourthLightningStrikeThreshold },
-            { new HorizontalFilling(_horizontalFillingIcon, attackZone), _horizontalFillingThreshold },
-            { new CrossFilling(_crossFillingIcon, attackZone), _crossFillingThreshold },
-            { new VerticalFilling(_verticalFillingIcon,attackZone), _verticalFillingThreshold },
-            { new DamageOfFirstRank(_damageOfFirstRankIcon, attackZone), _damageOfFirstRankThreshold },
-            { new DamageOfSecondRank(_damageOfSecondRankIcon, attackZone), _damageOfSecondRankThreshold },
-            { new DamageOfThirdRank(_damageOfThirdRankIcon, attackZone), _damageOfThirdRankThreshold },
-            { new PassiveSkillOfSecondRank(_passiveSkillOfSecondRankIcon, attackZone), _passiveSkillOfSecondRankThreshold },
-            { new PassiveSkillOfThirdRank(_passiveSkillOfThirdRankIcon, attackZone), _passiveSkillOfThirdRankThreshold },
-            { new PassiveSkillOfFourthRank(_passiveSkillOfFourthRankIcon, attackZone), _passiveSkillOfFourthRankThreshold }
+            { new FirstLightningStrike(_firstLightningStrikeIcon,Instantiate(_firstLightningStrikeEffect, _effectContainer),_firstLightningStrikeSound), _firstLightningStrikeThreshold },
+            { new SecondLightningStrike(_secondLightningStrikeIcon, Instantiate(_secondLightningStrikeEffect, _effectContainer), _firstLightningStrikeSound), _secondLightningStrikeThreshold },
+            { new ThirdLightningStrike(_thirdLightningStrikeIcon, Instantiate(_thirdLightningStrikeEffect, _effectContainer), _firstLightningStrikeSound), _thirdLightningStrikeThreshold },
+            { new FourthLightningStrike(_fourthLightningStrikeIcon, Instantiate(_fourthLightningStrikeEffect, _effectContainer), _firstLightningStrikeSound), _fourthLightningStrikeThreshold },
+            { new HorizontalFilling(_horizontalFillingIcon, Instantiate(_horizontalFillingEffect, _effectContainer), _fillingSound), _horizontalFillingThreshold },
+            { new CrossFilling(_crossFillingIcon, Instantiate(_crossFillingEffect, _effectContainer), _fillingSound), _crossFillingThreshold },
+            { new VerticalFilling(_verticalFillingIcon,Instantiate(_verticalFillingEffect, _effectContainer), _fillingSound), _verticalFillingThreshold },
+            { new DamageOfFirstRank(_damageOfFirstRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _damageEffectSound), _damageOfFirstRankThreshold },
+            { new DamageOfSecondRank(_damageOfSecondRankIcon, Instantiate(_secondDamageEffect, _effectContainer), _damageEffectSound), _damageOfSecondRankThreshold },
+            { new DamageOfThirdRank(_damageOfThirdRankIcon, Instantiate(_thirdDamageEffect, _effectContainer), _thirdDamageEffectSound), _damageOfThirdRankThreshold },
+            { new PassiveSkillOfSecondRank(_passiveSkillOfSecondRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfSecondRankThreshold },
+            { new PassiveSkillOfThirdRank(_passiveSkillOfThirdRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfThirdRankThreshold },
+            { new PassiveSkillOfFourthRank(_passiveSkillOfFourthRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfFourthRankThreshold }
         };
 
         foreach (var skill in skills)        

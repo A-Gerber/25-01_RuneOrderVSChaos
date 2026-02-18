@@ -4,9 +4,9 @@ using UnityEngine;
 
 internal class CubeViewSpawner : Spawner<CubeView>, ICreateableCubesForArea
 {
+    private readonly List<CubeView> _currentCubeViews = new();
     private List<LocalPosition> _coordinates;
-    private List<CubeView> _currentCubeViews = new List<CubeView>();
-    List<CellModel> _cells = new List<CellModel>();
+    List<CellModel> _cells = new();
     private int _index = 0;
 
     private bool _isSendForShape = true;
@@ -48,7 +48,7 @@ internal class CubeViewSpawner : Spawner<CubeView>, ICreateableCubesForArea
     protected override CubeView Create()
     {
         CubeView @object = Instantiate(Prefab);
-        @object.Initialize(new CubeModel(@object.transform, @object.DurationLanding, @object.DistanceRaycast));
+        @object.Initialize(new Cube(@object.transform, @object.Rigidbody, @object.DurationLanding, @object.RaycastDistance));
 
         return @object;
     }
@@ -58,6 +58,7 @@ internal class CubeViewSpawner : Spawner<CubeView>, ICreateableCubesForArea
         if (cube == null)
             throw new InvalidOperationException("cube is null");
 
+        cube.Reset();
         base.OnRelease(cube);
 
         cube.Released -= Release;
