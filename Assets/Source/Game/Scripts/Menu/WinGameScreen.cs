@@ -5,6 +5,7 @@ using UnityEngine;
 
 internal class WinGameScreen : Window
 {
+    [SerializeField] private CanvasGroup _witchGroup;
     [SerializeField] private RectTransform _scrollView;
     [SerializeField] private RectTransform _iconSkillContainer;
     [SerializeField] private SkillIcon _skillIconPrefab;
@@ -36,7 +37,7 @@ internal class WinGameScreen : Window
         }
     }
 
-    internal void Hide()
+    internal void HideSkills()
     {
         if (_skillIcons.Count == 0)
             return;
@@ -54,12 +55,22 @@ internal class WinGameScreen : Window
             throw new ArgumentOutOfRangeException(nameof(currentLevel));
 
         _textGameScoreIncrease.text = $"+{gameScoreIncrease}";
-        _textSkillCountIncrease.text = $"+{UserUtilities.SkillIncrease}";
+        _textSkillCountIncrease.text = $"+{Constants.SkillIncrease}";
 
-        if ((currentLevel + 1) % UserUtilities.SkillPointsInterval == 0)
-            _textSkillScoreIncrease.text = $"+{UserUtilities.SkillIncrease}";
+        if ((currentLevel + 1) % Constants.SkillPointsInterval == 0)
+            _textSkillScoreIncrease.text = $"+{Constants.SkillIncrease}";
         else
             _textSkillScoreIncrease.text = $"+0";
+    }
+
+    internal void ShowWitch()
+    {
+        _witchGroup.alpha = 1f;
+    }
+
+    internal void HideWitch()
+    {
+        _witchGroup.alpha = 0f;
     }
 
     private void ClearSkillIcons()

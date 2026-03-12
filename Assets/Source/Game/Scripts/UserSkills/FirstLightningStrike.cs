@@ -18,7 +18,7 @@ public class FirstLightningStrike : UserSkill, ISetableInFirstButton
         OffsetX = _offset;
         OffsetZ = _offset;
 
-        _description = "FirstLightningStrike";
+        _description = "<color=#FFC300>Lightning strike I\n<color=white>Destroys runes in the shape of a <color=#FFC300>cross 3x3";
         Description = _description;
     }
 

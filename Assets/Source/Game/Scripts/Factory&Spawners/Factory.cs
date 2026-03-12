@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 internal class Factory : MonoBehaviour, IFactoryData
 {
@@ -15,10 +13,8 @@ internal class Factory : MonoBehaviour, IFactoryData
     [SerializeField] private FreezingEffectSpawner _freezingEffectSpawner;
     [SerializeField] private EffectConfettiSpawner _effectConfettiSpawner;
     [SerializeField] private PlayerInputController _controller;
-    [SerializeField] private float _flightAltitude = 2f;
 
     private UserSkillHandler _userSkillHandler;
-    private ShapeModelFactory _shapeModelFactory;
 
     public ShapePresenterSpawner ShapePresenterSpawner => _shapePresenterSpawner;
     public EnemiesFactory EnemiesFactory => _enemiesFactory;
@@ -38,8 +34,7 @@ internal class Factory : MonoBehaviour, IFactoryData
 
         GameModel gameModel = new(this, areaModel, attacker, userSkillPerformer, enemySkillPerfomer);
 
-        _shapeModelFactory = new(UserUtilities.CameraHeight - _flightAltitude);
-        _shapePresenterSpawner.Initialize(gameModel, _shapeModelFactory, userSkillPerformer);
+        _shapePresenterSpawner.Initialize(gameModel, new ShapeModelFactory(), userSkillPerformer);
         _enemiesFactory.SetGameForEnemyPresenter(gameModel);
 
         return gameModel;

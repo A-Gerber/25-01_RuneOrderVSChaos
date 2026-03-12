@@ -14,11 +14,11 @@ internal class AreaModelFactory
 
     internal CellModel[,] CreateCells()
     {
-        CellModel[,] cells = new CellModel[UserUtilities.AreaSize, UserUtilities.AreaSize];
+        CellModel[,] cells = new CellModel[Constants.AreaSize, Constants.AreaSize];
 
-        for (int x = UserUtilities.OriginByX; x < UserUtilities.AreaSize; x++)
+        for (int x = Constants.OriginByX; x < Constants.AreaSize; x++)
         {
-            for (int z = UserUtilities.OriginByZ; z < UserUtilities.AreaSize; z++)
+            for (int z = Constants.OriginByZ; z < Constants.AreaSize; z++)
             {
                 cells[x, z] = new CellModel(new LocalPosition(x, z));
             }

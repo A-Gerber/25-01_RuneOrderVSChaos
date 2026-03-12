@@ -55,7 +55,7 @@ public class UserSkillPerformer : ISubscribeable
         _isPressedButton = false;
         DisabledAttackZone?.Invoke();
 
-        Vector3 targetPosition = UserUtilities.GetCursorPosition(UserUtilities.CameraHeight);
+        Vector3 targetPosition = UserUtilities.GetCursorPosition(Constants.CameraHeight);
 
         if (UserUtilities.IsLocateInArena(targetPosition) == false)
             return false;
@@ -68,7 +68,7 @@ public class UserSkillPerformer : ISubscribeable
         }
 
         LocalPosition position = new LocalPosition((int)Mathf.Round(targetPosition.x), (int)Mathf.Round(targetPosition.z));
-        List<LocalPosition> skillCoordinates = _skill.GetSkillCoordinates(position, (int)Mathf.Round(UserUtilities.MinBorderArea), (int)Mathf.Round(UserUtilities.MaxBorderArea));      
+        List<LocalPosition> skillCoordinates = _skill.GetSkillCoordinates(position, (int)Mathf.Round(Constants.MinBorderArea), (int)Mathf.Round(Constants.MaxBorderArea));      
 
         if (_skill is ISetableInFirstButton)
         {

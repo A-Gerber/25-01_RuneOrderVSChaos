@@ -15,7 +15,7 @@ public abstract class Freezer : IEnemy
         if (skillCooldown <= 0)
             throw new ArgumentOutOfRangeException(nameof(skillCooldown));
 
-        if (healthIncrease <= 0)
+        if (healthIncrease < 0)
             throw new ArgumentOutOfRangeException(nameof(healthIncrease));
 
         _icon = icon ?? throw new InvalidOperationException("icon is null");
@@ -33,6 +33,8 @@ public abstract class Freezer : IEnemy
     public int IncreaseToHealth => _increaseToHealth;
     public float SkillCooldown => _skillCooldown;
     public Sprite Icon => _icon;
+    public Sprite SkillIcon => _skill.SkillIcon;
+    public string SkillDescription => _skill.Description;
 
     public void TakeSkill(FreezingSkill freezingSkill)
     {

@@ -17,7 +17,7 @@ public class HorizontalFilling : UserSkill, ISetableInSecondButton
         OffsetX = _offsetX;
         OffsetZ = _offsetZ;
 
-        _description = "HorizontalFilling";
+        _description = "<color=#FFC300>Creating Runes I\n<color=white>Creates runes in a <color=#FFC300>horizontal line";
         Description = _description;
     }
 

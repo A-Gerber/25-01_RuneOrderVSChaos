@@ -8,7 +8,7 @@ internal class UserSkillHandler : IAddableSkill, IChangeableLevel
     private readonly List<UserSkill> _tempSkills = new();
     private readonly SkillCardDiscoverer _skillCardDiscoverer;
     private readonly IPassiveSkill _firstPassiveSkill;
-    private readonly int _skillPointsInterval = UserUtilities.SkillPointsInterval;
+    private readonly int _skillPointsInterval = Constants.SkillPointsInterval;
     private readonly IConfigurableFromSkillSide _attacker;
     private ISettingableSkillButton _gameView;
     private int _level;
@@ -37,7 +37,7 @@ internal class UserSkillHandler : IAddableSkill, IChangeableLevel
 
         if (level % _skillPointsInterval == 0)
         {
-            _score += UserUtilities.SkillIncrease;
+            _score += Constants.SkillIncrease;
             ChangedScore?.Invoke(_score);
         }
     }

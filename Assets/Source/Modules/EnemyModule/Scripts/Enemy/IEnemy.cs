@@ -11,6 +11,8 @@ public interface IEnemy : IChangeableHealthEnemy
     int IncreaseToHealth {  get; }
     float SkillCooldown { get; }
     Sprite Icon { get; }
+    Sprite SkillIcon { get; }
+    string SkillDescription { get; }
 
     void UpdateHealth();
 

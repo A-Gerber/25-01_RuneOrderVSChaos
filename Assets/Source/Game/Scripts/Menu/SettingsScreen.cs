@@ -44,13 +44,9 @@ internal class SettingsScreen : Window
     private void ToggleSound(bool isDisabled)
     {
         if (isDisabled)
-        {
             AudioListener.volume = ValueMute;
-        }
         else
-        {
             AudioListener.volume = ValueWithSound;
-        }
     }
 
 

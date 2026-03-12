@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
+internal class MenuView : MonoBehaviour, IOpenableMenu
 {
-    private const int Reward = 2;
-
     [SerializeField] private WinGameScreen _winGameScreen;
     [SerializeField] private EndGameScreen _endGameScreen;
     [SerializeField] private MenuScreen _menuScreen;
     [SerializeField] private SettingsScreen _settingsScreen;
+    [SerializeField] private SkillTooltipScreen _skillTooltipScreen;
     [SerializeField] private TextMeshProUGUI _winnerText;
     [SerializeField] private float _delay = 0.5f;
 
@@ -29,19 +28,23 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
         _winGameScreen.NextLevelButtonClicked += OnNextLevelButtonClick;
         _endGameScreen.RestartButtonClicked += OnRestartButtonClick;
         _endGameScreen.RewardButtonClicked += OnRewardButtonClick;
-        _settingsScreen.ExitButtonClicked += CloseMenu;
+        _settingsScreen.ExitButtonClicked += CloseSettings;
+        _skillTooltipScreen.ExitButtonClicked += CloseSkillTooltip;
 
         _menuScreen.NewGameButtonClicked += OnNewGameButtonClick;
         _menuScreen.ContinueButtonClicked += OnContinueButtonClick;
         _menuScreen.SettingsButtonClicked += OpenSettings;
     }
 
+
+
     private void OnDisable()
     {
         _winGameScreen.NextLevelButtonClicked -= OnNextLevelButtonClick;
         _endGameScreen.RestartButtonClicked -= OnRestartButtonClick;
         _endGameScreen.RewardButtonClicked -= OnRewardButtonClick;
-        _settingsScreen.ExitButtonClicked -= CloseMenu;
+        _settingsScreen.ExitButtonClicked -= CloseSettings;
+        _skillTooltipScreen.ExitButtonClicked -= CloseSkillTooltip;
 
         _menuScreen.NewGameButtonClicked -= OnNewGameButtonClick;
         _menuScreen.ContinueButtonClicked -= OnContinueButtonClick;
@@ -55,10 +58,10 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
         _menuScreen.Open();
     }
 
-    public void OpenSettings()
+    public void OpenSkillsToolTip()
     {
         Time.timeScale = 0;
-        _settingsScreen.Open();
+        _skillTooltipScreen.Open();
     }
 
     internal void Initialize(IGame gameModel, ISkillCardDiscoverer skillCardDiscoverer)
@@ -76,15 +79,26 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
         _game.GameWined += OnWinGame;
     }
 
-    private void CloseMenu()
+    private void OpenSettings()
+    {
+        _settingsScreen.Open();
+    }
+
+    private void CloseSettings()
     {
         _settingsScreen.Close();
+    }
+
+    private void CloseSkillTooltip()
+    {
+        Time.timeScale = 1;
+        _skillTooltipScreen.Close();
     }
 
     private void OnNewGameButtonClick()
     {
         Time.timeScale = 1;
-        _game.NewGame();
+        _game.StartNewGame();
         _menuScreen.Close();
     }
 
@@ -112,7 +126,7 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
     {
         Time.timeScale = 1;
         _endGameScreen.Close();
-        _game.OnRewardSkillPoints(Reward);
+        _game.OnRewardSkillPoints(Constants.RewardForAdvertising);
     }
 
     private void OnGameOver()
@@ -128,10 +142,15 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
         if (_skillCardDiscoverer.TryGetSkillSprites(out List<Sprite> sprites, _game.CurrentLevel + 1))
             _winGameScreen.ShowOpenSkills(sprites);
         else
-            _winGameScreen.Hide();
+            _winGameScreen.HideSkills();
 
         _winGameScreen.UpdateIncreases(gameScoreIncrease, _game.CurrentLevel);
         _winnerText.gameObject.SetActive(true);
+
+        if (_game.CurrentLevel == Constants.LastLevel)
+            _winGameScreen.ShowWitch();
+        else
+            _winGameScreen.HideWitch();
     }
 
     private IEnumerator OpenWinScreenOverTime()
@@ -140,8 +159,6 @@ internal class MenuView : MonoBehaviour, IOpenableGameViewMenu
         yield return _wait;
         _winnerText.gameObject.SetActive(false);
         _winGameScreen.Open();
-
-        yield return _wait;
         Time.timeScale = 0;
     }
 }

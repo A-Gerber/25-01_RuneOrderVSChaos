@@ -9,18 +9,18 @@ public class ThirdLightningStrike : UserSkill, ISetableInFirstButton
     public ThirdLightningStrike(Sprite iconOnButton, ParticleSystem effect, AudioClip audioClip) : base(iconOnButton, effect, audioClip)
     {
         _configuration = new int[,] {
-           { 0, 1, 1, 1, 0 },
            { 1, 1, 1, 1, 1 },
            { 1, 1, 1, 1, 1 },
            { 1, 1, 1, 1, 1 },
-           { 0, 1, 1, 1, 0 }
+           { 1, 1, 1, 1, 1 },
+           { 1, 1, 1, 1, 1 }
        };
 
         Configuration = _configuration;
         OffsetX = _offset;
         OffsetZ = _offset;
 
-        _description = "ThirdLightningStrike";
+        _description = "<color=#FFC300>Lightning strike III\n<color=white>Destroys runes in a <color=#FFC300>square 5x5";
         Description = _description;
     }
 

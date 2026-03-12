@@ -7,8 +7,6 @@ internal class ShapeLifter
     private Ray _ray;
     private ILiftable _shape;
 
-    internal event Action Placed;
-
     public ShapeLifter(Camera camera, Ray ray)
     {
         if (camera == null)
@@ -22,7 +20,7 @@ internal class ShapeLifter
     {
         if (UserUtilities.CanPerformRaycast)
         {
-            _ray = _camera.ScreenPointToRay(Input.mousePosition);
+            _ray = _camera.ScreenPointToRay(Input.mousePosition);           
 
             if (Physics.Raycast(_ray, out RaycastHit hit, Mathf.Infinity) && hit.transform.TryGetComponent(out ILiftable shape) && shape.IsRaised == false)
             {
@@ -38,7 +36,6 @@ internal class ShapeLifter
         {
             _shape.Put();
             _shape = null;
-            Placed?.Invoke();
         }
     }
 }

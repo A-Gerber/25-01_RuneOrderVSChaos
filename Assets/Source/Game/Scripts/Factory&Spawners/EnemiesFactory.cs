@@ -7,45 +7,47 @@ internal class EnemiesFactory : MonoBehaviour
     [SerializeField] private EnemySkillFactory _enemySkillFactory;
     [SerializeField] private EnemyPresenter _enemyPresenter;
     [SerializeField] private EnemySkillPerfomerView _enemySkillPerfomerView;
-    [SerializeField] private int _startEnemyHealth = 60;
-    [SerializeField] private int _increasePerLevel = 10;
-    [SerializeField] private int _divider = 5;
+    [SerializeField] private int _startEnemyHealth = 65;
+    [SerializeField] private int _increasePerLevel = 3;
+    [SerializeField] private int _divider = 20;
+    [SerializeField] private int _powerOfCoefficient = 3;
+    [SerializeField] private int _powerMultiplier  = 20;
 
     [Header("EnemyParameters")]
     [SerializeField] private float _goblinSkillCooldown = 180f;
     [SerializeField] private int _goblinIncreaseToHealth = 0;
     [SerializeField] private Sprite _goblinIcon;
 
-    [SerializeField] private float _orcSkillCooldown = 60f;
-    [SerializeField] private int _orcIncreaseToHealth = 50;
+    [SerializeField] private float _orcSkillCooldown = 25f;
+    [SerializeField] private int _orcIncreaseToHealth = 15;
     [SerializeField] private Sprite _orcIcon;
 
-    [SerializeField] private float _orcChieftainSkillCooldown = 60f;
-    [SerializeField] private int _orcChieftainIncreaseToHealth = 50;
+    [SerializeField] private float _orcChieftainSkillCooldown = 20f;
+    [SerializeField] private int _orcChieftainIncreaseToHealth = 30;
     [SerializeField] private Sprite _orcChieftainIcon;
 
-    [SerializeField] private float _yetiSkillCooldown = 40f;
-    [SerializeField] private int _yetiIncreaseToHealth = 30;
+    [SerializeField] private float _yetiSkillCooldown = 15f;
+    [SerializeField] private int _yetiIncreaseToHealth = 0;
     [SerializeField] private Sprite _yetiIcon;
 
-    [SerializeField] private float _fenrirSkillCooldown = 40f;
-    [SerializeField] private int _fenrirIncreaseToHealth = 80;
+    [SerializeField] private float _fenrirSkillCooldown = 10f;
+    [SerializeField] private int _fenrirIncreaseToHealth = 20;
     [SerializeField] private Sprite _fenrirIcon;
 
-    [SerializeField] private float _snowQueenSkillCooldown = 40f;
-    [SerializeField] private int _snowQueenIncreaseToHealth = 80;
+    [SerializeField] private float _snowQueenSkillCooldown = 15f;
+    [SerializeField] private int _snowQueenIncreaseToHealth = 25;
     [SerializeField] private Sprite _snowQueenIcon;
 
-    [SerializeField] private float _gargoyleSkillCooldown = 40f;
-    [SerializeField] private int _gargoyleIncreaseToHealth = 50;
+    [SerializeField] private float _gargoyleSkillCooldown = 25f;
+    [SerializeField] private int _gargoyleIncreaseToHealth = 10;
     [SerializeField] private Sprite _gargoyleIcon;
 
-    [SerializeField] private float _earthDragonSkillCooldown = 40f;
-    [SerializeField] private int _earthDragonIncreaseToHealth = 50;
+    [SerializeField] private float _earthDragonSkillCooldown = 20f;
+    [SerializeField] private int _earthDragonIncreaseToHealth = 20;
     [SerializeField] private Sprite _earthDragonIcon;
 
-    [SerializeField] private float _witchSkillCooldown = 40f;
-    [SerializeField] private int _witchIncreaseToHealth = 50;
+    [SerializeField] private float _witchSkillCooldown = 12f;
+    [SerializeField] private int _witchIncreaseToHealth = 175;
     [SerializeField] private Sprite _witchIcon;
 
     private EnemiesGenerator _generator;
@@ -90,7 +92,7 @@ internal class EnemiesFactory : MonoBehaviour
 
         int coefficient = level / _divider;
 
-        return _startEnemyHealth + _increasePerLevel * level + coefficient * _increasePerLevel + enemy.IncreaseToHealth;
+        return _startEnemyHealth + enemy.IncreaseToHealth + _increasePerLevel * level + _powerMultiplier * (int)Mathf.Pow(coefficient, _powerOfCoefficient);
     }
 
     private List<IEnemy> CreateEnemies()
@@ -113,4 +115,17 @@ internal class EnemiesFactory : MonoBehaviour
 
         return enemies;
     }
+}
+
+enum Enemies
+{
+    Goblin,
+    Orc,
+    Yeti,
+    OrcChieftain,
+    Fenrir,
+    Gargoyle,
+    SnowQueen,
+    EarthDragon,
+    WitchOfChaos
 }

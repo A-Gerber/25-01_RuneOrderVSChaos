@@ -7,17 +7,23 @@ internal class MiddleCubeConfigurator : ICubeConfigurator
 
     internal MiddleCubeConfigurator()
     {
-        _configurations.Add(new CConfiguration());
-        _configurations.Add(new LConfiguration());
-        _configurations.Add(new LConfiguration());
-        _configurations.Add(new LConfiguration());
-        _configurations.Add(new LineOfFiveCubes());
-        _configurations.Add(new LineOfFourCubes());
+        _configurations.Add(new LineOfThreeCubes());
+        _configurations.Add(new LineOfThreeCubes());
+        _configurations.Add(new LineOfThreeCubes());
+        _configurations.Add(new AngleOfThreeCubes());
+        _configurations.Add(new AngleOfThreeCubes());
+        _configurations.Add(new DiagonalOfTwoCubes());
+        _configurations.Add(new DiagonalOfTwoCubes());
+        _configurations.Add(new DiagonalOfThreeCubes());
+        _configurations.Add(new DiagonalOfThreeCubes());
+        _configurations.Add(new DiagonalOfThreeCubes());
         _configurations.Add(new LineOfFourCubes());
         _configurations.Add(new LineOfFourCubes());
         _configurations.Add(new SquareOfNineCubes());
-        _configurations.Add(new SquareOfNineCubes());
+        _configurations.Add(new LConfiguration());
+        _configurations.Add(new LConfiguration());
         _configurations.Add(new TConfiguration());
+        _configurations.Add(new AngleOfFiveCubes());
     }
 
     public List<LocalPosition> CreateConfiguration()

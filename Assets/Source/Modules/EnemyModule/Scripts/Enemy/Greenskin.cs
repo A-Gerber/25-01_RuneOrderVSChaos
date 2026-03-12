@@ -33,6 +33,8 @@ public abstract class Greenskin : IEnemy
     public int Health => _health;
     public float SkillCooldown => _skillCooldown;
     public Sprite Icon => _icon;
+    public Sprite SkillIcon => _skill.SkillIcon;
+    public string SkillDescription => _skill.Description;
 
     public void TakeSkill(HealingSkill healingSkill)
     {

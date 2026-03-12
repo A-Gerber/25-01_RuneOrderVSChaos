@@ -139,8 +139,3 @@ public class SkillCardDiscoverer : ISkillCardDiscoverer
         return sprites.Count > 0;
     }
 }
-
-public interface ISkillCardDiscoverer
-{
-    bool TryGetSkillSprites(out List<Sprite> sprites, int currentLevel);
-}

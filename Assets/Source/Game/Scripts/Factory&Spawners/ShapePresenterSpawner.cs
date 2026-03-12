@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using YG;
 
 internal class ShapePresenterSpawner : Spawner<ShapePresenter>
 {
@@ -55,7 +56,11 @@ internal class ShapePresenterSpawner : Spawner<ShapePresenter>
     protected override ShapePresenter Create()
     {
         ShapePresenter @object = Instantiate(Prefab);
-        @object.Initialize(_modelFactory.Create(@object.transform, @object.DurationOfReturn, _speed),new ShapeRotater(@object.transform));
+
+        if (YG2.envir.isMobile)
+            @object.Initialize(_modelFactory.Create(@object.transform, _speed), new ShapeRotater(@object.transform), new MobileShapeShifter());
+        else
+            @object.Initialize(_modelFactory.Create(@object.transform, _speed), new ShapeRotater(@object.transform), new ShapeShifter());
 
         return @object;
     }
@@ -99,7 +104,7 @@ internal class ShapePresenterSpawner : Spawner<ShapePresenter>
             if (UserUtilities.IsEqualVector3(cubeView.LocalPosition, _arrowView.Position))
             {
                 _arrowView.transform.SetParent(cubeView.transform);
-                _arrowView.transform.localPosition = new Vector3(0f,1f,0f);
+                _arrowView.transform.localPosition = new Vector3(0f, 1f, 0f);
             }
         }
 

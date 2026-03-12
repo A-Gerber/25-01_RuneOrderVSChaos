@@ -18,7 +18,7 @@ public class ShapeRotater
     internal void Rotate()
     {
         Vector3 direction = _transform.position - _oldPosition;
-        Vector3 Movement = Vector3.zero;
+        Vector3 movement = Vector3.zero;
 
         if (direction.magnitude > ErrorRateMovement)
         {
@@ -27,21 +27,21 @@ public class ShapeRotater
             if (Mathf.Approximately(MovementOnZ, 0f))
             {
                 if (Mathf.Round(Vector3.Dot(Vector3.right, direction.normalized)) >= 0)
-                    Movement.z = -1f;
+                    movement.z = -1f;
                 else
-                    Movement.z = 1f;
+                    movement.z = 1f;
             }
             else
             {
-                Movement.x = MovementOnZ;
+                movement.x = MovementOnZ;
             }
 
-            Lerp(Movement * RotateMultiplier);
+            Lerp(movement * RotateMultiplier);
             _oldPosition = _transform.position;
             return;
         }
 
-        Lerp(Movement);
+        Lerp(movement);
         _oldPosition = _transform.position;
     }
 

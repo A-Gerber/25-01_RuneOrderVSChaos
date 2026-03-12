@@ -7,13 +7,16 @@ internal class SimpleCubeConfigurator : ICubeConfigurator
 
     internal SimpleCubeConfigurator()
     {
-        _configurations.Add(new LineOfFourCubes());
-        _configurations.Add(new LineOfFourCubes());
+        _configurations.Add(new LineOfThreeCubes());
+        _configurations.Add(new LineOfThreeCubes());
+        _configurations.Add(new AngleOfThreeCubes());
+        _configurations.Add(new AngleOfThreeCubes());
+        _configurations.Add(new DiagonalOfTwoCubes());
+        _configurations.Add(new DiagonalOfTwoCubes());
+        _configurations.Add(new DiagonalOfThreeCubes());
         _configurations.Add(new LineOfFourCubes());
         _configurations.Add(new SquareOfNineCubes());
-       _configurations.Add(new SquareOfNineCubes());
         _configurations.Add(new LConfiguration());
-        //_configurations.Add(new SquareOfSixteenCubes());
     }
 
     public List<LocalPosition> CreateConfiguration()

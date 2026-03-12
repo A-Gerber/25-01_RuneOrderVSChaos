@@ -59,23 +59,71 @@
                 },
                 {
                     "name": "",
-                    "id": "d594bf83-2337-42ae-a46a-47c100040a54",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Mouse",
-                    "action": "PutShape",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "13a1eaf6-d6dc-4f5b-9554-2697ec6ab390",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Mouse",
                     "action": "UseSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a473be83-cce3-4992-ac33-d03a0c7fe9a3",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Phone",
+                    "action": "UseSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "TouchControls",
+            "id": "4f6ddb8d-3abd-44cb-95ba-cd43fc146832",
+            "actions": [
+                {
+                    "name": "TakeShape",
+                    "type": "Button",
+                    "id": "d00dfff9-e3d8-4529-a8fe-efbe520f75ae",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PutShape",
+                    "type": "Button",
+                    "id": "e4228eb8-2210-4ec0-ba74-e2cbfac99f0c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "47971573-323b-4d16-be4a-646cbc50764f",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "Hold(duration=0.1,pressPoint=0.1)",
+                    "processors": "",
+                    "groups": ";Phone",
+                    "action": "TakeShape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6ba3b012-aa5c-4ce4-8701-f2470bfac82e",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "Hold(duration=0.2,pressPoint=0.2)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PutShape",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -89,6 +137,17 @@
             "devices": [
                 {
                     "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        },
+        {
+            "name": "Phone",
+            "bindingGroup": "Phone",
+            "devices": [
+                {
+                    "devicePath": "<Touchscreen>",
                     "isOptional": false,
                     "isOR": false
                 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using YG;
 
 public class UserSkillFactory : MonoBehaviour
 {
@@ -21,10 +22,10 @@ public class UserSkillFactory : MonoBehaviour
     [SerializeField] private int _firstLightningStrikeThreshold = 1;
     [SerializeField] private ParticleSystem _secondLightningStrikeEffect;
     [SerializeField] private Sprite _secondLightningStrikeIcon;
-    [SerializeField] private int _secondLightningStrikeThreshold = 1;
+    [SerializeField] private int _secondLightningStrikeThreshold = 5;
     [SerializeField] private ParticleSystem _thirdLightningStrikeEffect;
     [SerializeField] private Sprite _thirdLightningStrikeIcon;
-    [SerializeField] private int _thirdLightningStrikeThreshold = 15;
+    [SerializeField] private int _thirdLightningStrikeThreshold = 25;
     [SerializeField] private ParticleSystem _fourthLightningStrikeEffect;
     [SerializeField] private Sprite _fourthLightningStrikeIcon;
     [SerializeField] private int _fourthLightningStrikeThreshold = 45;
@@ -45,7 +46,7 @@ public class UserSkillFactory : MonoBehaviour
     [SerializeField] private AudioClip _damageEffectSound;
     [SerializeField] private ParticleSystem _firstDamageEffect;
     [SerializeField] private Sprite _damageOfFirstRankIcon;
-    [SerializeField] private int _damageOfFirstRankThreshold = 1;
+    [SerializeField] private int _damageOfFirstRankThreshold = 15;
     [SerializeField] private ParticleSystem _secondDamageEffect;
     [SerializeField] private Sprite _damageOfSecondRankIcon;
     [SerializeField] private int _damageOfSecondRankThreshold = 20;
@@ -56,11 +57,13 @@ public class UserSkillFactory : MonoBehaviour
 
     [Header("PassiveSkills")]
     [SerializeField] private Sprite _passiveSkillOfSecondRankIcon;
-    [SerializeField] private int _passiveSkillOfSecondRankThreshold = 5;
+    [SerializeField] private int _passiveSkillOfSecondRankThreshold = 2;
     [SerializeField] private Sprite _passiveSkillOfThirdRankIcon;
-    [SerializeField] private int _passiveSkillOfThirdRankThreshold = 5;
+    [SerializeField] private int _passiveSkillOfThirdRankThreshold = 20;
     [SerializeField] private Sprite _passiveSkillOfFourthRankIcon;
-    [SerializeField] private int _passiveSkillOfFourthRankThreshold = 5;
+    [SerializeField] private int _passiveSkillOfFourthRankThreshold = 30;
+    [SerializeField] private Sprite _passiveSkillOfFifthRankIcon;
+    [SerializeField] private int _passiveSkillOfFifthRankThreshold = 40;
 
     private UserSkillPerformerView _userSkillPerformerView;
 
@@ -94,7 +97,7 @@ public class UserSkillFactory : MonoBehaviour
             skillCards.Add(new SkillCard(skill.Key, skill.Value));
 
         foreach (var card in skillCards)
-            Instantiate(_skillCardViewPrefab, _skillViewContainer).Initialize(card);        
+                Instantiate(_skillCardViewPrefab, _skillViewContainer).Initialize(card);
 
         return skillCards;
     }
@@ -115,11 +118,12 @@ public class UserSkillFactory : MonoBehaviour
             { new DamageOfThirdRank(_damageOfThirdRankIcon, Instantiate(_thirdDamageEffect, _effectContainer), _thirdDamageEffectSound), _damageOfThirdRankThreshold },
             { new PassiveSkillOfSecondRank(_passiveSkillOfSecondRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfSecondRankThreshold },
             { new PassiveSkillOfThirdRank(_passiveSkillOfThirdRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfThirdRankThreshold },
-            { new PassiveSkillOfFourthRank(_passiveSkillOfFourthRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfFourthRankThreshold }
+            { new PassiveSkillOfFourthRank(_passiveSkillOfFourthRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfFourthRankThreshold },
+            { new PassiveSkillOfFifthRank(_passiveSkillOfFifthRankIcon, Instantiate(_firstDamageEffect, _effectContainer), _firstLightningStrikeSound), _passiveSkillOfFifthRankThreshold }
         };
 
-        foreach (var skill in skills)        
-            Instantiate(_skillViewPrefab, _skillContainer).Initialize(skill.Key);       
+        foreach (var skill in skills)
+            Instantiate(_skillViewPrefab, _skillContainer).Initialize(skill.Key);
 
         return skills;
     }

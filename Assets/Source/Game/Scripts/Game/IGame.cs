@@ -7,7 +7,7 @@ internal interface IGame : IWinable
     bool IsPlaying { get; }
     int CurrentLevel { get; }
 
-    void NewGame();
+    void StartNewGame();
 
     void Restart();
 

@@ -30,7 +30,7 @@ public class CrossFilling : UserSkill, ISetableInSecondButton
         OffsetX = _offset;
         OffsetZ = _offset;
 
-        _description = "CrossFilling";
+        _description = "<color=#FFC300>Creating Runes II\n<color=white>Creates runes in a <color=#FFC300>cross";
         Description = _description;
     }
 

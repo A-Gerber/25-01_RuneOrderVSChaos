@@ -10,17 +10,18 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
     [SerializeField] private TextMeshProUGUI _textLevel;
     [SerializeField] private TextMeshProUGUI _scillCount;
     [SerializeField] private TextMeshProUGUI _gameScore;
-    [SerializeField] private Button _settingsButton;
     [SerializeField] private Button _menuButton;
-    [SerializeField] private Button _skillsButton;
+    [SerializeField] private Button _skillMenuButton;
+    [SerializeField] private Button _skillsTooltipButton;
     [SerializeField] private ParticleSystem _hintAboutUsingSkill;
     [SerializeField] private SkillButton _firstSkillButton;
     [SerializeField] private SkillButton _secondSkillButton;
     [SerializeField] private SkillButton _thirdSkillButton;
 
     private WaitForSeconds _waitForAttack;
+    private Coroutine _coroutine;
     private GameModel _gameModel;
-    private IOpenableGameViewMenu _menu;
+    private IOpenableMenu _menu;
 
     public event Action OpenedSkillsMenu;
 
@@ -63,9 +64,9 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
     }
 
     internal void NewGame() =>
-    _gameModel.NewGame();
+    _gameModel.StartNewGame();
 
-    internal void Initialize(GameModel gameModel, IOpenableGameViewMenu menu)
+    internal void Initialize(GameModel gameModel, IOpenableMenu menu)
     {
         if (_gameModel != null)
             UnsubscribeGameModel();
@@ -76,19 +77,19 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
         SubscribeGameModel();
     }
 
-    private void OnSettingButtonClick()
-    {
-        _menu.OpenSettings();
-    }
-
     private void OnMenuButtonClick()
     {
         _menu.OpenMenu();
     }
 
-    private void OnSkillsButtonClick()
+    private void OnSkillsTooltipButtonClick()
     {
-        //Time.timeScale = 0;
+        _menu.OpenSkillsToolTip();
+    }
+
+    private void OnSkillMenuButtonClick()
+    {
+        Time.timeScale = 0;
         OpenedSkillsMenu?.Invoke();
     }
 
@@ -98,9 +99,14 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
         _hintAboutUsingSkill.gameObject.SetActive(false);
     }
 
-    private void OnChangeLevel(int value)
+    private void OnStartNewLevel()
     {
-        _textLevel.text = $"Level {value}";
+        _textLevel.text = $"Level {_gameModel.CurrentLevel}";
+        _scillCount.text = $"{_gameModel.SkillCount}";
+        _gameScore.text = $"{_gameModel.GameScore}";
+
+        if(_coroutine != null)
+            StopCoroutine(_coroutine);
     }
 
     private void OnChangeCountSkill(int value)
@@ -108,19 +114,19 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
         _scillCount.text = $"{value}";
     }
 
-    private void OnChangeGameScore(int value)
-    {
-        _gameScore.text = $"{value}";
-    }
-
     private void OnHelp()
     {
         _hintAboutUsingSkill.gameObject.SetActive(true);
     }
 
+    private void OnDisableHint()
+    {
+        _hintAboutUsingSkill.gameObject.SetActive(false);
+    }
+
     private void OnWaitForDelayAttack(bool isUsedSkill)
     {
-        StartCoroutine(AttackOverTime(isUsedSkill));
+        _coroutine = StartCoroutine(AttackOverTime(isUsedSkill));
     }
 
     private IEnumerator AttackOverTime(bool isUsedSkill)
@@ -137,15 +143,16 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
     {
         //SubscribeGameModel();
 
+        _gameModel.StartedNewGame += OnStartNewLevel;
+        _gameModel.WentToNextLevel += OnStartNewLevel;
         _gameModel.Waited += OnWaitForDelayAttack;
-        _gameModel.ChangedLevel += OnChangeLevel;
         _gameModel.SkillCountChanged += OnChangeCountSkill;
-        _gameModel.GameScoreChanged += OnChangeGameScore;
         _gameModel.Helped += OnHelp;
+        _gameModel.DisabledHint += OnDisableHint;
 
-        _settingsButton.onClick.AddListener(OnSettingButtonClick);
         _menuButton.onClick.AddListener(OnMenuButtonClick);
-        _skillsButton.onClick.AddListener(OnSkillsButtonClick);
+        _skillMenuButton.onClick.AddListener(OnSkillMenuButtonClick);
+        _skillsTooltipButton.onClick.AddListener(OnSkillsTooltipButtonClick);
 
         _firstSkillButton.ButtonClicked += OnSkillButtonClick;
         _secondSkillButton.ButtonClicked += OnSkillButtonClick;
@@ -156,15 +163,16 @@ public class GameView : MonoBehaviour, ISettingableSkillButton
     {
         //UnsubscribeGameModel();
 
+        _gameModel.StartedNewGame -= OnStartNewLevel;
+        _gameModel.WentToNextLevel -= OnStartNewLevel;
         _gameModel.Waited -= OnWaitForDelayAttack;
-        _gameModel.ChangedLevel -= OnChangeLevel;
         _gameModel.SkillCountChanged -= OnChangeCountSkill;
-        _gameModel.GameScoreChanged -= OnChangeGameScore;
-        _gameModel.Helped += OnHelp;
+        _gameModel.Helped -= OnHelp;
+        _gameModel.DisabledHint -= OnDisableHint;
 
-        _settingsButton.onClick.RemoveListener(OnSettingButtonClick);
         _menuButton.onClick.RemoveListener(OnMenuButtonClick);
-        _skillsButton.onClick.RemoveListener(OnSkillsButtonClick);
+        _skillMenuButton.onClick.RemoveListener(OnSkillMenuButtonClick);
+        _skillsTooltipButton.onClick.RemoveListener(OnSkillsTooltipButtonClick);
 
         _firstSkillButton.ButtonClicked -= OnSkillButtonClick;
         _secondSkillButton.ButtonClicked -= OnSkillButtonClick;

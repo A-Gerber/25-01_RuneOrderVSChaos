@@ -33,7 +33,7 @@ internal class ProjectileSpawner : Spawner<WizardProjectile>, ICreateableBullets
             throw new InvalidOperationException("bullet is null");
 
         _soundPlayer.PlayDamageSound();
-        base.OnRelease(bullet);
+        base.OnRelease(bullet);   
 
         bullet.Released -= Release;
     }

@@ -145,23 +145,71 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d594bf83-2337-42ae-a46a-47c100040a54"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Mouse"",
-                    ""action"": ""PutShape"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""13a1eaf6-d6dc-4f5b-9554-2697ec6ab390"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Mouse"",
                     ""action"": ""UseSkill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a473be83-cce3-4992-ac33-d03a0c7fe9a3"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Phone"",
+                    ""action"": ""UseSkill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""TouchControls"",
+            ""id"": ""4f6ddb8d-3abd-44cb-95ba-cd43fc146832"",
+            ""actions"": [
+                {
+                    ""name"": ""TakeShape"",
+                    ""type"": ""Button"",
+                    ""id"": ""d00dfff9-e3d8-4529-a8fe-efbe520f75ae"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PutShape"",
+                    ""type"": ""Button"",
+                    ""id"": ""e4228eb8-2210-4ec0-ba74-e2cbfac99f0c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""47971573-323b-4d16-be4a-646cbc50764f"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": ""Hold(duration=0.1,pressPoint=0.1)"",
+                    ""processors"": """",
+                    ""groups"": "";Phone"",
+                    ""action"": ""TakeShape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ba3b012-aa5c-4ce4-8701-f2470bfac82e"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": ""Hold(duration=0.2,pressPoint=0.2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PutShape"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -179,6 +227,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isOR"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Phone"",
+            ""bindingGroup"": ""Phone"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Touchscreen>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
         }
     ]
 }");
@@ -187,11 +246,16 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_TakeShape = m_Player.FindAction("TakeShape", throwIfNotFound: true);
         m_Player_PutShape = m_Player.FindAction("PutShape", throwIfNotFound: true);
         m_Player_UseSkill = m_Player.FindAction("UseSkill", throwIfNotFound: true);
+        // TouchControls
+        m_TouchControls = asset.FindActionMap("TouchControls", throwIfNotFound: true);
+        m_TouchControls_TakeShape = m_TouchControls.FindAction("TakeShape", throwIfNotFound: true);
+        m_TouchControls_PutShape = m_TouchControls.FindAction("PutShape", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInput.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_TouchControls.enabled, "This will cause a leak and performance issues, PlayerInput.TouchControls.Disable() has not been called.");
     }
 
     /// <summary>
@@ -381,6 +445,113 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
+
+    // TouchControls
+    private readonly InputActionMap m_TouchControls;
+    private List<ITouchControlsActions> m_TouchControlsActionsCallbackInterfaces = new List<ITouchControlsActions>();
+    private readonly InputAction m_TouchControls_TakeShape;
+    private readonly InputAction m_TouchControls_PutShape;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "TouchControls".
+    /// </summary>
+    public struct TouchControlsActions
+    {
+        private @PlayerInput m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public TouchControlsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "TouchControls/TakeShape".
+        /// </summary>
+        public InputAction @TakeShape => m_Wrapper.m_TouchControls_TakeShape;
+        /// <summary>
+        /// Provides access to the underlying input action "TouchControls/PutShape".
+        /// </summary>
+        public InputAction @PutShape => m_Wrapper.m_TouchControls_PutShape;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_TouchControls; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="TouchControlsActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(TouchControlsActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="TouchControlsActions" />
+        public void AddCallbacks(ITouchControlsActions instance)
+        {
+            if (instance == null || m_Wrapper.m_TouchControlsActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TouchControlsActionsCallbackInterfaces.Add(instance);
+            @TakeShape.started += instance.OnTakeShape;
+            @TakeShape.performed += instance.OnTakeShape;
+            @TakeShape.canceled += instance.OnTakeShape;
+            @PutShape.started += instance.OnPutShape;
+            @PutShape.performed += instance.OnPutShape;
+            @PutShape.canceled += instance.OnPutShape;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="TouchControlsActions" />
+        private void UnregisterCallbacks(ITouchControlsActions instance)
+        {
+            @TakeShape.started -= instance.OnTakeShape;
+            @TakeShape.performed -= instance.OnTakeShape;
+            @TakeShape.canceled -= instance.OnTakeShape;
+            @PutShape.started -= instance.OnPutShape;
+            @PutShape.performed -= instance.OnPutShape;
+            @PutShape.canceled -= instance.OnPutShape;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="TouchControlsActions.UnregisterCallbacks(ITouchControlsActions)" />.
+        /// </summary>
+        /// <seealso cref="TouchControlsActions.UnregisterCallbacks(ITouchControlsActions)" />
+        public void RemoveCallbacks(ITouchControlsActions instance)
+        {
+            if (m_Wrapper.m_TouchControlsActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="TouchControlsActions.AddCallbacks(ITouchControlsActions)" />
+        /// <seealso cref="TouchControlsActions.RemoveCallbacks(ITouchControlsActions)" />
+        /// <seealso cref="TouchControlsActions.UnregisterCallbacks(ITouchControlsActions)" />
+        public void SetCallbacks(ITouchControlsActions instance)
+        {
+            foreach (var item in m_Wrapper.m_TouchControlsActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_TouchControlsActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="TouchControlsActions" /> instance referencing this action map.
+    /// </summary>
+    public TouchControlsActions @TouchControls => new TouchControlsActions(this);
     private int m_MouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -392,6 +563,19 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         {
             if (m_MouseSchemeIndex == -1) m_MouseSchemeIndex = asset.FindControlSchemeIndex("Mouse");
             return asset.controlSchemes[m_MouseSchemeIndex];
+        }
+    }
+    private int m_PhoneSchemeIndex = -1;
+    /// <summary>
+    /// Provides access to the input control scheme.
+    /// </summary>
+    /// <seealso cref="UnityEngine.InputSystem.InputControlScheme" />
+    public InputControlScheme PhoneScheme
+    {
+        get
+        {
+            if (m_PhoneSchemeIndex == -1) m_PhoneSchemeIndex = asset.FindControlSchemeIndex("Phone");
+            return asset.controlSchemes[m_PhoneSchemeIndex];
         }
     }
     /// <summary>
@@ -422,5 +606,27 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUseSkill(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "TouchControls" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="TouchControlsActions.AddCallbacks(ITouchControlsActions)" />
+    /// <seealso cref="TouchControlsActions.RemoveCallbacks(ITouchControlsActions)" />
+    public interface ITouchControlsActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "TakeShape" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnTakeShape(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PutShape" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPutShape(InputAction.CallbackContext context);
     }
 }

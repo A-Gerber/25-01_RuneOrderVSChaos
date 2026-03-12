@@ -21,8 +21,6 @@ public class SkillCard
     internal event Action<bool> ChangedInteractable;
 
     internal bool IsOpen { get; private set; } = false;
-    internal bool CanChangeInteractivity { get; private set; } = false;
-    internal bool IsActive { get; private set; } = false;
     internal int OpeningThreshold => _openingThreshold;
     internal UserSkill Skill => _skill;
 

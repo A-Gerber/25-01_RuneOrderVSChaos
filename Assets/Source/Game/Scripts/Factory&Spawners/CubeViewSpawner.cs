@@ -48,7 +48,7 @@ internal class CubeViewSpawner : Spawner<CubeView>, ICreateableCubesForArea
     protected override CubeView Create()
     {
         CubeView @object = Instantiate(Prefab);
-        @object.Initialize(new Cube(@object.transform, @object.Rigidbody, @object.DurationLanding, @object.RaycastDistance));
+        @object.Initialize(new Cube(@object.transform, @object.Rigidbody, @object.RaycastDistance));
 
         return @object;
     }

@@ -20,13 +20,18 @@ public class GroundImpactEffect : MonoBehaviour
         _mover = new MoverTo(_projectile);
     }
 
+    private void Update()
+    {
+        _mover.Move();
+    }
+
     public void Perform(Vector3 targetPosition)
     {
         _projectile.localPosition = Vector3.zero;
         _projectile.LookAt(targetPosition);
 
         _rune.position = targetPosition;
-        _mover.MoveTo(targetPosition, _projectileFlightTime);
+        _mover.SetTarget(targetPosition, _projectileFlightTime);
 
         StartCoroutine(ReleaseOverTime());
     }
@@ -34,6 +39,7 @@ public class GroundImpactEffect : MonoBehaviour
     private IEnumerator ReleaseOverTime()
     {
         yield return _wait;
+        _mover.Reset();
         Released?.Invoke(this);
     }
 }

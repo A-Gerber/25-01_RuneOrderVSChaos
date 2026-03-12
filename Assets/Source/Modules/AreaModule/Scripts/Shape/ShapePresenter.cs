@@ -14,16 +14,23 @@ public class ShapePresenter : MonoBehaviour, ILiftable
     private Shape _shape;
     private Arrow _arrow;
     private ShapeRotater _shapeRotater;
+    private ShapeShifter _shapeShifter;
+    private MoverTo _moverTo;
 
     private readonly float _unitCoefficient = 1f;
+    private float _shapeVerticalShift = 0f;
     private bool _isReduced;
     private bool _canArrowTrackMovements;
 
     public event Action<ShapePresenter> Released;
 
-    public float DurationOfReturn => _durationOfReturn;
     public bool IsRaised => _shape.IsRaised;
     public bool IsRestart { get; private set; } = false;
+
+    private void Awake()
+    {
+        _moverTo = new MoverTo(transform);
+    }
 
     private void FixedUpdate()
     {
@@ -58,22 +65,29 @@ public class ShapePresenter : MonoBehaviour, ILiftable
 
     private void Update()
     {
-        if (_shape.IsRaised)
-            _shape.Raise();
+        if (_shape.IsRaised && _shape.IsBackStartPosition == false)
+            _shape.Raise(_shapeVerticalShift);
 
         if (_canArrowTrackMovements)
             _arrow.TrackMovement();
+
+        _moverTo.Move();
     }
 
-    public void Initialize(Shape shape, ShapeRotater shapeRotater)
+    public void Initialize(Shape shape, ShapeRotater shapeRotater, ShapeShifter shapeShifter)
     {
         if (_shape != null)
+        {
             _shape.ReleasedOnRestart -= OnRelease;
+            _shape.ReturnedOnStartPosition -= OnReturnOnStartPosition;
+        }
 
         _shape = shape ?? throw new InvalidOperationException("shape is null");
         _shapeRotater = shapeRotater ?? throw new InvalidOperationException("shapeRotater is null");
+        _shapeShifter = shapeShifter ?? throw new InvalidOperationException("shapeShifter is null");
 
         _shape.ReleasedOnRestart += OnRelease;
+        _shape.ReturnedOnStartPosition += OnReturnOnStartPosition;
     }
 
     public void Reduce()
@@ -99,6 +113,7 @@ public class ShapePresenter : MonoBehaviour, ILiftable
             cubeModels.Add(cubeView.GetCubeModel());
         }
 
+        _shapeVerticalShift = _shapeShifter.CalculateOffset(cubeModels);
         _shape.TakeCubes(cubeModels);
         _arrow = arrow ?? throw new InvalidOperationException("arrow is null");
     }
@@ -113,6 +128,11 @@ public class ShapePresenter : MonoBehaviour, ILiftable
         return _shape;
     }
 
+    private void OnReturnOnStartPosition(Vector3 target)
+    {
+        _moverTo.SetTarget(target, _durationOfReturn);
+    }
+
     private void OnRelease(bool value)
     {
         IsRestart = value;
@@ -121,6 +141,7 @@ public class ShapePresenter : MonoBehaviour, ILiftable
 
         _arrow.Activate();
         _arrow.Destroy();
+        _moverTo.Reset();
         Released?.Invoke(this);
     }
 

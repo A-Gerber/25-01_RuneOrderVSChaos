@@ -9,7 +9,10 @@ public class EnemyPresenter : MonoBehaviour
     private const float DelaySlider = 0.01f;
 
     [SerializeField] private Image _enemyView;
+    [SerializeField] private Image _skillIcon;
+    [SerializeField] private Image _circularSlider;
     [SerializeField] private TextMeshProUGUI _text;
+    [SerializeField] private TextMeshProUGUI _skillDescription;
     [SerializeField] private Slider _slider;
     [SerializeField] private float _smoothEffectTime = 0.25f;
 
@@ -26,16 +29,7 @@ public class EnemyPresenter : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_enemy == null)
-            return;
-
-        _currentTime -= Time.fixedDeltaTime;
-
-        if (_currentTime <= 0f && _enemy.IsAlive)
-        {
-            _enemy.UseSkill();
-            _currentTime = _enemy.SkillCooldown;
-        }
+        UseTimerSkill();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -65,6 +59,24 @@ public class EnemyPresenter : MonoBehaviour
         _enemy.ChangedHealth += Show;
         _enemy.UpdateHealth();
         _enemyView.sprite = _enemy.Icon;
+        _skillIcon.sprite = _enemy.SkillIcon;
+        _circularSlider.fillAmount = _currentTime / _enemy.SkillCooldown;
+        _skillDescription.text = _enemy.SkillDescription;
+    }
+
+    private void UseTimerSkill()
+    {
+        if (_enemy == null)
+            return;
+
+        _currentTime -= Time.fixedDeltaTime;
+        _circularSlider.fillAmount = _currentTime / _enemy.SkillCooldown;
+
+        if (_currentTime <= 0f && _enemy.IsAlive)
+        {
+            _enemy.UseSkill();
+            _currentTime = _enemy.SkillCooldown;
+        }
     }
 
     private void Show()

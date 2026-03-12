@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class AttackerModel : IConfigurableFromSkillSide
 {
-
-    private readonly Score—ounter _Òounter;
+    private readonly ScoreCounter _Òounter;
     private readonly int _numberSimpleCombo;
     private IDamageable _enemy;
     private int _damagePerProjectile;
 
-    public AttackerModel(Score—ounter Òounter, int numberSimpleCombo)
+    public AttackerModel(ScoreCounter Òounter, int numberSimpleCombo)
     {
         if (numberSimpleCombo <= 0)
             throw new ArgumentOutOfRangeException(nameof(numberSimpleCombo));
@@ -18,6 +17,8 @@ public class AttackerModel : IConfigurableFromSkillSide
         _numberSimpleCombo = numberSimpleCombo;
 
         Òounter.SkillPointsAwarded += OnReward;
+
+        Debug.Log("œÓ‰ÛÏ‡Ú¸ Í‡Í ÓÚÔËÒ‡Ú¸Òˇ");
     }
 
     public event Action<int> SkillPointsAwarded;
@@ -46,7 +47,8 @@ public class AttackerModel : IConfigurableFromSkillSide
         _enemy.TakeDamage(countCells * _damagePerProjectile);
         CubesReleased?.Invoke(countCells * _damagePerProjectile);
 
-        int numberOfCombos = (int)Mathf.Ceil(countCells / UserUtilities.AreaSize);
+        int numberOfCombos = Mathf.CeilToInt(countCells / (float)Constants.AreaSize);
+
         _Òounter.CalculateCombo(numberOfCombos);
 
         if (numberOfCombos > _numberSimpleCombo)
@@ -68,6 +70,7 @@ public class AttackerModel : IConfigurableFromSkillSide
 
     private void OnReward(int count)
     {
+        Debug.Log("AttackerModel - " + count);
         SkillPointsAwarded?.Invoke(count);
     }
 }

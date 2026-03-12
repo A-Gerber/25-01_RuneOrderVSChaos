@@ -188,7 +188,7 @@ public class AreaModel : IUseableUserSkills, IUseableEnemySkills
 
         for (int i = 0; i < _shapeModel.Length; i++)
         {
-            if (_shapeModel[index].IsFrozen)
+            if (_shapeModel[index].IsFrozen || _shapeModel[index].IsRelease)
             {
                 index = ++index % _shapeModel.Length;
             }
@@ -201,16 +201,13 @@ public class AreaModel : IUseableUserSkills, IUseableEnemySkills
 
         if (canFreezeShape)
         {
-            if (_shapeModel[index].IsRelease == false)
-            {
-                if (_shapeModel[index].IsRaised)
-                    position = UserUtilities.GetCursorPosition(UserUtilities.CameraHeight);
-                else
-                    position = _shapeModel[index].StartPosition;
+            if (_shapeModel[index].IsRaised)
+                position = UserUtilities.GetCursorPosition(Constants.CameraHeight);
+            else
+                position = _shapeModel[index].StartPosition;
 
-                _shapeModel[index].FreezeCubes();
-                return true;
-            }
+            _shapeModel[index].FreezeCubes();
+            return true;
         }
 
         return false;

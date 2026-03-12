@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core;
 using System;
 using UnityEngine;
 
@@ -46,8 +47,8 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
 
         _area.Initialize(_shapeModels);
 
-        _startLevel = UserUtilities.StartLevel;
-        _startSkillCount = UserUtilities.StartSkillCount;
+        _startLevel = Constants.StartLevel;
+        _startSkillCount = Constants.StartSkillCount;
         _configurationGenerator = new(_startLevel);
 
         _shapePresenterSpawner.CreatedShape += OnCreateShapeView;  // Подумать как отписаться
@@ -57,31 +58,32 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
         Debug.Log("Подумать как отписаться");
     }
 
+    public event Action StartedNewGame;
+    public event Action WentToNextLevel;
     public event Action GameOvered;
     public event Action Helped;
+    public event Action DisabledHint;
     public event Action<int> GameWined;
-    public event Action<int> ChangedLevel;
     internal event Action<bool> Waited;
     internal event Action<int> SkillCountChanged;
-    internal event Action<int> GameScoreChanged;
 
     public bool IsPlaying { get; private set; } = false;
     public bool CanAttack => _canAttack;
     public int CurrentLevel => _level;
+    public int SkillCount => _skillCount;
+    public int GameScore => _gameScore;
 
     public void ProcessStepOverTime()
     {
         Waited?.Invoke(false);
     }
 
-    public void NewGame()
+    public void StartNewGame()
     {
         _level = _startLevel;
-        ChangedLevel?.Invoke(_level);
         _skillCount = _startSkillCount;
-        SkillCountChanged?.Invoke(_skillCount);
         _gameScore = 0;
-        GameScoreChanged?.Invoke(_gameScore);
+        StartedNewGame?.Invoke();
 
         _index = ShapeCountForCreate;
 
@@ -110,12 +112,10 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
     public void GoToNextLevel()
     {
         _level++;
-        ChangedLevel?.Invoke(_level);
-        _skillCount += UserUtilities.SkillIncrease;
-
-        SkillCountChanged?.Invoke(_skillCount);
+        _skillCount += Constants.SkillIncrease;
         _gameScore += _gameScoreIncrease;
-        GameScoreChanged?.Invoke(_gameScore);
+
+        WentToNextLevel?.Invoke();
         _attacker.ResetCounter();
 
         _index = ShapeCountForCreate;
@@ -128,6 +128,7 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
 
     public void OnRewardSkillPoints(int numberOfSkillPoints)
     {
+        Debug.Log("GameModel - " + numberOfSkillPoints);
         _skillCount += numberOfSkillPoints;
         SkillCountChanged?.Invoke(_skillCount);
     }
@@ -167,7 +168,7 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
 
     internal void UseSkill()
     {
-        //_skillCount--;
+        _skillCount--;
         SkillCountChanged?.Invoke(_skillCount);
 
         _projectileSpawner.CreateBullets(_area.GetPositionTargetCells());
@@ -221,6 +222,10 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
                 GameOvered?.Invoke();
             else
                 Helped?.Invoke();
+        }
+        else
+        {
+            DisabledHint?.Invoke();
         }
     }
 

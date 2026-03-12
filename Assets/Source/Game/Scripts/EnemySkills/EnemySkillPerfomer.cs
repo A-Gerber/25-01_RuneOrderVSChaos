@@ -108,9 +108,9 @@ internal class EnemySkillPerfomer
     {
         List<ITakeable> cells = new();
 
-        for (int i = 0; i < UserUtilities.AreaSize; i++)
+        for (int i = 0; i < Constants.AreaSize; i++)
         {
-            for (int j = 0; j < UserUtilities.AreaSize; j++)
+            for (int j = 0; j < Constants.AreaSize; j++)
             {
                 if (_areaModel.TryGetCellByCoordinate(out ITakeable cell, new LocalPosition(i, j)) && cell.IsBusy == false)
                     cells.Add(cell);

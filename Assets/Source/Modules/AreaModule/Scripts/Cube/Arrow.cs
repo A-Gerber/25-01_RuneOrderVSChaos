@@ -63,16 +63,16 @@ public class Arrow
 
     private void GetTargetPositions(Vector3 centr)
     {
-        if (Physics.Raycast(centr, _direction, out RaycastHit hit, UserUtilities.AreaSize))
+        if (Physics.Raycast(centr, _direction, out RaycastHit hit, Constants.AreaSize))
         {
-            Vector3 raycastCentr = new(Mathf.Round(hit.point.x), UserUtilities.CellSize / UserUtilities.HalfDivider, Mathf.Round(hit.point.z));
+            Vector3 endPointRaycast = new(Mathf.Round(hit.point.x), Constants.CellSize / Constants.HalfDivider, Mathf.Round(hit.point.z));
 
-            for (int i = 1; i <= UserUtilities.AreaSize; i++)
+            for (int i = 1; i <= Constants.AreaSize; i++)
             {
                 Vector3 vector = Vector3.zero;
                 vector += centr + _direction * i;
 
-                if (UserUtilities.IsLocateInArena(vector) && UserUtilities.IsEqualVector3(vector, raycastCentr) == false)
+                if (UserUtilities.IsLocateInArena(vector) && UserUtilities.IsEqualVector3(vector, endPointRaycast) == false)
                 {
                     _smallCubeSpawner.Create(vector);
                     _coordinates.Add(new LocalPosition((int)vector.x, (int)vector.z));
@@ -85,7 +85,7 @@ public class Arrow
         }
         else
         {
-            for (int i = 1; i <= UserUtilities.AreaSize; i++)
+            for (int i = 1; i <= Constants.AreaSize; i++)
             {
                 Vector3 vector = Vector3.zero;
                 vector += centr + _direction * i;
@@ -101,9 +101,9 @@ public class Arrow
 
     private bool TryGetÑellÑenter(out Vector3 centr)
     {
-        centr = new Vector3(Mathf.Round(_transform.position.x), UserUtilities.CellSize / UserUtilities.HalfDivider, Mathf.Round(_transform.position.z));
+        centr = new Vector3(Mathf.Round(_transform.position.x), Constants.CellSize / Constants.HalfDivider, Mathf.Round(_transform.position.z));
         Vector3 offset = _transform.position - centr;
 
-        return Mathf.Abs(offset.x) <= UserUtilities.CubeSize / UserUtilities.HalfDivider || Mathf.Abs(offset.z) <= UserUtilities.CubeSize / UserUtilities.HalfDivider;
+        return Mathf.Abs(offset.x) <= Constants.CubeSize / Constants.HalfDivider || Mathf.Abs(offset.z) <= Constants.CubeSize / Constants.HalfDivider;
     }
 }

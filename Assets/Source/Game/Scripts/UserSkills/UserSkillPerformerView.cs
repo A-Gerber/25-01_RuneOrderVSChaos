@@ -20,8 +20,8 @@ public class UserSkillPerformerView : MonoBehaviour
     {
         if (_isEnableAttackZone)
         {
-            Vector3 targetPosition = UserUtilities.GetCursorPosition(UserUtilities.CameraHeight);
-            targetPosition.y = UserUtilities.CellSize;
+            Vector3 targetPosition = UserUtilities.GetCursorPosition(Constants.CameraHeight);
+            targetPosition.y = Constants.CellSize;
             _transformAttackZone.position = Vector3.MoveTowards(_transformAttackZone.position, targetPosition, _speed * Time.deltaTime);      
         }       
     }
@@ -42,7 +42,7 @@ public class UserSkillPerformerView : MonoBehaviour
 
     private void OnEnableAttackZone()
     {
-        _transformAttackZone.position = UserUtilities.GetCursorPosition(UserUtilities.CameraHeight);
+        _transformAttackZone.position = UserUtilities.GetCursorPosition(Constants.CameraHeight);
         _isEnableAttackZone = true;
         _attackZone.gameObject.SetActive(true);
     }

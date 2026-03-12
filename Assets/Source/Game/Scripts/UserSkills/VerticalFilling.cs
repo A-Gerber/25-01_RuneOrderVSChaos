@@ -32,7 +32,7 @@ public class VerticalFilling : UserSkill, ISetableInSecondButton
         OffsetX = _offsetX;
         OffsetZ = _offsetZ;
 
-        _description = "VerticalFilling";
+        _description = "<color=#FFC300>Creating Runes III\n<color=white>Creates runes in the form of <color=#FFC300>three vertical lines";
         Description = _description;
     }
 

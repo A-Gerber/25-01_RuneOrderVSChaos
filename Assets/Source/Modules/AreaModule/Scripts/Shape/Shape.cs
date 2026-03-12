@@ -5,36 +5,34 @@ using UnityEngine;
 public class Shape
 {
     private readonly List<Cube> _cubes = new();
-    private readonly MoverTo _moverTo;
     private readonly Transform _transform;
-    private readonly float _durationOfReturn;
-    private ShapeMover _mover;
+    private readonly ShapeMover _mover;
     private Vector3 _startPosition;
 
     private bool _isBackStartPosition = false;
     private bool _isRaised = false;
     private bool _isFrozen = false;
 
-    public Shape(Transform transform, ShapeMover mover, float durationOfReturn)
+    public Shape(Transform transform, ShapeMover mover)
     {
-        if (durationOfReturn <= 0)
-            throw new ArgumentOutOfRangeException(nameof(durationOfReturn));
-
         _transform = transform != null ? transform : throw new InvalidOperationException("transform is null");
         _mover = mover ?? throw new InvalidOperationException("mover is null");
-        _durationOfReturn = durationOfReturn;
-        _moverTo = new MoverTo(_transform);
     }
 
     internal event Action<bool> ReleasedOnRestart;
+    internal event Action<Vector3> ReturnedOnStartPosition;
 
     public bool IsRaised => _isRaised;
+    public bool IsBackStartPosition => _isBackStartPosition;
     internal bool IsRelease => _cubes.Count == 0;
     internal bool IsFrozen => _isFrozen;
     internal Vector3 StartPosition => _startPosition;
 
     public bool TryPut()
     {
+        foreach (var cube in _cubes)
+            cube.SetTransparency(false);
+
         if (IsFreeSpace())
         {
             foreach (var cubeModel in _cubes)
@@ -51,7 +49,7 @@ public class Shape
         else
         {
             _isBackStartPosition = true;
-            _moverTo.MoveTo(_startPosition, _durationOfReturn);
+            ReturnedOnStartPosition?.Invoke(_startPosition);
 
             return false;
         }
@@ -61,11 +59,15 @@ public class Shape
     {
         _isRaised = true;
         _isBackStartPosition = false;
+        _mover.CalculateOffset(_transform);
+
+        foreach (var cube in _cubes)
+            cube.SetTransparency(true);
     }
 
-    internal void SetMover(ShapeMover mover)
+    internal void SetStatusOnStartPoint()
     {
-        _mover = mover ?? throw new InvalidOperationException("mover is null");
+        _isRaised = false;
     }
 
     internal void SetPosition(Vector3 startPosition)
@@ -76,9 +78,9 @@ public class Shape
         _startPosition = startPosition;
     }
 
-    internal void TakeCubes(List<Cube> cubeModels)
+    internal void TakeCubes(List<Cube> cubes)
     {
-        foreach (var cube in cubeModels)
+        foreach (var cube in cubes)
             _cubes.Add(cube);
     }
 
@@ -106,19 +108,14 @@ public class Shape
         ReleasedOnRestart?.Invoke(true);
     }
 
-    internal void SetStatusOnStartPoint()
+    internal void Raise(float verticalShift)
     {
-        _isRaised = false;
-    }
-
-    internal void Raise()
-    {
-        _mover.Move(_transform);
+        _mover.Move(_transform, verticalShift);
 
         if (_isBackStartPosition == false)
         {
-            foreach (var cubeModel in _cubes)
-                cubeModel.TrackLanding();
+            foreach (var cube in _cubes)
+                cube.TrackLanding();
         }
     }
 

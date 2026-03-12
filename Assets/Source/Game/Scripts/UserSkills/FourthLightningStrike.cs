@@ -9,20 +9,20 @@ public class FourthLightningStrike : UserSkill, ISetableInFirstButton
     public FourthLightningStrike(Sprite iconOnButton, ParticleSystem effect, AudioClip audioClip) : base(iconOnButton, effect, audioClip)
     {
         _configuration = new int[,] {
-                { 0, 0, 1, 1, 1, 0, 0 },
-                { 0, 1, 1, 1, 1, 1, 0 },
                 { 1, 1, 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 1, 1, 1, 1 },
-                { 0, 1, 1, 1, 1, 1, 0 },
-                { 0, 0, 1, 1, 1, 0, 0 }
+                { 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1 }
             };
 
         Configuration = _configuration;
         OffsetX = _offset;
         OffsetZ = _offset;
 
-        _description = "FourthLightningStrike";
+        _description = "<color=#FFC300>Lightning strike IV\n<color=white>Destroys runes in a <color=#FFC300>square 7x7";
         Description = _description;
     }
 

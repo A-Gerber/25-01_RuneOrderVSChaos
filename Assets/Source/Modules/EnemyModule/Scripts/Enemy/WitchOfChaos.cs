@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WitchOfChaos : IEnemy
 {
+    private readonly string _skillDescription;
     private readonly int _increaseToHealth;
     private readonly float _skillCooldown;
     private readonly Sprite _icon;
@@ -11,6 +12,7 @@ public class WitchOfChaos : IEnemy
     private int _health;
     private List<IEnemySkill> _skills = new();
     private HealingSkill _healingSkill;
+    private Sprite _skillIcon;
 
     public WitchOfChaos(float skillCooldown, Sprite icon, int healthIncrease)
     {
@@ -23,6 +25,8 @@ public class WitchOfChaos : IEnemy
         _icon = icon ?? throw new InvalidOperationException("icon is null");
         _skillCooldown = skillCooldown;
         _increaseToHealth = healthIncrease;
+        _skillDescription = $"<color=#FFC300>The witch's witchcraft <color=white>- allows you to use " +
+            $"<color=#FFC300>Regeneration<color=white>, <color=#FFC300>Snowstorm<color=white>, <color=#FFC300>Stone spikes<color=white>.";
     }
 
     public event Action ChangedHealth;
@@ -35,8 +39,11 @@ public class WitchOfChaos : IEnemy
     public int Health => _health;
     public float SkillCooldown => _skillCooldown;
     public Sprite Icon => _icon;
+    public Sprite SkillIcon => _skillIcon;
 
-    public void TakeSkills(HealingSkill healingSkill, FreezingSkill freezingSkill, GroundImpact groundImpact)
+    public string SkillDescription => _skillDescription;
+
+    public void TakeSkills(HealingSkill healingSkill, FreezingSkill freezingSkill, GroundImpact groundImpact, Sprite skillIcon)
     {
         if (freezingSkill == null)
             throw new InvalidOperationException("healingSkill is null");
@@ -45,6 +52,7 @@ public class WitchOfChaos : IEnemy
             throw new InvalidOperationException("healingSkill is null");
 
         _healingSkill = healingSkill ?? throw new InvalidOperationException("healingSkill is null");
+        _skillIcon = skillIcon != null ? skillIcon : throw new InvalidOperationException("skillIcon is null");
 
         _skills.Add(_healingSkill);
         _skills.Add(freezingSkill);

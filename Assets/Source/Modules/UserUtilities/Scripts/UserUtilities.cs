@@ -6,23 +6,7 @@ public static class UserUtilities
     private const float MinValueVolumeRegulator = 0.0001f;
     private const float CoefficientVolumeRegulator = 20f;
 
-    public static int StartLevel { get; private set; }
-    public static int StartSkillCount { get; private set; }
-    public static int SkillIncrease { get; private set; }
-    public static int SkillPointsInterval { get; private set; }
-    public static int OriginByX { get; private set; }
-    public static int OriginByZ { get; private set; }
-    public static int AreaSize { get; private set; }
-    public static int EndByX { get; private set; }
-    public static int EndByZ { get; private set; }
-    public static float HalfDivider { get; private set; } = 2f;
-    public static float CubeSize { get; private set; }
-    public static float CameraHeight { get; private set; }
-    public static float CellSize { get; private set; }
-    public static float MinBorderArea { get; private set; }
-    public static float MaxBorderArea { get; private set; }
     public static bool CanPerformRaycast { get; private set; } = true;
-
 
     public static bool IsInRange(float value, float min, float max)
     {
@@ -59,66 +43,10 @@ public static class UserUtilities
 
     public static bool IsLocateInArena(Vector3 targetPosition)
     {
-        bool isAbscissaInArea = IsInRange(targetPosition.x, MinBorderArea, MaxBorderArea);
-        bool isApplicateInArea = IsInRange(targetPosition.z, MinBorderArea, MaxBorderArea);
+        bool isAbscissaInArea = IsInRange(targetPosition.x, Constants.MinBorderArea, Constants.MaxBorderArea);
+        bool isApplicateInArea = IsInRange(targetPosition.z, Constants.MinBorderArea, Constants.MaxBorderArea);
 
         return isAbscissaInArea && isApplicateInArea;
-    }
-
-    public static void SetCameraHeight(float cameraHeight)
-    {
-        CameraHeight = cameraHeight;
-    }
-
-    public static void SetAreaParameters(int originByX, int originByZ, int areaSize)
-    {
-        if (areaSize <= 0)
-            throw new ArgumentOutOfRangeException(nameof(areaSize));
-
-        OriginByX = originByX;
-        OriginByZ = originByZ;
-        AreaSize = areaSize;
-        EndByX = areaSize - 1 + originByX;
-        EndByZ = areaSize - 1 + originByZ;
-    }
-
-    public static void SetGameParameters(int startLevel, int startSkillCount, int skillCountIncrease, int skillPointsInterval)
-    {
-        if (startLevel < 0)
-            throw new ArgumentOutOfRangeException(nameof(startLevel));
-
-        if (startSkillCount < 0)
-            throw new ArgumentOutOfRangeException(nameof(startSkillCount));
-
-        if (skillCountIncrease <= 0)
-            throw new ArgumentOutOfRangeException(nameof(skillCountIncrease));
-
-        if (skillPointsInterval <= 0)
-            throw new ArgumentOutOfRangeException(nameof(skillPointsInterval));
-
-        StartLevel = startLevel;
-        StartSkillCount = startSkillCount;
-        SkillIncrease = skillCountIncrease;
-        SkillPointsInterval = skillPointsInterval;
-    }
-
-    public static void SetCubeParameters(float cubeSize)
-    {
-        if (cubeSize <= 0)
-            throw new ArgumentOutOfRangeException(nameof(cubeSize));
-
-        CubeSize = cubeSize;
-    }
-
-    public static void CalculateAreaBorders(float cellSize)
-    {
-        if (cellSize <= 0)
-            throw new ArgumentOutOfRangeException(nameof(cellSize));
-
-        CellSize = cellSize;
-
-        MinBorderArea = OriginByX - CellSize / HalfDivider;
-        MaxBorderArea = EndByX + CellSize / HalfDivider;
     }
 
     public static float CalculateVolumeValue(float value)
@@ -137,5 +65,14 @@ public static class UserUtilities
     public static void UnbanRaycast()
     {
         CanPerformRaycast = true;
+    }
+
+    public static Vector3 GetRandomScreenPosition()
+    {
+        float x = UnityEngine.Random.Range(Constants.MinBorderArea, Constants.MaxBorderArea);
+        float z = UnityEngine.Random.Range(Constants.MinBorderArea, Constants.MaxBorderArea);
+
+        Vector3 randomPosition = new(x, 0f, z);
+        return Camera.main.WorldToScreenPoint(randomPosition);
     }
 }
