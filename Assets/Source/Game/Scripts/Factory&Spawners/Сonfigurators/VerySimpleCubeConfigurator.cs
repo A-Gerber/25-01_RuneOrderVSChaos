@@ -18,7 +18,13 @@ internal class VerySimpleCubeConfigurator : ICubeConfigurator
         _configurations.Add(new DiagonalOfTwoCubes());
         _configurations.Add(new DiagonalOfThreeCubes());
         _configurations.Add(new LineOfFourCubes());
-        _configurations.Add(new SquareOfNineCubes());  
+        _configurations.Add(new SquareOfNineCubes());
+
+        //_configurations.Add(new SquareOfSixteenCubes());
+        //_configurations.Add(new LConfiguration());
+        //_configurations.Add(new TConfiguration());
+        //_configurations.Add(new ZConfiguration());
+        //_configurations.Add(new AngleOfFiveCubes());
     }
 
     public List<LocalPosition> CreateConfiguration()

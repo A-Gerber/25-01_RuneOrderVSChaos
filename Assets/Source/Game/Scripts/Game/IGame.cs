@@ -2,21 +2,24 @@ using System;
 
 internal interface IGame : IWinable
 {
-    event Action GameOvered;
+    event Action<int> GameOvered;
 
     bool IsPlaying { get; }
     int CurrentLevel { get; }
 
-    void StartNewGame();
+    void StartGame(GameSavedData data);
 
     void Restart();
 
     void GoToNextLevel();
-
-    void OnRewardSkillPoints(int numberOfSkillPoints);
 }
 
 internal interface IWinable
 {
-    event Action<int> GameWined;
+    event Action<GameSavedData> GameWined;
+}
+
+internal interface IRewardable
+{
+    void RewardForADV();
 }

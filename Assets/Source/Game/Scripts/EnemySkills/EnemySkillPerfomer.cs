@@ -26,21 +26,20 @@ internal class EnemySkillPerfomer
     internal event Action<Vector3> UsedFreezingSkill;
     internal event Action<Vector3> UsedGroundImpact;
     internal event Action PlacedStalactite;
+    internal event Action Initialized;
 
-    internal void SubscribeToEnemy(IEnemy enemy)
+    internal bool CanUseSkill => _enemy != null && _enemy.IsAlive;
+    internal float EnemySkillCooldown => _enemy.SkillCooldown;
+
+    internal void Initialize(IEnemy enemy)
     {
-        if (_enemy != null)
-            _enemy.UsedSkill -= OnUseSkill;
-
         _enemy = enemy ?? throw new InvalidOperationException("enemy is null");
-
-        _enemy.UsedSkill += OnUseSkill;
+        Initialized?.Invoke();
     }
 
-    private void OnUseSkill(IEnemySkill skill)
+    internal void UseSkill()
     {
-        if (skill == null)
-            throw new InvalidOperationException("skill is null");
+        IEnemySkill skill = _enemy.GetSkill() ?? throw new InvalidOperationException("skill is null");
 
         if (skill is HealingSkill healingSkill)
         {

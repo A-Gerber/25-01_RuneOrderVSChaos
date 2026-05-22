@@ -101,7 +101,7 @@ public class Arrow
 
     private bool TryGet—ell—enter(out Vector3 centr)
     {
-        centr = new Vector3(Mathf.Round(_transform.position.x), Constants.CellSize / Constants.HalfDivider, Mathf.Round(_transform.position.z));
+        centr = new Vector3(Mathf.Round(_transform.position.x), Constants.CellSize / Constants.HalfDivider , Mathf.Round(_transform.position.z));
         Vector3 offset = _transform.position - centr;
 
         return Mathf.Abs(offset.x) <= Constants.CubeSize / Constants.HalfDivider || Mathf.Abs(offset.z) <= Constants.CubeSize / Constants.HalfDivider;

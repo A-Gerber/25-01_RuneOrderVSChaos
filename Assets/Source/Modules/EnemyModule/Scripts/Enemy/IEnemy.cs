@@ -4,7 +4,6 @@ using UnityEngine;
 public interface IEnemy : IChangeableHealthEnemy
 {
     event Action ChangedHealth;
-    event Action <IEnemySkill> UsedSkill;
 
     int Health {  get; }
     bool IsFullHealth {  get; }
@@ -16,9 +15,11 @@ public interface IEnemy : IChangeableHealthEnemy
 
     void UpdateHealth();
 
-    void UseSkill();
+    IEnemySkill GetSkill();
 
     void SetMaxHealth(int health);
 
     void TakeHealth(int health);
+
+    void ChangeSkillDescription(Languages language);
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,7 +13,15 @@ public class ShapeShifter
 
 public class MobileShapeShifter : ShapeShifter
 {
-    private const float Shift = 1f;
+    private readonly float _shift;
+
+    public MobileShapeShifter(float shift)
+    {
+        if (shift < 0)
+            throw new ArgumentOutOfRangeException(nameof(shift));
+
+        _shift = shift;
+    }
 
     internal override float CalculateOffset(List<Cube> cubes)
     {
@@ -21,6 +30,6 @@ public class MobileShapeShifter : ShapeShifter
         foreach (var cube in cubes)
             values.Add(cube.LocalPosition.PositionZ);
 
-        return Shift + (values.Max() - values.Min()) / Constants.HalfDivider;
+        return _shift + Mathf.Ceil((values.Max() - values.Min()) / Constants.HalfDivider);
     }
 }

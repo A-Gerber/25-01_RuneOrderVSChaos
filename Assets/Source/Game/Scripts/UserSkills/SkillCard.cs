@@ -16,11 +16,13 @@ public class SkillCard
         _openingThreshold = openingThreshold;
     }
 
+    internal event Action ActivatedOnLoad;
     internal event Action Opened;
     internal event Action Closed;
     internal event Action<bool> ChangedInteractable;
 
     internal bool IsOpen { get; private set; } = false;
+    internal bool IsActivated { get; private set; } = false;
     internal int OpeningThreshold => _openingThreshold;
     internal UserSkill Skill => _skill;
 
@@ -38,12 +40,20 @@ public class SkillCard
     internal void Close()
     {
         IsOpen = false;
+        IsActivated = false;
         Closed?.Invoke();
     }
 
     internal void Activate()
     {
+        IsActivated = true;
         _userSkillHandler.AddSkillToTempList(this);
+    }
+
+    internal void ActivateOnLoad()
+    {
+        IsActivated = true;
+        ActivatedOnLoad?.Invoke();
     }
 
     internal void SetInteracteble(bool value)
@@ -59,5 +69,10 @@ public class SkillCard
     internal string GetDescription()
     {
         return _skill.SkillDescription;
+    }
+
+    internal void ChangeSkillDescription(Languages language)
+    {
+        _skill.SetDescriptionLanguage(language);
     }
 }

@@ -1,0 +1,18 @@
+{
+    "intExample": 5,
+    "strExample": "Hello!",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 610,
+    "Level": 1,
+    "ManaCount": 40,
+    "GameScore": 0,
+    "MaxGameResult": 1965,
+    "ActivatedSkills": [
+        "FirstLightningStrike"
+    ]
+}

@@ -1,76 +1,66 @@
-using Palmmedia.ReportGenerator.Core;
 using System;
 using UnityEngine;
 
-internal class GameModel : IProcessable, IGame, IPerformableAttack
+internal class GameModel : IProcessable, IGame, IPerformableAttack, IRewardable
 {
-    private const int ShapeCountForCreate = 3;
-
     private readonly Shape[] _shapeModels = new Shape[ShapeCountForCreate];
     private readonly ShapePresenterSpawner _shapePresenterSpawner;
     private readonly EnemiesFactory _enemiesFactory;
     private readonly ICreateableBullets _projectileSpawner;
     private readonly AreaModel _area;
     private readonly AttackerModel _attacker;
+    private readonly ManaGenerator _manaGenerator;
     private readonly PlayerInputController _controller;
-    private readonly ConfigurationGenerator _configurationGenerator;
     private readonly UserSkillPerformer _userPerformer;
     private readonly EnemySkillPerfomer _enemySkillPerfomer;
-    private readonly IChangeableLevel _userSkillHandler;
+
+    private const int ShapeCountForCreate = 3;
+
+    private ConfigurationGenerator _configurationGenerator;
     private IChangeableHealthEnemy _enemy;
-
-    private readonly int _startLevel;
-    private readonly int _startSkillCount;
-
     private int _index = 0;
     private int _gameScore = 0;
     private int _gameScoreIncrease;
-    private int _skillCount;
     private int _level;
     private bool _canAttack;
 
-    internal GameModel(IFactoryData factory, AreaModel area, AttackerModel attacker, UserSkillPerformer userPerformer, EnemySkillPerfomer enemySkillPerfomer)
+    internal GameModel(EntityDataForGame entityDataForGame)
     {
-        if (factory == null)
-            throw new InvalidOperationException("shapeViewSpawner is null");
+        if (entityDataForGame == null)
+            throw new InvalidOperationException("entityDataForGame is null");
 
-        _area = area ?? throw new InvalidOperationException("area is null");
-        _attacker = attacker ?? throw new InvalidOperationException("attacker is null");
-        _userPerformer = userPerformer ?? throw new InvalidOperationException("userPerformer is null");
-        _enemySkillPerfomer = enemySkillPerfomer ?? throw new InvalidOperationException("enemySkillPerfomer is null");
+        _area = entityDataForGame.AreaModel ?? throw new InvalidOperationException("AreaModel is null");
+        _attacker = entityDataForGame.AttackerModel ?? throw new InvalidOperationException("AttackerModel is null");
+        _manaGenerator = entityDataForGame.ManaGenerator ?? throw new InvalidOperationException("ManaGenerator is null");
+        _userPerformer = entityDataForGame.UserSkillPerformer ?? throw new InvalidOperationException("UserSkillPerformer is null");
+        _enemySkillPerfomer = entityDataForGame.EnemySkillPerfomer ?? throw new InvalidOperationException("EnemySkillPerfomer is null");
+        _enemiesFactory = entityDataForGame.EnemiesFactory != null ? entityDataForGame.EnemiesFactory : throw new InvalidOperationException("EnemiesFactory is null");
+        _shapePresenterSpawner = entityDataForGame.ShapePresenterSpawner != null ? entityDataForGame.ShapePresenterSpawner : throw new InvalidOperationException("ShapePresenterSpawner is null");
+        _projectileSpawner = entityDataForGame.ProjectileSpawner ?? throw new InvalidOperationException("ProjectileSpawner is null");
+        _controller = entityDataForGame.PlayerInputController != null ? entityDataForGame.PlayerInputController : throw new InvalidOperationException("PlayerInputController is null");
 
-        _enemiesFactory = factory.EnemiesFactory;
-        _shapePresenterSpawner = factory.ShapePresenterSpawner;
-        _projectileSpawner = factory.ProjectileSpawner;
-        _controller = factory.PlayerInputController;
-        _userSkillHandler = factory.UserSkillHandler;
+        _area.Initialize(_shapeModels);  
 
-        _area.Initialize(_shapeModels);
-
-        _startLevel = Constants.StartLevel;
-        _startSkillCount = Constants.StartSkillCount;
-        _configurationGenerator = new(_startLevel);
-
-        _shapePresenterSpawner.CreatedShape += OnCreateShapeView;  // Подумать как отписаться
+        _shapePresenterSpawner.CreatedShape += OnCreateShapePresenter;  // Подумать как отписаться
+        _shapePresenterSpawner.ReleasedShape += OnReleaseShapePresenter;  // Подумать как отписаться
         _controller.UsedSkill += OnUseSkill;  // Подумать как отписаться
-        _attacker.SkillPointsAwarded += OnRewardSkillPoints; // Подумать как отписаться
+        _attacker.SkillPointsAwarded += RewardForCombo; // Подумать как отписаться
         _enemySkillPerfomer.PlacedStalactite += IsOverGame; // Подумать как отписаться
         Debug.Log("Подумать как отписаться");
     }
 
-    public event Action StartedNewGame;
+    public event Action StartedGame;
     public event Action WentToNextLevel;
-    public event Action GameOvered;
     public event Action Helped;
     public event Action DisabledHint;
-    public event Action<int> GameWined;
-    internal event Action<bool> Waited;
-    internal event Action<int> SkillCountChanged;
+    public event Action<int> GameOvered;
+    public event Action<GameSavedData> GameWined;
+    public event Action<bool> Waited;
 
     public bool IsPlaying { get; private set; } = false;
     public bool CanAttack => _canAttack;
     public int CurrentLevel => _level;
-    public int SkillCount => _skillCount;
+    public int ManaCostPerLevel => _manaGenerator.ManaCostPerLevel;
     public int GameScore => _gameScore;
 
     public void ProcessStepOverTime()
@@ -78,18 +68,16 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
         Waited?.Invoke(false);
     }
 
-    public void StartNewGame()
+    public void StartGame(GameSavedData data)
     {
-        _level = _startLevel;
-        _skillCount = _startSkillCount;
-        _gameScore = 0;
-        StartedNewGame?.Invoke();
-
+        _level = data.Level;
+        _manaGenerator.SetStartData(_level, data.ManaCount);
+        _gameScore = data.GameScore;
+        StartedGame?.Invoke();
         _index = ShapeCountForCreate;
-
-        _userSkillHandler.ChangeLevel(_level);
-        _userSkillHandler.Reset();
-        _configurationGenerator.StartLevel();
+        _configurationGenerator = new(_level);
+        _configurationGenerator.ResetTimeCounter();
+        
         CreateEnemy();
 
         if (IsPlaying)
@@ -102,35 +90,29 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
     public void Restart()
     {
         _index = ShapeCountForCreate;
-        _configurationGenerator.StartLevel();
         _enemy.Restart();
         _area.Restart();
+        _configurationGenerator.ResetTimeCounter();
+        _manaGenerator.Restart();
         _attacker.ResetCounter();
         CreateShapes();
     }
 
     public void GoToNextLevel()
     {
-        _level++;
-        _skillCount += Constants.SkillIncrease;
-        _gameScore += _gameScoreIncrease;
-
         WentToNextLevel?.Invoke();
         _attacker.ResetCounter();
 
         _index = ShapeCountForCreate;
-        _userSkillHandler.ChangeLevel(_level);
-        _configurationGenerator.StartLevel();
+        _configurationGenerator.ResetTimeCounter();
         CreateEnemy();
         _area.Restart();
         CreateShapes();
     }
 
-    public void OnRewardSkillPoints(int numberOfSkillPoints)
+    public void RewardForADV()
     {
-        Debug.Log("GameModel - " + numberOfSkillPoints);
-        _skillCount += numberOfSkillPoints;
-        SkillCountChanged?.Invoke(_skillCount);
+        _manaGenerator.RewardForAdvertising();
     }
 
     public void Attack()
@@ -162,14 +144,13 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
 
     internal void PressSkillButton(UserSkill skill)
     {
-        if (_skillCount > 0)
+        if (_manaGenerator.CanSpendMana(skill.ManaCost))
             _userPerformer.PressButton(skill);
     }
 
     internal void UseSkill()
     {
-        _skillCount--;
-        SkillCountChanged?.Invoke(_skillCount);
+        _manaGenerator.SpendMana(_userPerformer.CurrentManaCost);
 
         _projectileSpawner.CreateBullets(_area.GetPositionTargetCells());
         _attacker.UseSkill(_area.CountTargetDamage);
@@ -179,6 +160,17 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
             Win();
 
         IsOverGame();
+    }
+
+    private void OnUseSkill()
+    {
+        if (_userPerformer.IsPressedButton)
+        {
+            if (_userPerformer.TryUseSkill())
+                Waited?.Invoke(true);
+            else
+                IsOverGame();
+        }
     }
 
     private void CreateShapes()
@@ -198,30 +190,30 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
         _attacker.SetEnemy(_enemy);
     }
 
-    private void OnCreateShapeView(Shape shapeModel)
+    private void OnCreateShapePresenter(Shape shapeModel)
     {
         _area.TakeShapeModel(shapeModel);
     }
 
-    private void OnUseSkill()
+    private void OnReleaseShapePresenter(int cubeCount)
     {
-        if (_userPerformer.IsPressedButton)
-        {
-            if (_skillCount > 0 && _userPerformer.TryUseSkill())            
-                Waited?.Invoke(true);         
-            else           
-                IsOverGame();          
-        }
+         _manaGenerator.RewardForCubes(cubeCount);
+        _configurationGenerator.StartCountdown();
+    }
+
+    private void RewardForCombo(int numberOfRewards)
+    {
+        _manaGenerator.RewardForCombo(numberOfRewards);
     }
 
     private void IsOverGame()
     {
         if (_enemy.IsAlive && _area.IsLostGame())
         {
-            if (_skillCount <= 0)
-                GameOvered?.Invoke();
-            else
+            if (_manaGenerator.HaveManaForSkill())
                 Helped?.Invoke();
+            else
+                GameOvered?.Invoke(_manaGenerator.CalculateIncrease());
         }
         else
         {
@@ -231,7 +223,11 @@ internal class GameModel : IProcessable, IGame, IPerformableAttack
 
     private void Win()
     {
-        _gameScoreIncrease = _enemy.MaxHealth + _attacker.MaxTotalCombo;
-        GameWined?.Invoke(_gameScoreIncrease);
+        _gameScoreIncrease = _enemy.MaxHealth + _attacker.MaxTotalCombo + _manaGenerator.ManaCount;
+        _level++;
+        _manaGenerator.RewardForLevel(_level);
+        _gameScore += _gameScoreIncrease;
+
+        GameWined?.Invoke(new GameSavedData(_level, _manaGenerator.ManaCount, _gameScore));
     }
 }

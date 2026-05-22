@@ -3,14 +3,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-internal class UserSkillHandlerView : MonoBehaviour
+internal class UserSkillHandlerView : MonoBehaviour, IWindowController
 {
+    private const string MenuPauseKey = "MenuPause";
+
     [SerializeField] private CanvasGroup _windowGroup;
     [SerializeField] private Button _exitButton;
     [SerializeField] private Button _resetButton;
     [SerializeField] private TextMeshProUGUI _scoreText;
 
     private UserSkillHandler _userSkillHandler;
+
+    public event Action<string> OpenedWindow;
+    public event Action<string> ClosedWindow;
 
     private void OnEnable()
     {
@@ -50,18 +55,22 @@ internal class UserSkillHandlerView : MonoBehaviour
         _exitButton.interactable = true;
         _resetButton.interactable = true;
         UserUtilities.BanRaycast();
+
+        OpenedWindow?.Invoke(MenuPauseKey);
     }
 
     private void Close()
     {
-        Time.timeScale = 1;
         _userSkillHandler.ActivateTempScills();
+        _userSkillHandler.SaveChanges();
 
         _windowGroup.alpha = 0f;
         _windowGroup.blocksRaycasts = false;
         _exitButton.interactable = false;
         _resetButton.interactable = false;
         UserUtilities.UnbanRaycast();
+
+        ClosedWindow?.Invoke(MenuPauseKey);
     }
 
     private void OnReset()

@@ -14,10 +14,9 @@ public class CellModel : ITakeable
     internal event Action ChangedDisplayRune;
 
     public LocalPosition Position => _position;
-
     public bool IsBusy => _isBusy;
     internal bool IsBusyByStalactite => _item is Stalactite;
-    internal bool IsEnableRune { get; private set; } = true;
+    internal bool IsEnabledRune { get; private set; } = false;
 
     public void Take(IReleaseable item)
     {
@@ -25,20 +24,17 @@ public class CellModel : ITakeable
         _isBusy = true;
     }
 
-    internal void EnableRune()
+    internal void ChangeRuneState(bool isEnabled)
     {
-        if (IsEnableRune == false)
-        {
-            IsEnableRune = true;
-            ChangedDisplayRune?.Invoke();
-        }
+        if (IsEnabledRune != isEnabled)
+            IsEnabledRune = isEnabled;
     }
 
     internal void DisableRune()
     {
-        if (IsEnableRune)
+        if (IsEnabledRune)
         {
-            IsEnableRune = false;
+            IsEnabledRune = false;
             ChangedDisplayRune?.Invoke();
         }
     }
@@ -57,5 +53,10 @@ public class CellModel : ITakeable
     internal void Release—ell()
     {
         _isBusy = false;
+    }
+
+    internal void ChangeRuneDisplay()
+    {
+        ChangedDisplayRune?.Invoke();
     }
 }

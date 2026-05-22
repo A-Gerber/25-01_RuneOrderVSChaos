@@ -18,7 +18,7 @@ internal class EffectConfettiSpawner : Spawner<EffectConfetti>
         _game.GameWined += OnWinGame;
     }
 
-    internal void OnWinGame(int gameScore)
+    internal void OnWinGame(GameSavedData data)
     {
         for (int i = 0; i < _pointsSpawn.Length; i++)
             Get();

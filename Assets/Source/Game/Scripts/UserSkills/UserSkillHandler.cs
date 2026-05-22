@@ -1,31 +1,48 @@
 using System;
 using System.Collections.Generic;
 
-internal class UserSkillHandler : IAddableSkill, IChangeableLevel
+internal class UserSkillHandler : IAddableSkill, IUserSkillHandler
 {
-    private const int _startScore = 1;
-
     private readonly List<UserSkill> _tempSkills = new();
     private readonly SkillCardDiscoverer _skillCardDiscoverer;
     private readonly IPassiveSkill _firstPassiveSkill;
     private readonly int _skillPointsInterval = Constants.SkillPointsInterval;
     private readonly IConfigurableFromSkillSide _attacker;
+    private readonly ISettableComboManaReward _manaGenerator;
+
+    private const int StartSkillsScore = 2;
+
     private ISettingableSkillButton _gameView;
     private int _level;
-    private int _score;
+    private int _skillScore;
 
-    public UserSkillHandler(SkillCardDiscoverer skillCardDiscoverer, IConfigurableFromSkillSide attacker, IPassiveSkill firstPassiveSkill)
+    public UserSkillHandler(SkillCardDiscoverer skillCardDiscoverer, IConfigurableFromSkillSide attacker, IPassiveSkill firstPassiveSkill, ISettableComboManaReward manaGenerator)
     {
         _attacker = attacker ?? throw new InvalidOperationException("attacker is null");
         _firstPassiveSkill = firstPassiveSkill ?? throw new InvalidOperationException("firstPassiveSkill is null");
         _skillCardDiscoverer = skillCardDiscoverer ?? throw new InvalidOperationException("skillCardDiscoverer is null");
+        _manaGenerator = manaGenerator ?? throw new InvalidOperationException("manaGenerator is null");
 
-        _score = _startScore;
         _attacker.SetParameters(_firstPassiveSkill.DamagePerProjectile, _firstPassiveSkill.ComboSkillPointsInterval, _firstPassiveSkill.TimeFrameOfCombo);
+        _manaGenerator.SetComboManaReward(_firstPassiveSkill.ComboManaReward);
     }
 
+    public event Action<SkillsSavedData> SavedSkills;
     internal event Action OpenedSkillsMenu;
     internal event Action<int> ChangedScore;
+
+    public void StartGame(SkillsSavedData data)
+    {
+        Reset();
+
+        _skillCardDiscoverer.ActivateSkillCards(data.GetActivatedtSkills());
+        ActivateTempScills();
+    }
+
+    public SkillsSavedData GetSkillsToSave()
+    {
+        return new SkillsSavedData(_skillCardDiscoverer.GetActivatedSkills());
+    }
 
     public void ChangeLevel(int level)
     {
@@ -37,22 +54,39 @@ internal class UserSkillHandler : IAddableSkill, IChangeableLevel
 
         if (level % _skillPointsInterval == 0)
         {
-            _score += Constants.SkillIncrease;
-            ChangedScore?.Invoke(_score);
+            _skillScore += Constants.SkillCountIncrease;
+            ChangedScore?.Invoke(_skillScore);
         }
     }
 
     public void Reset()
     {
-        _score = _startScore + _level / _skillPointsInterval;
-        ChangedScore?.Invoke(_score);
+        _skillScore = CalculateSkillScore();
         _tempSkills.Clear();
 
         _attacker.SetParameters(_firstPassiveSkill.DamagePerProjectile, _firstPassiveSkill.ComboSkillPointsInterval, _firstPassiveSkill.TimeFrameOfCombo);
+        _manaGenerator.SetComboManaReward(_firstPassiveSkill.ComboManaReward);
         _gameView.ResetSkillButtons();
         _skillCardDiscoverer.Reset();
         _skillCardDiscoverer.OpenSkillCards(_level);
-        _skillCardDiscoverer.SetInteracteble(_score > 0);
+        _skillCardDiscoverer.SetInteracteble(_skillScore > 0);
+    }
+
+    public void AddSkillToTempList(SkillCard skillCard)
+    {
+        if (skillCard == null)
+            throw new InvalidOperationException("skillCard is null");
+
+        if (_skillScore <= 0)
+            throw new InvalidOperationException("Missing skill points");
+
+        _tempSkills.Add(skillCard.Skill);
+        _skillScore--;
+        ChangedScore?.Invoke(_skillScore);
+
+        _skillCardDiscoverer.RemoveFromClosedList(skillCard);
+        _skillCardDiscoverer.OpenSkillCards(_level);
+        _skillCardDiscoverer.SetInteracteble(_skillScore > 0);
     }
 
     internal void Initialize(ISettingableSkillButton gameView)
@@ -64,7 +98,12 @@ internal class UserSkillHandler : IAddableSkill, IChangeableLevel
 
         _gameView.OpenedSkillsMenu += OnSkillsButtonClick;
 
-        ChangedScore?.Invoke(_score);
+        ChangedScore?.Invoke(_skillScore);
+    }
+
+    internal void SaveChanges()
+    {
+        SavedSkills?.Invoke(new SkillsSavedData(_skillCardDiscoverer.GetActivatedSkills()));
     }
 
     internal void ActivateTempScills()
@@ -73,7 +112,7 @@ internal class UserSkillHandler : IAddableSkill, IChangeableLevel
             return;
 
         foreach (var skill in _tempSkills)
-        {          
+        {
             switch (skill)
             {
                 case ISetableInFirstButton _:
@@ -89,7 +128,7 @@ internal class UserSkillHandler : IAddableSkill, IChangeableLevel
                     break;
 
                 case IPassiveSkill passiveSkill:
-                    _attacker.SetParameters(passiveSkill.DamagePerProjectile, passiveSkill.ComboSkillPointsInterval, passiveSkill.TimeFrameOfCombo);
+                    SetParametrs(passiveSkill);
                     break;
 
                 default:
@@ -100,18 +139,18 @@ internal class UserSkillHandler : IAddableSkill, IChangeableLevel
         _tempSkills.Clear();
     }
 
-    public void AddSkillToTempList(SkillCard skillCard)
+    private int CalculateSkillScore()
     {
-        if (skillCard == null)
-            throw new InvalidOperationException("skillCard is null");
+        int score = StartSkillsScore + (_level / _skillPointsInterval) * Constants.SkillCountIncrease;
+        ChangedScore?.Invoke(score);
 
-        _tempSkills.Add(skillCard.Skill);
-        _score--;
-        ChangedScore?.Invoke(_score);
+        return score;
+    }
 
-        _skillCardDiscoverer.RemoveFromClosedList(skillCard);
-        _skillCardDiscoverer.OpenSkillCards(_level);
-        _skillCardDiscoverer.SetInteracteble(_score > 0);
+    private void SetParametrs(IPassiveSkill passiveSkill)
+    {
+        _attacker.SetParameters(passiveSkill.DamagePerProjectile, passiveSkill.ComboSkillPointsInterval, passiveSkill.TimeFrameOfCombo);
+        _manaGenerator.SetComboManaReward(passiveSkill.ComboManaReward);
     }
 
     private void OnSkillsButtonClick()

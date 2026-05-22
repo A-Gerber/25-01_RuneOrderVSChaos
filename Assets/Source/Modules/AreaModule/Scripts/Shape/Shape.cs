@@ -6,16 +6,19 @@ public class Shape
 {
     private readonly List<Cube> _cubes = new();
     private readonly Transform _transform;
-    private readonly ShapeMover _mover;
+    private readonly ShapeShifter _shapeShifter;
+    private readonly MoverBehindCursor _mover;
     private Vector3 _startPosition;
 
     private bool _isBackStartPosition = false;
     private bool _isRaised = false;
     private bool _isFrozen = false;
+    private float _verticalShift;
 
-    public Shape(Transform transform, ShapeMover mover)
+    public Shape(Transform transform, MoverBehindCursor mover, ShapeShifter shapeShifter)
     {
         _transform = transform != null ? transform : throw new InvalidOperationException("transform is null");
+        _shapeShifter = shapeShifter ?? throw new InvalidOperationException("shapeShifter is null");
         _mover = mover ?? throw new InvalidOperationException("mover is null");
     }
 
@@ -27,6 +30,7 @@ public class Shape
     internal bool IsRelease => _cubes.Count == 0;
     internal bool IsFrozen => _isFrozen;
     internal Vector3 StartPosition => _startPosition;
+    internal int CubeCount => _cubes.Count;
 
     public bool TryPut()
     {
@@ -36,9 +40,7 @@ public class Shape
         if (IsFreeSpace())
         {
             foreach (var cubeModel in _cubes)
-            {
                 cubeModel.Land();
-            }
 
             _isRaised = false;
             _isFrozen = false;
@@ -55,11 +57,11 @@ public class Shape
         }
     }
 
-    public void SetStatusRaised()
+    public void SetStatusRaised(Vector3 cubePosition)
     {
         _isRaised = true;
         _isBackStartPosition = false;
-        _mover.CalculateOffset(_transform);
+        _mover.CalculateOffset(cubePosition);
 
         foreach (var cube in _cubes)
             cube.SetTransparency(true);
@@ -72,14 +74,13 @@ public class Shape
 
     internal void SetPosition(Vector3 startPosition)
     {
-        if (startPosition == null)
-            throw new InvalidOperationException("startPosition is null");
-      
         _startPosition = startPosition;
     }
 
     internal void TakeCubes(List<Cube> cubes)
     {
+        _verticalShift = _shapeShifter.CalculateOffset(cubes);
+
         foreach (var cube in cubes)
             _cubes.Add(cube);
     }
@@ -87,7 +88,7 @@ public class Shape
     internal void FreezeCubes()
     {
         _isFrozen = true;
-        
+
         foreach (var cube in _cubes)
             cube.Freeze();
     }
@@ -108,15 +109,12 @@ public class Shape
         ReleasedOnRestart?.Invoke(true);
     }
 
-    internal void Raise(float verticalShift)
+    internal void Move()
     {
-        _mover.Move(_transform, verticalShift);
+        _mover.Move(_transform, _verticalShift);
 
-        if (_isBackStartPosition == false)
-        {
-            foreach (var cube in _cubes)
-                cube.TrackLanding();
-        }
+        foreach (var cube in _cubes)
+            cube.TrackLanding();
     }
 
     internal List<LocalPosition> GetLocalPositionCubes()

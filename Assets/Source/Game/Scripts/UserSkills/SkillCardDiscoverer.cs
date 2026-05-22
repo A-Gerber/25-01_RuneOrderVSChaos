@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SkillCardDiscoverer : ISkillCardDiscoverer
@@ -20,10 +21,61 @@ public class SkillCardDiscoverer : ISkillCardDiscoverer
             _deactivatedSkillCards.Add(card);
     }
 
+    public bool TryGetSkillSprites(out List<Sprite> sprites, int currentLevel)
+    {
+        sprites = new List<Sprite>();
+
+        foreach (var card in _skillCards)
+        {
+            if (card.OpeningThreshold == currentLevel)
+                sprites.Add(card.Skill.IconOnButton);
+        }
+
+        return sprites.Count > 0;
+    }
+
+    public int GetNextThreshold(int currentLevel)
+    {
+        List<int> thresholds = new();
+
+        foreach (var card in _skillCards)
+        {
+            if (card.OpeningThreshold > currentLevel)
+                thresholds.Add(card.OpeningThreshold);
+        }
+
+        return thresholds.Min();
+    }
+
     internal void InitializeSkillCards(IAddableSkill userSkillHandler)
     {
         foreach (var card in _skillCards)
             card.Initialize(userSkillHandler);
+    }
+
+    internal void ActivateSkillCards(List<string> activatedSkills)
+    {
+        foreach (var skill in activatedSkills)
+        {
+            foreach (var card in _skillCards)
+            {
+                if (card.Skill.GetName() == skill)
+                    card.ActivateOnLoad();
+            }
+        }
+    }
+
+    internal List<string> GetActivatedSkills()
+    {
+        List<string> activatedSkills = new();
+
+        foreach (var card in _skillCards)
+        {
+            if (card.IsActivated)
+                activatedSkills.Add(card.Skill.GetName());
+        }
+
+        return activatedSkills;
     }
 
     internal void RemoveFromClosedList(SkillCard skillCard)
@@ -124,18 +176,5 @@ public class SkillCardDiscoverer : ISkillCardDiscoverer
         _secondCard = null;
         _thirdCard = null;
         _passiveCard = null;
-    }
-
-    public bool TryGetSkillSprites(out List<Sprite> sprites, int currentLevel)
-    {
-        sprites = new List<Sprite>();
-
-        foreach (var card in _skillCards)
-        {
-            if (card.OpeningThreshold == currentLevel)           
-                sprites.Add(card.Skill.IconOnButton);            
-        }
-
-        return sprites.Count > 0;
     }
 }

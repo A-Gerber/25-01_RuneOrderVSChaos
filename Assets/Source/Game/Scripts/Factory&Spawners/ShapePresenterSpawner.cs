@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using YG;
 
-internal class ShapePresenterSpawner : Spawner<ShapePresenter>
+internal class ShapePresenterSpawner : Spawner<ShapePresenter>, IReportableOnRelease
 {
     [SerializeField] private Transform[] _pointsSpawn;
     [SerializeField] private CubeViewSpawner _cubeViewSpawner;
     [SerializeField] private SmallCubeSpawner _smallCubeSpawner;
     [SerializeField] private ArrowFactory _arrowFactory;
-    [SerializeField] private float _speed = 20f;
+    [SerializeField] private float _gridStep = 0f;
+    [SerializeField] private float _speed = 8f;
+    [SerializeField] private float _mobileShift = 2f;
 
-    private ShapeModelFactory _modelFactory;
     private List<CubeView> _currentCubeViews;
     private ISubscribeable _userSkillPerformer;
     private IProcessable _game;
+    private IChangeableRuneDisplay _area;
     private int _index = 0;
     private ArrowView _arrowView;
 
-    internal event Action<Shape> CreatedShape;
+    public event Action<Shape> CreatedShape;
+    public event Action<int> ReleasedShape;
 
     private void OnEnable()
     {
@@ -30,11 +33,11 @@ internal class ShapePresenterSpawner : Spawner<ShapePresenter>
         _cubeViewSpawner.CreatedCubeView -= OnGetShape;
     }
 
-    internal void Initialize(IProcessable game, ShapeModelFactory modelFactory, ISubscribeable userSkillPerformer)
+    internal void Initialize(IProcessable game, ISubscribeable userSkillPerformer, IChangeableRuneDisplay area)
     {
         _game = game ?? throw new InvalidOperationException("game is null");
-        _modelFactory = modelFactory ?? throw new InvalidOperationException("modelFactory is null");
         _userSkillPerformer = userSkillPerformer ?? throw new InvalidOperationException("userSkillPerformer is null");
+        _area = area ?? throw new InvalidOperationException("area is null");
     }
 
     internal void CreateShape(ICubeConfigurator configurator)
@@ -57,10 +60,16 @@ internal class ShapePresenterSpawner : Spawner<ShapePresenter>
     {
         ShapePresenter @object = Instantiate(Prefab);
 
-        if (YG2.envir.isMobile)
-            @object.Initialize(_modelFactory.Create(@object.transform, _speed), new ShapeRotater(@object.transform), new MobileShapeShifter());
+        if (YG2.envir.isDesktop)
+        {
+            Shape shape = new(@object.transform, new MoverBehindCursor(_gridStep, _speed), new ShapeShifter());
+            @object.Initialize(shape, new ShapeRotater(@object.transform), _area);
+        }
         else
-            @object.Initialize(_modelFactory.Create(@object.transform, _speed), new ShapeRotater(@object.transform), new ShapeShifter());
+        {
+            Shape shape = new(@object.transform, new MobileMoverBehindCursor(_gridStep, _speed), new MobileShapeShifter(_mobileShift));
+            @object.Initialize(shape, new ShapeRotater(@object.transform), _area);
+        }
 
         return @object;
     }
@@ -72,11 +81,13 @@ internal class ShapePresenterSpawner : Spawner<ShapePresenter>
 
         base.OnRelease(shape);
 
-        shape.RemoveCubes();
-
         if (shape.IsRestart == false)
+        {
+            ReleasedShape?.Invoke(shape.CubeCount);
             _game.ProcessStepOverTime();
+        }
 
+        shape.RemoveCubes();
         shape.Released -= Release;
     }
 

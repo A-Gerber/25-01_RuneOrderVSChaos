@@ -7,7 +7,7 @@ internal class AreaModelFactory
         if (cells.GetLength(0) == 0 || cells.GetLength(1) == 0)
             throw new InvalidOperationException("cells are not correct");
 
-        AreaModel area = new AreaModel(cells);
+        AreaModel area = new (cells);
 
         return area;
     }

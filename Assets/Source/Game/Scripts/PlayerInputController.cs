@@ -8,6 +8,7 @@ public class PlayerInputController : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private Ray _ray;
     [SerializeField] private float _delayBeforeLifting = 0.2f;
+    [SerializeField] private LayerMask _layerMask;
 
     private ShapeLifter _shapeLifter;
     private PlayerInput _playerInput;
@@ -18,7 +19,7 @@ public class PlayerInputController : MonoBehaviour
 
     private void Awake()
     {
-        _shapeLifter = new ShapeLifter(_camera, _ray);
+        _shapeLifter = new ShapeLifter(_camera, _ray, _layerMask);
         _playerInput = new PlayerInput();
         _delay = new WaitForSeconds(_delayBeforeLifting);
 

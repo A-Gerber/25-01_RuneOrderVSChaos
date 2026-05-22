@@ -24,6 +24,7 @@ public class UserSkillPerformer : ISubscribeable
     internal event Action DisabledAttackZone;
 
     public bool IsPressedButton => _isPressedButton;
+    public int CurrentManaCost => _skill.ManaCost;
 
     public void Initialize(IUseableUserSkills area, ICreateableCubesForArea cubeViewSpawner)
     {

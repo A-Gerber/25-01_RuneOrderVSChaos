@@ -7,6 +7,7 @@ public class ScoreCounter
     private float _timeFrameOfCombo;
     private int _maxTotalCombo = 0;
     private int _totalComboNumber = 0;
+    private int _comboInterval = 0;
 
     private readonly int _numberSimpleCombo;
 
@@ -48,23 +49,33 @@ public class ScoreCounter
         ShowedScore?.Invoke(numberOfCombos);
 
         _maxTotalCombo = Math.Max(_totalComboNumber, _maxTotalCombo);
+         int comboInterval = _totalComboNumber / _comboSkillPointsInterval;
 
         if (_totalComboNumber % _comboSkillPointsInterval == 0)
         {
-            Debug.Log("ScoreÑounter");
-            SkillPointsAwarded?.Invoke(_totalComboNumber / _comboSkillPointsInterval);
-        }    
+            SkillPointsAwarded?.Invoke(comboInterval);
+        }
+        else
+        {
+            if (comboInterval > _comboInterval)
+            {
+                SkillPointsAwarded?.Invoke(comboInterval);
+                _comboInterval = comboInterval;
+            }
+        }
 
     }
 
     internal void ResetCounter()
     {
         _totalComboNumber = 0;
+        _comboInterval = 0;
     }
 
     internal void ResetMaxScore()
     {
         _maxTotalCombo = 0;
         _totalComboNumber = 0;
+        _comboInterval = 0;
     }
 }

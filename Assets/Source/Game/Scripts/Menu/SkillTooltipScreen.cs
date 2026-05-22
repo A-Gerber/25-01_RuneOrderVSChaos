@@ -2,7 +2,7 @@ using System;
 
 internal class SkillTooltipScreen : Window
 {
-    internal event Action ExitButtonClicked;
+    public event Action ExitButtonClicked;
 
     protected override void OnButtonClick()
     {

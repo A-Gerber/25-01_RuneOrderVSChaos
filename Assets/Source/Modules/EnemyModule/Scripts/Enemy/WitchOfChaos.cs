@@ -1,13 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class WitchOfChaos : IEnemy
 {
-    private readonly string _skillDescription;
     private readonly int _increaseToHealth;
     private readonly float _skillCooldown;
     private readonly Sprite _icon;
+
+    private string _skillDescription;
     private int _maxHealth;
     private int _health;
     private List<IEnemySkill> _skills = new();
@@ -25,12 +26,11 @@ public class WitchOfChaos : IEnemy
         _icon = icon ?? throw new InvalidOperationException("icon is null");
         _skillCooldown = skillCooldown;
         _increaseToHealth = healthIncrease;
-        _skillDescription = $"<color=#FFC300>The witch's witchcraft <color=white>- allows you to use " +
-            $"<color=#FFC300>Regeneration<color=white>, <color=#FFC300>Snowstorm<color=white>, <color=#FFC300>Stone spikes<color=white>.";
+
+        ChangeSkillDescription(Constants.Language);
     }
 
     public event Action ChangedHealth;
-    public event Action<IEnemySkill> UsedSkill;
 
     public bool IsAlive => _health > 0;
     public bool IsFullHealth => _maxHealth == _health;
@@ -107,10 +107,28 @@ public class WitchOfChaos : IEnemy
         ChangedHealth?.Invoke();
     }
 
-    public void UseSkill()
+    public IEnemySkill GetSkill()
     {
         int index = UnityEngine.Random.Range(0, _skills.Count);
 
-        UsedSkill?.Invoke(_skills[index]);
+        return _skills[index];
+    }
+
+    public void ChangeSkillDescription(Languages language)
+    {
+        if (language == Languages.Russian)
+        {
+            _skillDescription = $"<color=#FFC300>Колдовство ведьмы <color=white>- позволяет использовать " +
+                $"<color=#FFC300>Регенерацию<color=white>, <color=#FFC300>Метель<color=white>, <color=#FFC300>Каменные шипы<color=white>.";
+        }
+        else if (language == Languages.Turkish)
+        {
+            _skillDescription = $"<color=#FFC300>Cadının büyücülüğü - yenilenmeyi, kar fırtınasını ve taş dikenleri<color=white> kullanmanıza olanak tanır";
+        }
+        else
+        {
+            _skillDescription = $"<color=#FFC300>The witch's witchcraft <color=white>- allows you to use " +
+                $"<color=#FFC300>Regeneration<color=white>, <color=#FFC300>Snowstorm<color=white>, <color=#FFC300>Stone spikes<color=white>.";
+        }
     }
 }

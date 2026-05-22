@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class MoverTo
 {
-    private const float CloseDistance = 0.05f;
-
     private readonly Transform _transform;
     private Vector3 _target;
     private float _speed = 0f;
@@ -21,7 +19,7 @@ public class MoverTo
 
         _transform.position = Vector3.MoveTowards(_transform.position, _target,_speed * Time.deltaTime);
 
-        if ((_transform.position - _target).sqrMagnitude < CloseDistance)
+        if ((_transform.position - _target).sqrMagnitude < Constants.CloseDistance)
         {
             _transform.position = _target;
             _haveTarget = false;

@@ -19,31 +19,40 @@ internal class SkillCardView : MonoBehaviour
     private void OnEnable()
     {
         _toggle.onValueChanged.AddListener(OnToggleChanged);
+
+        Subscribe();
     }
 
     private void OnDisable()
     {
         _toggle.onValueChanged.RemoveListener(OnToggleChanged);
+
+        Unsubscribe();
     }
 
     public void Initialize(SkillCard skillCard)
-    {      
-        if (_skillCard != null)
-        {
-            _skillCard.Opened -= OnOpen;
-            _skillCard.Closed -= OnClose;
-            _skillCard.ChangedInteractable -= OnChangeInteractable;
-        }
+    {
+        Unsubscribe();
 
         _skillCard = skillCard ?? throw new InvalidOperationException("skillCard is null");
 
-        _skillCard.Opened += OnOpen;
-        _skillCard.Closed += OnClose;
-        _skillCard.ChangedInteractable += OnChangeInteractable;
+        Subscribe();
 
         _icon.sprite = _skillCard.GetIcon();
-        _levelText.text = _skillCard.OpeningThreshold.ToString();
+        _levelText.text = $"<size=35>{_skillCard.OpeningThreshold}<size=22> lv";
         _description.text = _skillCard.GetDescription();
+    }
+
+    internal void ChangeSkillDescription(Languages language)
+    {
+        _skillCard.ChangeSkillDescription(language);
+
+        _description.text = _skillCard.GetDescription();
+    }
+
+    private void OnActivatedOnLoad()
+    {
+        _toggle.isOn = true;
     }
 
     private void OnChangeInteractable(bool value)
@@ -73,5 +82,27 @@ internal class SkillCardView : MonoBehaviour
         _image.color = _openColor;
         _canvasGroup.blocksRaycasts = true;
         _toggle.interactable = true;
+    }
+
+    private void Subscribe()
+    {
+        if (_skillCard != null)
+        {
+            _skillCard.ActivatedOnLoad += OnActivatedOnLoad;
+            _skillCard.Opened += OnOpen;
+            _skillCard.Closed += OnClose;
+            _skillCard.ChangedInteractable += OnChangeInteractable;
+        }
+    }
+
+    private void Unsubscribe()
+    {
+        if (_skillCard != null)
+        {
+            _skillCard.ActivatedOnLoad -= OnActivatedOnLoad;
+            _skillCard.Opened -= OnOpen;
+            _skillCard.Closed -= OnClose;
+            _skillCard.ChangedInteractable -= OnChangeInteractable;
+        }
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CellView : MonoBehaviour, IDisplayChangeable
+public class CellView : MonoBehaviour, IRuneToggleable
 {
     [SerializeField] private ParticleSystem _rune;
 
@@ -9,21 +9,28 @@ public class CellView : MonoBehaviour, IDisplayChangeable
 
     internal bool IsBusy => _cell.IsBusy;
 
-    public void ChangeDisplayRune()
+    private void OnEnable()
     {
-        _cell.EnableRune();
+        Subscribe();
+    }
+
+    private void OnDisable()
+    {
+        Unsubscribe();
+    }
+
+    public void ChangeRuneState(bool isEnabled)
+    {
+        _cell.ChangeRuneState(isEnabled);
     }
 
     public void Initialize(CellModel cell)
     {
-        if (_cell != null)
-            _cell.ChangedDisplayRune -= OnChangeDisplayRune;
+        Unsubscribe();
 
         _cell = cell ?? throw new InvalidOperationException("cell is null");
 
-        _cell.ChangedDisplayRune += OnChangeDisplayRune;
-
-        DisableRune();
+        Subscribe();
     }
 
     internal void Take(IReleaseable item)
@@ -31,16 +38,20 @@ public class CellView : MonoBehaviour, IDisplayChangeable
         _cell.Take(item);
     }
 
-    internal void DisableRune()
+    private void OnChangeRuneDisplay()
     {
-        _cell.DisableRune();
+        _rune.gameObject.SetActive(_cell.IsEnabledRune);
     }
 
-    private void OnChangeDisplayRune()
+    private void Subscribe()
     {
-        if(_cell.IsEnableRune)
-            _rune.gameObject.SetActive(true);
-        else 
-            _rune.gameObject.SetActive(false);
+        if (_cell != null)
+            _cell.ChangedDisplayRune += OnChangeRuneDisplay;
+    }
+
+    private void Unsubscribe()
+    {
+        if (_cell != null)
+            _cell.ChangedDisplayRune -= OnChangeRuneDisplay;
     }
 }

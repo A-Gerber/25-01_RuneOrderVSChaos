@@ -24,7 +24,6 @@ public abstract class EarthDemon : IEnemy
     }
 
     public event Action ChangedHealth;
-    public event Action<IEnemySkill> UsedSkill;
 
     public bool IsAlive => _health > 0;
     public bool IsFullHealth => _maxHealth == _health;
@@ -87,9 +86,14 @@ public abstract class EarthDemon : IEnemy
         ChangedHealth?.Invoke();
     }
 
-    public void UseSkill()
+    public IEnemySkill GetSkill()
     {
-        UsedSkill?.Invoke(_skill);
+        return _skill;
+    }
+
+    public void ChangeSkillDescription(Languages language)
+    {
+        _skill.ChangeSkillDescription(language);
     }
 }
 

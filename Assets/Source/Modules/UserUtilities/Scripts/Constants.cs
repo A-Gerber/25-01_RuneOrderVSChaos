@@ -2,13 +2,13 @@ using System;
 using UnityEngine;
 
 public static class Constants
-{
+{   
     public static int StartLevel { get; private set; }
     public static int LastLevel { get; private set; }
-    public static int StartSkillCount { get; private set; }
-    public static int SkillIncrease { get; private set; }
-    public static int RewardForAdvertising { get; private set; }
+    public static int ManaCountIncrease { get; private set; }
+    public static int AdvertisingReward { get; private set; }
     public static int SkillPointsInterval { get; private set; }
+    public static int SkillCountIncrease { get; private set; }
     public static int OriginByX { get; private set; }
     public static int OriginByZ { get; private set; }
     public static int AreaSize { get; private set; }
@@ -16,16 +16,18 @@ public static class Constants
     public static int EndByZ { get; private set; }
     public static float HalfDivider { get; private set; } = 2f;
     public static float PercentageMultiplier { get; private set; } = 100f;
+    public static float FlightAltitude { get; private set; } = 1.0f;
+    public static float CloseDistance { get; private set; } = 0.05f;
     public static float CubeSize { get; private set; }
     public static float CameraHeight { get; private set; }
-    public static float FlightAltitude { get; private set; }
     public static float CellSize { get; private set; }
     public static float MinBorderArea { get; private set; }
     public static float MaxBorderArea { get; private set; }
-    public static Vector2 MinLimitsForLeavingArena { get; private set; }
-    public static Vector2 MaxLimitsForLeavingArena { get; private set; }
+    public static Languages Language { get; private set; }
+    public static Vector2 MinLimitsForRuneboard { get; private set; }
+    public static Vector2 MaxLimitsForRuneboard { get; private set; }
 
-    public static void SetGameParameters(int startLevel, int lastLevel, int startSkillCount, int skillCountIncrease, int skillPointsInterval)
+    public static void SetGameParameters(int startLevel, int lastLevel, int manaCountIncrease, int advertisingReward, int skillPointsInterval, int skillCountIncrease)
     {
         if (startLevel < 0)
             throw new ArgumentOutOfRangeException(nameof(startLevel));
@@ -33,20 +35,24 @@ public static class Constants
         if (lastLevel < 0)
             throw new ArgumentOutOfRangeException(nameof(lastLevel));
 
-        if (startSkillCount < 0)
-            throw new ArgumentOutOfRangeException(nameof(startSkillCount));
+        if (manaCountIncrease <= 0)
+            throw new ArgumentOutOfRangeException(nameof(manaCountIncrease));
 
-        if (skillCountIncrease <= 0)
-            throw new ArgumentOutOfRangeException(nameof(skillCountIncrease));
+        if (advertisingReward <= 0)
+            throw new ArgumentOutOfRangeException(nameof(advertisingReward));
 
         if (skillPointsInterval <= 0)
             throw new ArgumentOutOfRangeException(nameof(skillPointsInterval));
 
+        if (skillCountIncrease <= 0)
+            throw new ArgumentOutOfRangeException(nameof(skillCountIncrease));
+
         StartLevel = startLevel;
         LastLevel = lastLevel;
-        StartSkillCount = startSkillCount;
-        SkillIncrease = skillCountIncrease;
+        ManaCountIncrease = manaCountIncrease;
+        AdvertisingReward = advertisingReward;
         SkillPointsInterval = skillPointsInterval;
+        SkillCountIncrease = skillCountIncrease;
     }
 
     public static void SetAreaParameters(int originByX, int originByZ, Vector2 minLimitsForLeavingArena, Vector2 maxLimitsForLeavingArena, int areaSize)
@@ -59,8 +65,8 @@ public static class Constants
         AreaSize = areaSize;
         EndByX = areaSize - 1 + originByX;
         EndByZ = areaSize - 1 + originByZ;
-        MinLimitsForLeavingArena = minLimitsForLeavingArena;
-        MaxLimitsForLeavingArena = maxLimitsForLeavingArena;
+        MinLimitsForRuneboard = minLimitsForLeavingArena;
+        MaxLimitsForRuneboard = maxLimitsForLeavingArena;
     }
 
     public static void SetCubeParameters(float cubeSize)
@@ -71,10 +77,9 @@ public static class Constants
         CubeSize = cubeSize;
     }
 
-    public static void SetCameraHeight(float cameraHeight, float flightAltitude)
+    public static void SetCameraHeight(float cameraHeight)
     {
         CameraHeight = cameraHeight;
-        FlightAltitude = flightAltitude;
     }
 
     public static void CalculateAreaBorders(float cellSize)
@@ -88,11 +93,15 @@ public static class Constants
         MaxBorderArea = EndByX + CellSize / HalfDivider;
     }
 
-    public static void SetRewardForAdvertising(int rewardForAdvertising)
+    public static void SetLanguage(Languages language)
     {
-        if (rewardForAdvertising <= 0)
-            throw new ArgumentOutOfRangeException(nameof(rewardForAdvertising));
-
-        RewardForAdvertising = rewardForAdvertising;
+        Language = language;
     }
+}
+
+public enum Languages
+{
+    Russian,
+    English,
+    Turkish
 }

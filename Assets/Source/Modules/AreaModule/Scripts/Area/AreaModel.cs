@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AreaModel : IUseableUserSkills, IUseableEnemySkills
+public class AreaModel : IUseableUserSkills, IUseableEnemySkills, IChangeableRuneDisplay
 {
     private readonly CellModel[,] _playField;
     private readonly List<CellModel> _targetCells = new();
@@ -13,6 +13,7 @@ public class AreaModel : IUseableUserSkills, IUseableEnemySkills
     private Shape[] _shapeModel;
 
     private int _index = 0;
+    private bool _canChangeRuneDisplay = false;
 
     public AreaModel(CellModel[,] playField)
     {
@@ -213,6 +214,23 @@ public class AreaModel : IUseableUserSkills, IUseableEnemySkills
         return false;
     }
 
+    public void ChangeRuneDisplay()
+    {
+        if (_canChangeRuneDisplay)
+        {
+            for (int i = 0; i < _playField.GetLength(0); i++)
+            {
+                for (int j = 0; j < _playField.GetLength(1); j++)
+                    _playField[i, j].ChangeRuneDisplay();
+            }
+        }
+    }
+
+    public void ChangeState(bool canChangeDisplay)
+    {
+        _canChangeRuneDisplay = canChangeDisplay;
+    }
+
     internal void DisableRunes()
     {
         for (int i = 0; i < _playField.GetLength(0); i++)
@@ -224,3 +242,4 @@ public class AreaModel : IUseableUserSkills, IUseableEnemySkills
         }
     }
 }
+

@@ -4,29 +4,39 @@ using UnityEngine;
 
 public abstract class UserSkill
 {
-    private readonly Sprite _iconOnButton;
-    private readonly ParticleSystem _effect;
     protected int[,] Configuration;
     protected int OffsetX;
     protected int OffsetZ;
     protected int Damage;
     protected string Description;
 
-    public UserSkill(Sprite iconOnButton, ParticleSystem effect, AudioClip audioClip)
+    private readonly Sprite _iconOnButton;
+    private readonly ParticleSystem _effect;
+    private readonly int _startManaCost;
+
+    private int _increasePerLevel;
+
+    public UserSkill(Sprite iconOnButton, ParticleSystem effect, AudioClip audioClip, int manaCost)
     {
+        if (manaCost < 0)
+            throw new ArgumentOutOfRangeException(nameof(manaCost));
+
         _iconOnButton = iconOnButton != null ? iconOnButton : throw new InvalidOperationException("iconOnButton is null");
         _effect = effect != null ? effect : throw new InvalidOperationException("attackZone is null");
         AudioClip = audioClip != null ? audioClip : throw new InvalidOperationException("audioClip is null");
+        _startManaCost = manaCost;
 
         _effect.Stop();
     }
 
-    internal event Action Used;
+    public event Action Used;
 
     internal AudioClip AudioClip {  get; private set; }
+    internal int ManaCost => _startManaCost + _increasePerLevel;
     internal Sprite IconOnButton => _iconOnButton;
     internal int SkillDamage => Damage;
     internal string SkillDescription => Description;
+
     protected ParticleSystem Effect => _effect;
 
     internal List<LocalPosition> GetSkillCoordinates(LocalPosition position, int minBorderArea, int maxBorderArea)
@@ -51,9 +61,20 @@ public abstract class UserSkill
         return coordinates;
     }
 
+    internal abstract void SetDescriptionLanguage(Languages language);
+    internal abstract string GetName();
+
     internal virtual void Use(Vector3 position)
     {
         _effect.Play();
         Used?.Invoke();
+    }
+
+    internal void SetIncrease(int increasePerLevel)
+    {
+        if (increasePerLevel < 0)
+            throw new ArgumentOutOfRangeException(nameof(increasePerLevel));
+
+        _increasePerLevel = increasePerLevel;
     }
 }

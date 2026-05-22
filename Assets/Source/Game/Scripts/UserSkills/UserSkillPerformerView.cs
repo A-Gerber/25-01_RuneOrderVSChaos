@@ -16,6 +16,16 @@ public class UserSkillPerformerView : MonoBehaviour
         _attackZone.gameObject.SetActive(false);
     }
 
+    private void OnEnable()
+    {
+        Subscribe();
+    }
+
+    private void OnDisable()
+    {
+        Unsubscribe();
+    }
+
     private void Update()
     {
         if (_isEnableAttackZone)
@@ -28,16 +38,11 @@ public class UserSkillPerformerView : MonoBehaviour
 
     public void Initialize(UserSkillPerformer skillUser)
     {
-        if (_userSkill != null)
-        {
-            _userSkill.EnabledAttackZone -= OnEnableAttackZone;
-            _userSkill.DisabledAttackZone -= OnDisableAttackZone;
-        }
+        Unsubscribe();
 
         _userSkill = skillUser ?? throw new InvalidOperationException("skillUser is null");
 
-        _userSkill.EnabledAttackZone += OnEnableAttackZone;
-        _userSkill.DisabledAttackZone += OnDisableAttackZone;
+        Subscribe();
     }
 
     private void OnEnableAttackZone()
@@ -51,5 +56,23 @@ public class UserSkillPerformerView : MonoBehaviour
     {
         _isEnableAttackZone = false;
         _attackZone.gameObject.SetActive(false);
+    }
+
+    private void Subscribe()
+    {
+        if (_userSkill != null)
+        {
+            _userSkill.EnabledAttackZone += OnEnableAttackZone;
+            _userSkill.DisabledAttackZone += OnDisableAttackZone;
+        }
+    }
+
+    private void Unsubscribe()
+    {
+        if (_userSkill != null)
+        {
+            _userSkill.EnabledAttackZone -= OnEnableAttackZone;
+            _userSkill.DisabledAttackZone -= OnDisableAttackZone;
+        }
     }
 }

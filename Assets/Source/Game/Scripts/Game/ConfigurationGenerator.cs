@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 internal class ConfigurationGenerator
@@ -14,6 +13,7 @@ internal class ConfigurationGenerator
     private readonly List<ICubeConfigurator> _configurators = new();
     private int _startLevel;
     private float _startTime;
+    private bool _isCountdownStarted = false;
 
     internal ConfigurationGenerator(int startLevel)
     {
@@ -21,7 +21,7 @@ internal class ConfigurationGenerator
             throw new ArgumentOutOfRangeException(nameof(startLevel));
 
         _startLevel = startLevel;
-        //_configurators.Add(new StartCubeConfigurator());
+       //_configurators.Add(new StartCubeConfigurator());
         _configurators.Add(new VerySimpleCubeConfigurator());
         _configurators.Add(new SimpleCubeConfigurator());
         _configurators.Add(new UsualCubeConfigurator());
@@ -40,7 +40,7 @@ internal class ConfigurationGenerator
 
         if (level <= Constants.LastLevel)
         {
-            int dividedLevel = level/ LevelDivider;
+            int dividedLevel = level / LevelDivider;
             int index = (int)((Time.time - _startTime) / (IndexPerSeconds - dividedLevel * Coefficient));
             int maxIndex = Math.Clamp(_configurators.Count - (_configurators.Count - 1 - dividedLevel), 0, _configurators.Count - 1);
             index = Math.Clamp(index, 0, maxIndex);
@@ -56,8 +56,17 @@ internal class ConfigurationGenerator
         }
     }
 
-    internal void StartLevel()
+    internal void ResetTimeCounter()
     {
-        _startTime = Time.time;
+        _isCountdownStarted = false;
+    }
+
+    internal void StartCountdown()
+    {
+        if (!_isCountdownStarted)
+        {
+            _startTime = Time.time;
+            _isCountdownStarted = true;
+        }
     }
 }

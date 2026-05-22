@@ -1,10 +1,12 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 internal class SkillButton : MonoBehaviour
 {
     [SerializeField] private Button _skillButton;
+    [SerializeField] private TextMeshProUGUI _manaCost;
     [SerializeField] private Image _icon;
     [SerializeField] private Image _image;
 
@@ -37,6 +39,7 @@ internal class SkillButton : MonoBehaviour
         _icon.sprite = _startIcon;
         _image.color = _closeColor;
         _skillButton.interactable = false;
+        _skillButton.gameObject.SetActive(false);
     }
 
     internal void SetUserSkill(UserSkill skill)
@@ -45,6 +48,20 @@ internal class SkillButton : MonoBehaviour
         _icon.sprite = skill.IconOnButton;
         _image.color = _openColor;
         _skillButton.interactable = true;
+        _skillButton.gameObject.SetActive(true);
+    }
+
+    internal void UpdateData(int increasePerLevel)
+    {
+        if (_skill != null)
+        {
+            _skill.SetIncrease(increasePerLevel);
+            _manaCost.text = $"{_skill.ManaCost}";
+        }
+        else
+        {
+            _manaCost.text = $"{0}";
+        }
     }
 
     private void OnSkillButtonClick()

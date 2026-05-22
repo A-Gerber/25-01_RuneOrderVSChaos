@@ -70,7 +70,6 @@ public class AttackerModel : IConfigurableFromSkillSide
 
     private void OnReward(int count)
     {
-        Debug.Log("AttackerModel - " + count);
         SkillPointsAwarded?.Invoke(count);
     }
 }

@@ -11,7 +11,7 @@ internal class EnemiesFactory : MonoBehaviour
     [SerializeField] private int _increasePerLevel = 3;
     [SerializeField] private int _divider = 20;
     [SerializeField] private int _powerOfCoefficient = 3;
-    [SerializeField] private int _powerMultiplier  = 20;
+    [SerializeField] private int _powerMultiplier = 20;
 
     [Header("EnemyParameters")]
     [SerializeField] private float _goblinSkillCooldown = 180f;
@@ -52,6 +52,7 @@ internal class EnemiesFactory : MonoBehaviour
 
     private EnemiesGenerator _generator;
     private EnemySkillPerfomer _enemySkillPerfomer;
+    private string _witchSkillDescription;
 
     internal Vector3 GetEnemyPosition()
     {
@@ -80,7 +81,7 @@ internal class EnemiesFactory : MonoBehaviour
         int health = CalculateHealth(level, enemy);
         enemy.SetMaxHealth(health);
         _enemyPresenter.SetEnemy(enemy);
-        _enemySkillPerfomer.SubscribeToEnemy(enemy);
+        _enemySkillPerfomer.Initialize(enemy);
 
         return enemy;
     }

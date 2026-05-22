@@ -8,6 +8,7 @@ public class Cube : IReleaseable
     private readonly float _distanceRaycast;
     private CellView _cellView;
     private bool _isFrozen = false;
+    private IRuneToggleable _target;
 
     public Cube(Transform transform, Rigidbody rigidbody, float distanceRaycast)
     {
@@ -27,7 +28,7 @@ public class Cube : IReleaseable
     internal event Action ChangedFreeze;
     internal event Action<bool> ChangedTransparente;
     internal event Action<bool> ChangedGlowEffect;
-    internal event Action<Vector3>Landed;
+    internal event Action<Vector3> Landed;
 
     public void Release()
     {
@@ -52,8 +53,16 @@ public class Cube : IReleaseable
 
     internal void TrackLanding()
     {
-        if (Physics.Raycast(_transform.position, Vector3.down, out RaycastHit hit, _distanceRaycast) && hit.transform.TryGetComponent(out IDisplayChangeable target))
-            target.ChangeDisplayRune();
+        if (Physics.Raycast(_transform.position, Vector3.down, out RaycastHit hit, _distanceRaycast) && hit.transform.TryGetComponent(out IRuneToggleable target))
+        {
+            if (!ReferenceEquals(_target, target))
+            {
+                _target?.ChangeRuneState(false);
+                _target = target;
+            }
+
+            target.ChangeRuneState(true);
+        }
     }
 
     internal void Land()
@@ -69,7 +78,7 @@ public class Cube : IReleaseable
         {
             if (hit.transform.TryGetComponent(out CellView target) && target.IsBusy == false)
             {
-                target.DisableRune();
+                _target?.ChangeRuneState(false);
                 _cellView = target;
 
                 return false;
@@ -104,5 +113,4 @@ public class Cube : IReleaseable
         _isFrozen = isFrozen;
         ChangedFreeze?.Invoke();
     }
-
 }
