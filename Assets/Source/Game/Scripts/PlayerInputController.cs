@@ -7,15 +7,14 @@ public class PlayerInputController : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private Ray _ray;
-    [SerializeField] private float _delayBeforeLifting = 0.2f;
+    [SerializeField] private float _delayBeforeLifting = 0.26f;
     [SerializeField] private LayerMask _layerMask;
 
     private ShapeLifter _shapeLifter;
     private PlayerInput _playerInput;
+    private UserSkillPerformerPresenter _userSkillPerformer;
     private WaitForSeconds _delay;
     private bool _canRaise = true;
-
-    internal event Action UsedSkill;
 
     private void Awake()
     {
@@ -24,11 +23,12 @@ public class PlayerInputController : MonoBehaviour
         _delay = new WaitForSeconds(_delayBeforeLifting);
 
         _playerInput.Player.TakeShape.started += OnTakeShape;
-        _playerInput.Player.PutShape.performed += OnPutShape;
+        _playerInput.Player.PutShape.canceled += OnPutShape;
         _playerInput.Player.UseSkill.performed += OnUseSkill;
 
-        _playerInput.TouchControls.TakeShape.performed += OnTakeShape;
+        _playerInput.TouchControls.TakeShape.started += OnTakeShape;
         _playerInput.TouchControls.PutShape.canceled += OnPutShape;
+        _playerInput.TouchControls.UseSkill.performed += OnUseSkill;
     }
 
     private void OnEnable()
@@ -44,30 +44,38 @@ public class PlayerInputController : MonoBehaviour
     private void OnDestroy()
     {
         _playerInput.Player.TakeShape.started -= OnTakeShape;
-        _playerInput.Player.PutShape.performed -= OnPutShape;
+        _playerInput.Player.PutShape.canceled -= OnPutShape;
         _playerInput.Player.UseSkill.performed -= OnUseSkill;
 
-        _playerInput.TouchControls.TakeShape.performed -= OnTakeShape;
+        _playerInput.TouchControls.TakeShape.started -= OnTakeShape;
         _playerInput.TouchControls.PutShape.canceled -= OnPutShape;
+        _playerInput.TouchControls.UseSkill.performed -= OnUseSkill;
     }
+
+
 
     public void OnTakeShape(InputAction.CallbackContext context)
     {
-        if(_canRaise)
+        if (_canRaise)
         {
             StartCoroutine(ChangeLiftingStatusOverTime());
-            _shapeLifter.LiftShape();
+            _shapeLifter.Lift();
         }
     }
 
     public void OnPutShape(InputAction.CallbackContext context)
     {
-        _shapeLifter.PutShape();
+        _shapeLifter.Put();
     }
 
     public void OnUseSkill(InputAction.CallbackContext context)
     {
-        UsedSkill?.Invoke();
+        _userSkillPerformer.UseSkill();
+    }
+
+    internal void Initialize(UserSkillPerformerPresenter userSkillPerformerPresenter)
+    {
+        _userSkillPerformer = userSkillPerformerPresenter ?? throw new ArgumentNullException("userSkillPerformerPresenter is null", nameof(userSkillPerformerPresenter));
     }
 
     private IEnumerator ChangeLiftingStatusOverTime()

@@ -125,7 +125,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""b0ecb6a3-8726-47b7-a79f-427ea3f5a942"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""Press(behavior=1)"",
+                    ""interactions"": ""Hold"",
                     ""processors"": """",
                     ""groups"": "";Mouse"",
                     ""action"": ""TakeShape"",
@@ -136,7 +136,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""45c9009d-b70f-48ff-9e12-84540f045dd2"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""Press(behavior=1)"",
+                    ""interactions"": ""Hold"",
                     ""processors"": """",
                     ""groups"": "";Mouse"",
                     ""action"": ""PutShape"",
@@ -150,17 +150,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Mouse"",
-                    ""action"": ""UseSkill"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a473be83-cce3-4992-ac33-d03a0c7fe9a3"",
-                    ""path"": ""<Touchscreen>/Press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Phone"",
                     ""action"": ""UseSkill"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -178,12 +167,21 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""PutShape"",
                     ""type"": ""Button"",
                     ""id"": ""e4228eb8-2210-4ec0-ba74-e2cbfac99f0c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""UseSkill"",
+                    ""type"": ""Button"",
+                    ""id"": ""d1c7b135-c53e-4ca0-a799-5d7c82c50749"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -195,7 +193,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""47971573-323b-4d16-be4a-646cbc50764f"",
                     ""path"": ""<Touchscreen>/Press"",
-                    ""interactions"": ""Hold(duration=0.1,pressPoint=0.1)"",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
                     ""groups"": "";Phone"",
                     ""action"": ""TakeShape"",
@@ -206,10 +204,21 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""6ba3b012-aa5c-4ce4-8701-f2470bfac82e"",
                     ""path"": ""<Touchscreen>/Press"",
-                    ""interactions"": ""Hold(duration=0.2,pressPoint=0.2)"",
+                    ""interactions"": ""Press"",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": "";Phone"",
                     ""action"": ""PutShape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d38266da-3b0a-40ab-8499-cecc04385f50"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": ""Tap"",
+                    ""processors"": """",
+                    ""groups"": "";Phone"",
+                    ""action"": ""UseSkill"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -250,6 +259,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_TouchControls = asset.FindActionMap("TouchControls", throwIfNotFound: true);
         m_TouchControls_TakeShape = m_TouchControls.FindAction("TakeShape", throwIfNotFound: true);
         m_TouchControls_PutShape = m_TouchControls.FindAction("PutShape", throwIfNotFound: true);
+        m_TouchControls_UseSkill = m_TouchControls.FindAction("UseSkill", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -451,6 +461,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<ITouchControlsActions> m_TouchControlsActionsCallbackInterfaces = new List<ITouchControlsActions>();
     private readonly InputAction m_TouchControls_TakeShape;
     private readonly InputAction m_TouchControls_PutShape;
+    private readonly InputAction m_TouchControls_UseSkill;
     /// <summary>
     /// Provides access to input actions defined in input action map "TouchControls".
     /// </summary>
@@ -470,6 +481,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "TouchControls/PutShape".
         /// </summary>
         public InputAction @PutShape => m_Wrapper.m_TouchControls_PutShape;
+        /// <summary>
+        /// Provides access to the underlying input action "TouchControls/UseSkill".
+        /// </summary>
+        public InputAction @UseSkill => m_Wrapper.m_TouchControls_UseSkill;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -502,6 +517,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PutShape.started += instance.OnPutShape;
             @PutShape.performed += instance.OnPutShape;
             @PutShape.canceled += instance.OnPutShape;
+            @UseSkill.started += instance.OnUseSkill;
+            @UseSkill.performed += instance.OnUseSkill;
+            @UseSkill.canceled += instance.OnUseSkill;
         }
 
         /// <summary>
@@ -519,6 +537,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @PutShape.started -= instance.OnPutShape;
             @PutShape.performed -= instance.OnPutShape;
             @PutShape.canceled -= instance.OnPutShape;
+            @UseSkill.started -= instance.OnUseSkill;
+            @UseSkill.performed -= instance.OnUseSkill;
+            @UseSkill.canceled -= instance.OnUseSkill;
         }
 
         /// <summary>
@@ -628,5 +649,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPutShape(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "UseSkill" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnUseSkill(InputAction.CallbackContext context);
     }
 }

@@ -4898,7 +4898,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1438392224933708352}
   - component: {fileID: 2600588026333305573}
-  - component: {fileID: 3386592035789396382}
+  - component: {fileID: 3398404074763982602}
   m_Layer: 0
   m_Name: WizardProjectile
   m_TagString: Untagged
@@ -4944,7 +4944,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.25
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3386592035789396382
+--- !u!114 &3398404074763982602
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4953,7 +4953,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 875044421890621392}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f02cc448de6d974d93c2dbc28c0dbe2, type: 3}
+  m_Script: {fileID: 11500000, guid: 63c54d38646bbce459ffbc138c425918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1528609156184782520

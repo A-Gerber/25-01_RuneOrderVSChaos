@@ -60,168 +60,87 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.62f2\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ICreateableBullets.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\AutoTranslateLangs\Scripts\AutoLang_info.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Yandex\AdvertisementViewer.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ProjectileSpawner.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\InfoYG\BasicSettings.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Other\PlatformEventsYG2.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdv_projectSettings.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\InterAdv_yandexPlatform.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\PassiveSkillOfSecondRank.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdv_info.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\TaskFactory.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\Attributes\ColorYGAttribute.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\LineOfFiveCubes.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\AutoTranslateLangs\Scripts\UtilsLang.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\EntityDataForMenu.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\ITask.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\Window.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\YandexSDK\PauseEventHandler.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdv_yg.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\InterAdv_interface.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\VeryHardCubeConfigurator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\DiagonalOfTwoCubes.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\SettingsScreen.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\UnityPackagesManager.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Other\PauseGameYG.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\YandexSDK\AdvertisementViewer.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Example\Scripts\ExampleRewardedAd.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\UserSkillFactory.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Server\ServerInfo.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Scripts\Storage_yandexPlatform.cs" />
     <Compile Include="Assets\PluginYourGames\Example\Scripts\Scenes\AllDemoScenes.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Authorization\Scripts\GetPlayerYG.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\UtilsLB.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Example\Scripts\LBExample.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\LConfiguration.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Example\Scripts\SavesDataExample.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\AutoTranslateLangs\Scripts\GraphicSettingsYG.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\PluginPrefs.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\LB_interface.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\Pusher.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\IWindowController.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Spawner.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdv_interface.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\MenuView.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\ISetableInFirstButton.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\YandexSDK\SavesYG.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\YGInsides.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\FileYG.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Authorization\Scripts\Auth_info.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\InfoYG\TemplateSettings.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\YGSendMessage.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Yandex\PauseController.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Yandex\LanguageHandler.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Authorization\Scripts\Auth_yg.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\InterstitialAdv_callingSimulation.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\InfoYG\InfoYG.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\Gigant.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\GamePause.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\AutoTranslateLangs\Scripts\LanguageYG.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\EnvirData\Scripts\EnvirData_yandexPlatform.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdvLockTimer.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\TaskOfGreeting.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\MiddleCubeConfigurator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\GameModel.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\AreaViewFactory.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\Saving\SkillsSavedData.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\CallAction.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Example\Scripts\DebugInterstitialAdv.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\UserSkillView.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\DamageOfThirdRank.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\TaskHandler.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\TaskOfOverview.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\EffectConfettiSpawner.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\UserSkillHandler.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\HelpingForSDK\PauseController.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Platform\PlatformSettingsAttributes.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\Attributes\LabelYGAttribute.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\ManaGeneratorView.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\ISkillCardDiscoverer.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\LB_lang.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\Saving\GameSavedData.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\Attributes\NestedYGAttribute.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\CrossFilling.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\AdNotification\AdNotificationYG.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\IAddableSkill.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\AutoTranslateLangs\Scripts\LangYGAdditionalText.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\SkillTooltipScreen.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\SkillCardDiscoverer.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Other\ImageLoadYG.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Other\AdvCallingSimulation.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\SkillIcon.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\HorizontalFilling.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Scripts\UtilsLang.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Yandex\PauseEventHandler.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\DefineSymbols.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\InfoYG\SimulationSettings.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\LeaderboardScreen.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\AngleOfThreeCubes.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\AreaModelFactory.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\ScreenOnOpenSkilslMenu.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\LeaderboardYG.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\InterAdv_info.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\DamageOfSecondRank.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\InterstitialAdv_optionalPlatform.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\ScreenOnMovingShape.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Scripts\Lang_yg.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\DiagonalOfThreeCubes.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\TaskOfUsingSkill.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\FourthLightningStrike.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Example\Scripts\CustomLBExample.cs" />
     <Compile Include="Assets\PluginYourGames\Example\Scripts\DemoTextTranslateRU.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Factory.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Scripts\Storage_info.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Platform\ProjectSettings.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\HardCubeConfigurator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\IReportableOnRelease.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\ScreenOnUsingSkill.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Platform\PlatformSettings.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\YandexSDK\LeaderBoard.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Authorization\Scripts\Auth_lang.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\UserSkillPerformer.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\SkillButton.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\LineOfFourCubes.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\SquareOfSixteenCubes.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\FirstLightningStrike.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\ConfigurationGenerator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\StalactiteViewSpawner.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\ICubeConfigurator.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Server\ServerJson.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\EnemiesFactory.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Platform\PlatformToggles.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\UsualCubeConfigurator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\UserSkillHandlerView.cs" />
     <Compile Include="Assets\Source\Game\Scripts\ConstantsInstaller.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\EnvirData\Scripts\EnvirData_yg.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\EnemySkills\EnemySkillPerfomer.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\YandexSDK\LanguageHandler.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\AutoTranslateLangs\Scripts\CorrectLang.cs" />
     <Compile Include="Assets\Source\Game\Scripts\LevelInstaller.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\LB_yg.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\EndGameScreen.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\EnemySkillFactory.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\PrefsList.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\InfoYG\InfoYGReferences.cs" />
     <Compile Include="Assets\PluginYourGames\Example\Scripts\CanvasScaleForMobile.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\GameReadyAPI.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\PassiveSkillOfFourthRank.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\LineOfThreeCubes.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\AngleOfFiveCubes.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Scripts\Storage_yg.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\ManaGenerator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\VerySimpleCubeConfigurator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\Saving\Saver.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\ISetableInThirdButton.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\MenuScreen.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\InfoYG\InfoYG_lang.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\FreezingEffectSpawner.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdv_yandexPlatform.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Platform\PlatformSettings_langs.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Yandex\LeaderBoard.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\EntityDataForGame.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ManaGeneratorFactory.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\ISetableInSecondButton.cs" />
     <Compile Include="Assets\PluginYourGames\Example\Scripts\BasicData.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\PassiveSkillOfFirstRank.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\IProcessable.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\IOpenableMenu.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\SimpleCubeConfigurator.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\LBPlayerDataYG.cs" />
     <Compile Include="Assets\PluginYourGames\Example\Scripts\Scenes\DemoScenePartial.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\WindowGame.cs" />
@@ -230,90 +149,46 @@
     <Compile Include="Assets\PluginYourGames\Platforms\YandexGames\Scripts\OwnHost\OwnHost.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Example\Scripts\SaverTest.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\InitAttributes.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\AttackerFactory.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\InterAdv_yg.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\TaskOfMovingShape.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\CConfiguration.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\TaskOfOpenSkillMenu.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\TaskOfViewingSkillsMenu.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\UltrayHardCubeConfigurator.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdv_callingSimulation.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\OptionalPlatform.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\InterstitialAdv_projectSettings.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\EnemySkills\EnemySkillPerfomerView.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\ICloseableTutorial.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Server\ModuleJson.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\CubeViewSpawner.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Scripts\Lang_info.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ShapePresenterSpawner.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\Attributes\HeaderYGAttribute.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\IReportableOnOpenMenu.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\ISubscribeable.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\EffectConfetti.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\RewardedAdv\Scripts\RewardedAdv_optionalPlatform.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\PassiveSkillOfThirdRank.cs" />
     <Compile Include="Assets\Source\Game\Scripts\PlayerInputController.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\ScreenOnGreeting.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\EnvirData\Scripts\EnvirData_interface.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\IReportableOnUsedSkill.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\GameView.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Example\Scripts\LanguageExample.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\LB_yandexPlatform.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\EnvirData\Example\Scripts\GetEnvirData.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\InterstitialAdv\Scripts\TimerBeforeAds\TimerBeforeAdsYG.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\SecondLightningStrike.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Utils\JsonYG.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\SkillCard.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\IPassiveSkill.cs" />
     <Compile Include="Assets\Source\Game\Scripts\ShapeLifter.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Platform\CommonOptions.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Scripts\Storage_projectSettings.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\GroundImpactEffectSpawner.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Scripts\Lang_interface.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Scripts\SavesYG2.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\Module.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\IAdvertisementViewer.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Menu\WinGameScreen.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Authorization\Scripts\Auth_yandexPlatform.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\SkillCardView.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\YG2.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\UserSkill.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\ThirdLightningStrike.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\UserSkillPerformerView.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Authorization\Scripts\Auth_interface.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\DamageOfFirstRank.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Yandex\SavesYG.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Utils\LocalStorage_yg.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\WizardProjectileSoundPlayer.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\VerticalFilling.cs" />
     <Compile Include="Assets\PluginYourGames\Example\Scripts\Scenes\DemoSceneLoadButton.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\ZConfiguration.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\SmallCubeSpawner.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\IUserSkillHandler.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\ArrowFactory.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Scripts\Lang_yandexPlatform.cs" />
     <Compile Include="Assets\PluginYourGames\Example\Scripts\DebugViewing.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Example\Scripts\EnvirLangExample.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\TextStyles.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\ScreenOfOverview.cs" />
     <Compile Include="Assets\Source\Game\Input\PlayerInput.cs" />
+    <Compile Include="Assets\Source\Game\Scripts\HelpingForSDK\Saver.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Platform\PlatformOptions.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\Basic\GameplayAPI.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\ISettingableSkillButton.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Tutorial\Tasks\ScreenOnViewingSkillsMenu.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\Translates\VersionControl_lang.cs" />
     <Compile Include="Assets\PluginYourGames\Platforms\YandexGames\Scripts\YandexGamePlatform.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Localization\Scripts\Lang_projectSettings.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\CubesConfiguration.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Storage\Scripts\Storage_interface.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\UserSkills\PassiveSkillOfFifthRank.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\TConfiguration.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Game\IGame.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Authorization\Example\Scripts\GetPlayerData.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\EnemiesGenerator.cs" />
     <Compile Include="Assets\PluginYourGames\Scripts\EditorScr\Translates\Langs.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Сonfigurators\StartCubeConfigurator.cs" />
-    <Compile Include="Assets\Source\Game\Scripts\Factory&amp;Spawners\Configurations\SquareOfNineCubes.cs" />
     <Compile Include="Assets\PluginYourGames\Modules\Leaderboards\Scripts\LB_info.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -1325,12 +1200,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.2D.Animation.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.2D.Tilemap.Extras">
-      <HintPath>Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Core.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Core.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.2D.Tilemap.Extras">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
@@ -1419,17 +1294,29 @@
       <Project>{03B53FD3-2497-D2DD-D0E8-8EE2893FDC3D}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
-    <ProjectReference Include="EnemyModule.csproj">
-      <Project>{5673DE17-2EAC-9CEC-C955-AC77B64FFB8F}</Project>
-      <Name>EnemyModule</Name>
+    <ProjectReference Include="RuneBoardModule.csproj">
+      <Project>{AC38C792-1473-1E69-DFC8-3F33DF810504}</Project>
+      <Name>RuneBoardModule</Name>
     </ProjectReference>
-    <ProjectReference Include="RuneOrderVSChaos.EnemyModule.UserUtilities.csproj">
-      <Project>{E7B88C93-A643-8105-4190-35BE913D7604}</Project>
-      <Name>RuneOrderVSChaos.EnemyModule.UserUtilities</Name>
+    <ProjectReference Include="UserUtilites.csproj">
+      <Project>{A5E4D469-1AFF-01F2-DCA9-51504833F38F}</Project>
+      <Name>UserUtilites</Name>
     </ProjectReference>
-    <ProjectReference Include="AreaModule.csproj">
-      <Project>{67D42B7F-4BF0-A1DF-A3A3-9F106ADA634B}</Project>
-      <Name>AreaModule</Name>
+    <ProjectReference Include="CellModule.csproj">
+      <Project>{EF08305F-1885-8690-9F27-A21A5DFDEA08}</Project>
+      <Name>CellModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="GameModule.csproj">
+      <Project>{61CDA716-5EE0-7EB2-DCAF-5C4C44DB1F86}</Project>
+      <Name>GameModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="UserSkillModule.csproj">
+      <Project>{E68DD973-5FA0-06C1-63F6-37A15B4BB481}</Project>
+      <Name>UserSkillModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="Windows.csproj">
+      <Project>{1FF3F6D7-69F4-5173-5FC5-8AB42CF1904E}</Project>
+      <Name>Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

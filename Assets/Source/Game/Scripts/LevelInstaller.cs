@@ -1,80 +1,47 @@
+using TMPro;
 using UnityEngine;
 using YG;
 
-internal class LevelInstaller : MonoBehaviour
+public class LevelInstaller : MonoBehaviour
 {
-    [SerializeField] private Camera _camera;
     [SerializeField] private ConstantsInstaller _constantsInstaller;
-    [SerializeField] private LanguageHandler _languageHandler;
-    [SerializeField] private Factory _factory;
-    [SerializeField] private TaskFactory _taskFactory;
-    [SerializeField] private MenuView _menu;
-    [SerializeField] private GameView _gameView;
-    [SerializeField] private Saver _saver;
-    [SerializeField] private CellView _cellViewPrefab;
-    [SerializeField] private CubeView _runePrefab;
-    [SerializeField] private int _startLevel = 1;
-    [SerializeField] private int _startManaCount = 20;
-    [SerializeField] private int _startGameScore = 0;
+    [SerializeField] private GameFactory _gameFactory;
+    [SerializeField] private PlayerInputController _controller;
+    [SerializeField] private TMP_Dropdown _languagDropdown;
 
-    private GameModel _gameModel;
-    private TaskHandler _taskHandler;
+    [SerializeField] private Transform _yandexEntitiesContainer;
+    [SerializeField] private LanguageHandler _languageHandlerPrefab;
+    [SerializeField] private Saver _saverPrefab;
+    [SerializeField] private PauseEventHandler _pauseEventHandlerPrefab;
+    [SerializeField] private AdvertisementViewer _advertisementViewerPrefab;
+    [SerializeField] private LeaderBoard _leaderBoardPrefab;
+    [SerializeField] private RectTransform _leaderBoardContainer;
 
     private void Awake()
     {
-        _constantsInstaller.SetParameters(_camera.transform.position.y, _cellViewPrefab.transform.localScale.x, _runePrefab.GetCubeSize());
-        _constantsInstaller.SetConstants(_startLevel);
+        _constantsInstaller.SetConstants();
         _constantsInstaller.SetLanguage(YG2.lang);
+        _gameFactory.Set(YG2.envir.isDesktop);
 
-        _gameModel = _factory.CreateGameModel();
-        _gameView.Initialize(_gameModel, _menu);
-        _factory.InitializeUserSkillHandler(_gameView);
-        _factory.InitializeEffectConfettiSpawner(_gameModel);
+        Saver saver = Instantiate(_saverPrefab, _yandexEntitiesContainer);
+        LanguageHandler languageHandler = Instantiate(_languageHandlerPrefab, _yandexEntitiesContainer);
 
-        _factory.CreateYandexEntities(_menu);
+        _gameFactory.CreateMediators();
+        Game game = _gameFactory.Create(saver, Instantiate(_leaderBoardPrefab, _leaderBoardContainer));
 
-        _saver.SetStartData(new GameSavedData(_startLevel, _startManaCount, _startGameScore), new SkillsSavedData(_factory.GetNameOfActivatedSkills()));
-        _menu.Initialize(_factory.GetEntityDataForMenu(_saver));
-        _languageHandler.Initialize(_factory.GetSkillCardViews());
+        Instantiate(_pauseEventHandlerPrefab, _yandexEntitiesContainer).Initialize(_gameFactory.WindowsWithPause);
+        Instantiate(_advertisementViewerPrefab, _yandexEntitiesContainer).Initialize(game, _gameFactory.FinalGameHandler, _gameFactory.AttackerPresenter);
 
-        Subscribe();
-    }
+        RuneBoardSavedData runeBoardStartData = new(Constants.StartLevel, _constantsInstaller.StartGameScore);
+        UserSkillSavedData userSkillStartData = new(_constantsInstaller.StartManaCount, _gameFactory.GetActivatedSkills());
+        saver.SetStartData(runeBoardStartData, userSkillStartData);
 
-    private void OnDestroy()
-    {
-        Unsubscribe();
+        _controller.Initialize(_gameFactory.UserSkillPerformerPresenter);
+        languageHandler.Initialize(_gameFactory.ModuleLanguageHandler, _languagDropdown);
     }
 
     private void Start()
     {
-        //_gameView.NewGame();
-        _menu.OpenMenu();
-    }
-
-    private void OnStartGame()
-    {        
-        if (_gameModel.CurrentLevel == _startLevel)
-        {
-            if(_taskHandler != null)
-                _taskHandler.CloseTutorial();
-
-            _taskHandler = _taskFactory.Create();
-        }
-    }
-
-    private void Subscribe()
-    {
-        if (_gameModel != null)
-        {
-            _gameModel.StartedGame += OnStartGame;
-        }
-    }
-
-    private void Unsubscribe()
-    {
-        if (_gameModel != null)
-        {
-            _gameModel.StartedGame -= OnStartGame;
-        }
+        _gameFactory.Menu.Open();
     }
 }

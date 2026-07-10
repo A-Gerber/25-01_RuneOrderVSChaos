@@ -9676,7 +9676,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 295097eccb4193a4284aa7ac3f00bca2, type: 2}
+  - {fileID: 2100000, guid: ab372b2120d48c1428b581136f960971, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -24372,7 +24372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3418167754485364390}
-  - component: {fileID: 8778541251811298889}
+  - component: {fileID: 3951954178740096978}
   m_Layer: 0
   m_Name: GroundImpactEffect
   m_TagString: Untagged
@@ -24397,7 +24397,7 @@ Transform:
   - {fileID: 7478854402008550786}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8778541251811298889
+--- !u!114 &3951954178740096978
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24406,7 +24406,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8817180721515623597}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2444d38d98409734ca1926759d1b936c, type: 3}
+  m_Script: {fileID: 11500000, guid: 759baa5e9de3de042b8102c67c1b7cf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _projectile: {fileID: 726769755946301235}

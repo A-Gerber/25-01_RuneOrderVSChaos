@@ -1,0 +1,21 @@
+{
+    "name": "GameModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:50dee7e91a9f1b74caae4aeb2fe3550a",
+        "GUID:7d96b3c305f99c646838722db8576f96",
+        "GUID:4e673fa021d0fdd48839b74fb68f38b2",
+        "GUID:af6e801dccc1c7a4391267240206e011",
+        "GUID:8bf6d6802e439a64d9a26c6927b36672"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

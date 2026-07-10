@@ -9812,7 +9812,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5323705926536169271}
-  - component: {fileID: 6551959983799979856}
+  - component: {fileID: 6851483945731368912}
   m_Layer: 0
   m_Name: FreezingEffect
   m_TagString: Untagged
@@ -9836,7 +9836,7 @@ Transform:
   - {fileID: 1513515959023687937}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6551959983799979856
+--- !u!114 &6851483945731368912
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9845,11 +9845,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4943861682423771126}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81b8f5a621b665448bd91cf7229c2cff, type: 3}
+  m_Script: {fileID: 11500000, guid: 216987500fa70554ebd462f1cb8ca077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _effect: {fileID: 6967502722443187924}
-  _effectTime: 2
+  _effectTime: 1.5
 --- !u!1 &4958220186762895066
 GameObject:
   m_ObjectHideFlags: 0

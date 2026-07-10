@@ -14812,7 +14812,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1352239610987115400}
-  - component: {fileID: 3256316257575897262}
+  - component: {fileID: 8890495157015656588}
   m_Layer: 0
   m_Name: Confetti
   m_TagString: Untagged
@@ -14837,7 +14837,7 @@ Transform:
   - {fileID: 6386716749960017979}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3256316257575897262
+--- !u!114 &8890495157015656588
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14846,7 +14846,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6894541936153440173}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66e860b81e6203b41bd37e98c912b21e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e40373f16d8bd14696e75bc79c09a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _effect: {fileID: 5784534903413850956}

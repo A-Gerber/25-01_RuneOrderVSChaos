@@ -1,0 +1,78 @@
+using System;
+using UnityEngine;
+
+public class SkillCard
+{
+    private readonly UserSkill _skill;
+    private readonly int _openingThreshold;
+    private IAddableSkill _userSkillHandler;
+
+    public SkillCard(UserSkill skill, int openingThreshold)
+    {
+        if (openingThreshold < 0)
+            throw new ArgumentOutOfRangeException(nameof(openingThreshold));
+
+        _skill = skill ?? throw new ArgumentNullException("skill is null", nameof(skill));
+        _openingThreshold = openingThreshold;
+    }
+
+    internal event Action ActivatedOnLoad;
+    internal event Action Opened;
+    internal event Action Closed;
+    internal event Action<bool> ChangedInteractable;
+
+    internal bool IsOpen { get; private set; } = false;
+    internal bool IsActivated { get; private set; } = false;
+    internal int OpeningThreshold => _openingThreshold;
+    internal UserSkill Skill => _skill;
+
+    internal void Initialize(IAddableSkill userSkillHandler)
+    {
+        _userSkillHandler = userSkillHandler ?? throw new ArgumentNullException("userSkillHandler is null", nameof(userSkillHandler));
+    }
+
+    internal void Open()
+    {
+        IsOpen = true;
+        Opened?.Invoke();
+    }
+
+    internal void Close()
+    {
+        IsOpen = false;
+        IsActivated = false;
+        Closed?.Invoke();
+    }
+
+    internal void Activate()
+    {
+        IsActivated = true;
+        _userSkillHandler.AddSkillToTempList(this);
+    }
+
+    internal void ActivateOnLoad()
+    {
+        IsActivated = true;
+        ActivatedOnLoad?.Invoke();
+    }
+
+    internal void SetInteracteble(bool value)
+    {
+        ChangedInteractable?.Invoke(value);
+    }
+
+    internal Sprite GetIcon()
+    {
+        return _skill.IconOnButton;
+    }
+
+    internal string GetDescription()
+    {
+        return _skill.SkillDescription;
+    }
+
+    internal void ChangeSkillDescription(Languages language)
+    {
+        _skill.SetDescriptionLanguage(language);
+    }
+}

@@ -7,11 +7,11 @@
         false,
         false
     ],
-    "idSave": 610,
-    "Level": 1,
-    "ManaCount": 40,
-    "GameScore": 0,
-    "MaxGameResult": 1965,
+    "idSave": 719,
+    "Level": 3,
+    "ManaCount": 132,
+    "GameScore": 407,
+    "MaxGameResult": 7819,
     "ActivatedSkills": [
         "FirstLightningStrike"
     ]

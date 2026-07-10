@@ -1047,12 +1047,12 @@
       <HintPath>Library\ScriptAssemblies\Unity.2D.Animation.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Unity.2D.Tilemap.Extras">
-      <HintPath>Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Unity.VisualScripting.Core.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Core.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.2D.Tilemap.Extras">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
@@ -1137,17 +1137,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="EnemyModule.csproj">
-      <Project>{5673DE17-2EAC-9CEC-C955-AC77B64FFB8F}</Project>
-      <Name>EnemyModule</Name>
+    <ProjectReference Include="RuneBoardModule.csproj">
+      <Project>{AC38C792-1473-1E69-DFC8-3F33DF810504}</Project>
+      <Name>RuneBoardModule</Name>
     </ProjectReference>
-    <ProjectReference Include="RuneOrderVSChaos.EnemyModule.UserUtilities.csproj">
-      <Project>{E7B88C93-A643-8105-4190-35BE913D7604}</Project>
-      <Name>RuneOrderVSChaos.EnemyModule.UserUtilities</Name>
+    <ProjectReference Include="UserUtilites.csproj">
+      <Project>{A5E4D469-1AFF-01F2-DCA9-51504833F38F}</Project>
+      <Name>UserUtilites</Name>
     </ProjectReference>
-    <ProjectReference Include="AreaModule.csproj">
-      <Project>{67D42B7F-4BF0-A1DF-A3A3-9F106ADA634B}</Project>
-      <Name>AreaModule</Name>
+    <ProjectReference Include="CellModule.csproj">
+      <Project>{EF08305F-1885-8690-9F27-A21A5DFDEA08}</Project>
+      <Name>CellModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="GameModule.csproj">
+      <Project>{61CDA716-5EE0-7EB2-DCAF-5C4C44DB1F86}</Project>
+      <Name>GameModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="UserSkillModule.csproj">
+      <Project>{E68DD973-5FA0-06C1-63F6-37A15B4BB481}</Project>
+      <Name>UserSkillModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="Windows.csproj">
+      <Project>{1FF3F6D7-69F4-5173-5FC5-8AB42CF1904E}</Project>
+      <Name>Windows</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,7 +10,7 @@ internal class ShapeLifter
     private Ray _ray;
     private ILiftable _shape;
 
-    public ShapeLifter(Camera camera, Ray ray, LayerMask layerMask)
+    internal ShapeLifter(Camera camera, Ray ray, LayerMask layerMask)
     {
         if (camera == null)
             throw new InvalidOperationException("camera is null");
@@ -21,51 +21,36 @@ internal class ShapeLifter
         _layerMask = layerMask;
     }
 
-    internal void LiftShape1()
-    {
-        if (UserUtilities.CanPerformRaycast)
-        {
-            _ray = _camera.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(_ray, out RaycastHit hit, Mathf.Infinity) && hit.transform.TryGetComponent(out ILiftable shape) && shape.IsRaised == false)
-            {
-                _shape = shape;
-                //_shape.SetStatusRaised();
-            }
-        }
-    }
-
-    internal void PutShape()
+    internal void Put()
     {
         if (_shape != null)
         {
-            _shape.Put();
+            _shape.Land();
             _shape = null;
         }
     }
 
-    internal void LiftShape()
+    internal void Lift()
     {
-        if (UserUtilities.CanPerformRaycast)
-        {
-            _ray = _camera.ScreenPointToRay(Input.mousePosition);
+        if (RayCastController.CanPerformRayCast == false)
+            return;
 
-            int hitCount = Physics.RaycastNonAlloc(_ray, _results, Mathf.Infinity, _layerMask);
+        _ray = _camera.ScreenPointToRay(Input.mousePosition);
+        int hitCount = Physics.RaycastNonAlloc(_ray, _results, Mathf.Infinity, _layerMask);
 
-            if (hitCount > 0 && TryGetRaisedShape(out ILiftable shape, hitCount))
-            {
-                _shape = shape;
-                _shape.SetStatusRaised(GetCubeTransform(hitCount));
-            }
+        if (hitCount > 0 && TryGetRaisedShape(out ILiftable shape, hitCount))
+        {           
+            _shape = shape;
+            _shape.SetStatusRaised(GetCubeLocalPosition(hitCount));
         }
     }
 
-    private Vector3 GetCubeTransform(int hitCount)
+    private Vector3 GetCubeLocalPosition(int hitCount)
     {
         for (int i = 0; i < hitCount; i++)
         {
-            if (_results[i].transform.TryGetComponent(out CubeView cube))
-                return cube.LocalPosition;
+            if (_results[i].transform.TryGetComponent(out CubePresenter _))
+                return _results[i].transform.localPosition;
         }
 
         return Vector3.zero;

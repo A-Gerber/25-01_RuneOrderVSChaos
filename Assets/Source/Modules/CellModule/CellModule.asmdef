@@ -1,0 +1,16 @@
+{
+    "name": "CellModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:50dee7e91a9f1b74caae4aeb2fe3550a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

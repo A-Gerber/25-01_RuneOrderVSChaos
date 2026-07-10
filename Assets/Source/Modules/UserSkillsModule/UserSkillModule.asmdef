@@ -1,0 +1,19 @@
+{
+    "name": "UserSkillModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:50dee7e91a9f1b74caae4aeb2fe3550a",
+        "GUID:4e673fa021d0fdd48839b74fb68f38b2",
+        "GUID:7d96b3c305f99c646838722db8576f96"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

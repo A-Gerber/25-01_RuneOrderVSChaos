@@ -1,0 +1,73 @@
+using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+internal class SkillButton : MonoBehaviour
+{
+    [SerializeField] private Button _skillButton;
+    [SerializeField] private TextMeshProUGUI _manaCost;
+    [SerializeField] private Image _icon;
+    [SerializeField] private Image _image;
+
+    private Sprite _startIcon;
+    private Color _closeColor;
+    private Color _openColor = Color.white;
+    private UserSkill _skill;
+
+    internal event Action<UserSkill> ButtonClicked;
+
+    private void Awake()
+    {
+        _closeColor = _image.color;
+        _startIcon = _icon.sprite;
+        ResetButton();
+    }
+
+    private void OnEnable()
+    {
+        _skillButton.onClick.AddListener(OnSkillButtonClick);
+    }
+
+    private void OnDisable()
+    {
+        _skillButton.onClick.RemoveListener(OnSkillButtonClick);
+    }
+
+    internal void ResetButton()
+    {
+        _icon.sprite = _startIcon;
+        _image.color = _closeColor;
+        _skillButton.interactable = false;
+        _skillButton.gameObject.SetActive(false);
+    }
+
+    internal void SetUserSkill(UserSkill skill, int increasePerLevel)
+    {
+        _skill = skill ?? throw new ArgumentNullException("skill is null", nameof(skill));
+        _icon.sprite = skill.IconOnButton;
+        _image.color = _openColor;
+        _skillButton.interactable = true;
+        _skillButton.gameObject.SetActive(true);
+
+        UpdateData(increasePerLevel);
+    }
+
+    private void UpdateData(int increasePerLevel)
+    {
+        if (_skill != null)
+        {
+            _skill.SetIncrease(increasePerLevel);
+            _manaCost.text = $"{_skill.ManaCost}";
+        }
+        else
+        {
+            _manaCost.text = $"{0}";
+        }
+    }
+
+    private void OnSkillButtonClick()
+    {
+        ButtonClicked?.Invoke(_skill);
+    }
+}
